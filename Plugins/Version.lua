@@ -43,7 +43,7 @@ L:RegisterTranslations("enUS", function() return {
 	["Nr Replies"] = true,
 	["Ancient"] = true,
             
-    ["Your version of Big Wigs Classic-WoW is out of date!\nPlease visit https://github.com/xorann/BigWigs/releases to get the latest version."] = true,
+    ["Your version of Big Wigs Elysium is out of date!\nPlease visit https://github.com/Hosq/BigWigs to get the latest version."] = true,
     ["Close"] = true,
     ["Cancel"] = true,
             
@@ -76,7 +76,7 @@ L:RegisterTranslations("deDE", function() return {
 	["Nr Replies"] = "Anzahl der Antworten",
 	["Ancient"] = "Alt",
             
-    ["Your version of Big Wigs Classic-WoW is out of date!\nPlease visit https://github.com/xorann/BigWigs/releases to get the latest version."] = "Deine Version von Big Wigs Classic-WoW ist veraltet! Bitte downloade die neuste Version von https://github.com/xorann/BigWigs/releases",
+    ["Your version of Big Wigs Elysium is out of date!\nPlease visit https://github.com/Hosq/BigWigs to get the latest version."] = "Deine Version von Big Wigs Elysium ist veraltet! Bitte downloade die neuste Version von https://github.com/Hosq/BigWigs",
     ["Close"] = "Schliessen",
     ["Cancel"] = "Abbrechen",
 } end )
@@ -203,9 +203,11 @@ end
 function BigWigsVersionQuery:UpdateVersions()
     for name, version in pairs(self.responseTable) do
         if not self.zoneRevisions then return end
-        if self.zoneRevisions[self.currentZone] and version > self.zoneRevisions[self.currentZone] then
-            self:IsOutOfDate()
-        end
+		if version > 20000 and version < 30000 then
+			if self.zoneRevisions[self.currentZone] and version > self.zoneRevisions[self.currentZone] then
+				self:IsOutOfDate()
+			end
+		end
 	end
     
 	if not isInitialQuery then
@@ -216,11 +218,11 @@ end
 function BigWigsVersionQuery:IsOutOfDate()
 	if not self.OutOfDateShown then
 		self.OutOfDateShown = true
-		BigWigs:Print(L["Your version of Big Wigs Classic-WoW is out of date!\nPlease visit https://github.com/xorann/BigWigs/releases to get the latest version."])
+		BigWigs:Print(L["Your version of Big Wigs Elysium is out of date!\nPlease visit https://github.com/Hosq/BigWigs to get the latest version."])
         
         local dialog = nil
         StaticPopupDialogs["BigWigsOutOfDateDialog"] = {
-            text = L["Your version of Big Wigs Classic-WoW is out of date!\nPlease visit https://github.com/xorann/BigWigs/releases to get the latest version."],
+            text = L["Your version of Big Wigs Elysium is out of date!\nPlease visit https://github.com/Hosq/BigWigs to get the latest version."],
             button1 = L["Close"],
             button2 = L["Cancel"],
             OnAccept = function()
@@ -231,7 +233,7 @@ function BigWigsVersionQuery:IsOutOfDate()
             end,
             OnShow = function (self, data)
                 local editbox = getglobal(this:GetName().."WideEditBox")
-                editbox:SetText("https://github.com/xorann/BigWigs/releases")
+                editbox:SetText("https://github.com/Hosq/BigWigs")
                 editbox:SetWidth(250)
                 editbox:ClearFocus()
                 editbox:HighlightText() 
