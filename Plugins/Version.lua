@@ -281,8 +281,11 @@ function BigWigsVersionQuery:OnTooltipUpdate()
 			if not self.zoneRevisions then self:PopulateRevisions() end
 			local color = COLOR_WHITE
 			if self.zoneRevisions[self.currentZone] and version > self.zoneRevisions[self.currentZone] then
-				color = COLOR_GREEN
-				self:IsOutOfDate()
+				color = COLOR_RED
+				if version > 20000 and version < 30000 then
+					self:IsOutOfDate()
+					color = COLOR_GREEN
+				end
 			elseif self.zoneRevisions[self.currentZone] and version < self.zoneRevisions[self.currentZone] then
 				color = COLOR_RED
 			end
