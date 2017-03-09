@@ -1,6 +1,6 @@
 ﻿--[[
 Name: Babble-Boss-2.2
-Revision: 20004
+Revision: 20005
 Author(s): ckknight (ckknight@gmail.com)
 Website: http://ckknight.wowinterface.com/
 Documentation: http://wiki.wowace.com/index.php/Babble-Boss-2.2
@@ -10,7 +10,7 @@ Dependencies: AceLibrary, AceLocale-2.2
 ]]
 
 local MAJOR_VERSION = "Babble-Boss-2.2"
-local MINOR_VERSION = 20004
+local MINOR_VERSION = 20005
 
 if not AceLibrary then error(MAJOR_VERSION .. " requires AceLibrary") end
 
@@ -364,6 +364,8 @@ BabbleBoss:RegisterTranslations("enUS", function()
 		["Rethilgore"] = true;
 		["Atiesh"] = true;
 		["Stratholme Courier"] = true;
+		["Ancient Core Hound"] = true;
+		["Gurubashi Berserker"] = true;
                 ["Elder Mottled Boar"] = true,
                 ["Stoneskin Gargoyle"] = true,
 	}
@@ -705,6 +707,8 @@ BabbleBoss:RegisterTranslations("ruRU", function()
 		["Rethilgore"] = "Ретилгор";
 		["Atiesh"] = "Атиеш";
 		["Stratholme Courier"] = "Стратхольмский курьер";
+		["Ancient Core Hound"] = true;
+		["Gurubashi Berserker"] = true;
                 ["Elder Mottled Boar"] = true,
                 ["Stoneskin Gargoyle"] = true,
 	}
@@ -929,7 +933,8 @@ BabbleBoss:RegisterTranslations("deDE", function()
 		["Razorclaw the Butcher"] = "Rasiermesserklaue der Metzger",
 		["Wolf Master Nandos"] = "Wolfmeister Nados",
 		["Rend Blackhand"] = "Rend Blackhand",
-
+		["Ancient Core Hound"] = true;
+		["Gurubashi Berserker"] = true;
                 ["Stoneskin Gargoyle"] = "Steinhautgargoyle",
                 ["Elder Mottled Boar"] = "Alter scheckiger Eber",
 	}

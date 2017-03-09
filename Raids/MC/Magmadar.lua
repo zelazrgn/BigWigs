@@ -5,7 +5,7 @@
 
 local module, L = BigWigs:ModuleDeclaration("Magmadar", "Molten Core")
 
-module.revision = 20003 -- To be overridden by the module!
+module.revision = 20004 -- To be overridden by the module!
 module.enabletrigger = module.translatedName -- string or table {boss, add1, add2}
 module.toggleoptions = {"panic", "frenzy", "bosskill"}
 
@@ -16,8 +16,9 @@ module.toggleoptions = {"panic", "frenzy", "bosskill"}
 
 local timer = {
 	panic = 30,
-	firstPanicDelay = 20 - 30,
+	firstPanicDelay = 10 - 30,
 	frenzy = 8,
+	firstFrenzy = 15
 }
 local icon = {
 	panic = "Spell_Shadow_DeathScream",
@@ -25,9 +26,9 @@ local icon = {
 	tranquil = "Spell_Nature_Drowsy",
 }
 local syncName = {
-	panic = "MagmadarPanic",
-	frenzy = "MagmadarFrenzyStart",
-	frenzyOver = "MagmadarFrenzyStop",
+	panic = "MagmadarPanic"..module.revision,
+	frenzy = "MagmadarFrenzyStart"..module.revision,
+	frenzyOver = "MagmadarFrenzyStop"..module.revision,
 }
 
 
@@ -113,7 +114,8 @@ end
 
 -- called after boss is engaged
 function module:OnEngage()
-	self:Panic(timer.firstPanicDelay) -- 10s earlier than normal
+	self:Panic(timer.firstPanicDelay) -- 20s earlier than normal
+	self:Bar(L["frenzy_bar"], timer.firstFrenzy, icon.frenzy, true, "red")
 end
 
 -- called after boss is disengaged (wipe(retreat) or victory)

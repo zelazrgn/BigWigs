@@ -149,8 +149,8 @@ module.toggleoptions = {"phase", "adds", "renew", "holyfire", "enrage", "announc
 -- locals
 local timer = {
 	holyfireCast = 3.5,
-	holyfire = 12,
-	renew = 15,
+	holyfire = 8,
+	renew = 20,
 }
 local icon = {
 	addDead = "INV_WAEPON_BOW_ZULGRUB_D_01",

@@ -5,7 +5,7 @@
 
 local module, L = BigWigs:ModuleDeclaration("Baron Geddon", "Molten Core")
 
-module.revision = 20003 -- To be overridden by the module!
+module.revision = 20004 -- To be overridden by the module!
 module.enabletrigger = module.translatedName -- string or table {boss, add1, add2}
 module.wipemobs = nil
 module.toggleoptions = {"inferno", "service", "bomb", "mana", "announce", "icon", "bosskill"}
@@ -18,9 +18,9 @@ module.toggleoptions = {"inferno", "service", "bomb", "mana", "announce", "icon"
 local timer = {
 	bomb = 8,
 	inferno = 8,
-	nextInferno = 30,
-    firstIgnite = 20,
-	ignite = 29,
+	nextInferno = 18,
+    firstIgnite = 10,
+	ignite = 20,
 	service = 8,
 }
 local icon = {
@@ -30,11 +30,11 @@ local icon = {
 	service = "Spell_Fire_SelfDestruct",
 }
 local syncName = {
-	bomb = "GeddonBombX",
-	bombStop = "GeddonBombStop",
-	inferno = "GeddonInferno1",
-	ignite = "GeddonManaIgniteX",
-	service = "GeddonServiceX",
+	bomb = "GeddonBomb"..module.revision,
+	bombStop = "GeddonBombStop"..module.revision,
+	inferno = "GeddonInferno"..module.revision,
+	ignite = "GeddonManaIgnite"..module.revision,
+	service = "GeddonService"..module.revision,
 }
 
 local firstinferno = true
@@ -45,7 +45,7 @@ local firstignite = true
 ----------------------------
 
 L:RegisterTranslations("enUS", function() return {
-	inferno_trigger = "is afflicted by Inferno.",
+	inferno_trigger = "Baron Geddon gains Inferno\.",
 	service_trigger = "performs one last service for Ragnaros",
 	ignitemana_trigger = "afflicted by Ignite Mana",
 	bombyou_trigger = "You are afflicted by Living Bomb.",
@@ -106,7 +106,7 @@ L:RegisterTranslations("enUS", function() return {
 } end)
 
 L:RegisterTranslations("deDE", function() return {
-	inferno_trigger = "ist von Inferno betroffen",
+	inferno_trigger = "Baron Geddon bekommt \'Inferno",
 	service_trigger = "performs one last service for Ragnaros",
 	ignitemana_trigger = "von Mana entz\195\188nden betroffen",
 	bombyou_trigger = "Ihr seid von Lebende Bombe betroffen.",
@@ -176,7 +176,7 @@ function module:OnEnable()
 	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_FRIENDLYPLAYER_DAMAGE", "Event")
 	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_PARTY_DAMAGE", "Event")
 	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_SELF_DAMAGE", "Event")
-	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_CREATURE_DAMAGE")
+	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_CREATURE_BUFFS")
 	self:RegisterEvent("CHAT_MSG_SPELL_AURA_GONE_SELF", "Event")
 	self:RegisterEvent("CHAT_MSG_SPELL_AURA_GONE_PARTY", "Event")
 	self:RegisterEvent("CHAT_MSG_SPELL_AURA_GONE_OTHER", "Event")
@@ -254,7 +254,7 @@ function module:Event(msg)
 	end
 end
 
-function module:CHAT_MSG_SPELL_PERIODIC_CREATURE_DAMAGE(msg)
+function module:CHAT_MSG_SPELL_PERIODIC_CREATURE_BUFFS(msg)
 	if string.find(msg, L["inferno_trigger"]) then
         BigWigs:DebugMessage("inferno trigger")
 		self:Sync(syncName.inferno)

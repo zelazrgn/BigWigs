@@ -31,8 +31,8 @@ L:RegisterTranslations("enUS", function() return {
 
 	warn1 = "You are afflicted by Volatile Infection!",
 	warn2 = " is afflicted by Volatile Infection!",
-	warn3 = "5 seconds until Noxious Breath!",
-	warn4 = "Noxious Breath! 18 seconds till next!",
+	warn3 = "3 seconds until Noxious Breath!",
+	warn4 = "Noxious Breath! 10-14 seconds till next!",
 	warn5 = "Emeriss engaged! 8 seconds till Noxious Breath!",
 	warn6 = "Corruption of the Earth! Heal NoW!",
 
@@ -77,8 +77,8 @@ end
 			self.prior = true
 			if self.db.profile.noxious then 
 				self:TriggerEvent("BigWigs_Message", L["warn4"], "Important")
-				self:ScheduleEvent("BigWigs_Message", 13, L["warn3"], "Important", true, "Alert")
-				self:TriggerEvent("BigWigs_StartBar", self, L["bar1text"], 18, "Interface\\Icons\\Spell_Shadow_LifeDrain02")
+				self:ScheduleEvent("BigWigs_Message", 7, L["warn3"], "Important", true, "Alert")
+				self:TriggerEvent("BigWigs_StartBar", self, L["bar1text"], 10, "Interface\\Icons\\Spell_Shadow_LifeDrain02")
 			end			
 		else
 			local _,_, EPlayer, EType = string.find(msg, L["trigger1"])
@@ -99,7 +99,7 @@ function BigWigsEmeriss:CHAT_MSG_MONSTER_YELL(msg)
 	if (msg == L["trigger3"]) then
 		if self.db.profile.noxious then
 		 self:TriggerEvent("BigWigs_Message", L["warn5"], "Important")
-		 self:ScheduleEvent("BigWigs_Message", 3, L["warn3"], "Important", true, "Alert")
+		 self:ScheduleEvent("BigWigs_Message", 5, L["warn3"], "Important", true, "Alert")
 		 self:TriggerEvent("BigWigs_StartBar", self, L["bar1text"], 8, "Interface\\Icons\\Spell_Shadow_LifeDrain02")
 end
 	elseif (string.find(msg, L["trigger4"])) then

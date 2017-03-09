@@ -26,7 +26,7 @@ L:RegisterTranslations("enUS", function() return {
 	wingbuffet_bar = "Next Wing Buffet",
 	wingbuffet1_bar = "Initial Wing Buffet",
 	shadowflame_bar = "Shadow Flame",
-	shadowflame_Nextbar = "Possible Shadow Flame",
+	shadowflame_Nextbar = "Next Shadow Flame",
 	flamebuffet_bar = "Flame Buffet",
 
 	cmd = "Firemaw",
@@ -61,7 +61,7 @@ L:RegisterTranslations("deDE", function() return {
 	wingbuffet_bar = "N\195\164chster Fl\195\188gelsto\195\159",
 	wingbuffet1_bar = "Erster Fl\195\188gelsto\195\159",
 	shadowflame_bar = "Schattenflamme",
-	shadowflame_Nextbar = "Mögliche Schattenflamme",
+	shadowflame_Nextbar = "Nächste Schattenflamme",
 	flamebuffet_bar = "Flammenpuffer",
 
 	cmd = "Firemaw",
@@ -85,7 +85,7 @@ L:RegisterTranslations("deDE", function() return {
 ---------------------------------
 
 -- module variables
-module.revision = 20006 -- To be overridden by the module!
+module.revision = 20007 -- To be overridden by the module!
 module.enabletrigger = module.translatedName -- string or table {boss, add1, add2}
 --module.wipemobs = { L["add_name"] } -- adds which will be considered in CheckForEngage
 module.toggleoptions = {"wingbuffet", "shadowflame", "flamebuffet", "bosskill"}
@@ -93,19 +93,21 @@ module.toggleoptions = {"wingbuffet", "shadowflame", "flamebuffet", "bosskill"}
 
 -- locals
 local timer = {
-	firstWingbuffet = 25,
+	firstWingbuffet = 30,
 	wingbuffet = 30,
 	wingbuffetCast = 1,
 	shadowflame = 16,
 	shadowflameCast = 2,
+	flameBuffet = 2,
 }
 local icon = {
 	wingbuffet = "INV_Misc_MonsterScales_14",
 	shadowflame = "Spell_Fire_Incinerate",	
+	flamebuffet = "Spell_Fire_Fireball"
 }
 local syncName = {
-	wingbuffet = "FiremawWingBuffetX",
-	shadowflame = "FiremawShadowflameX",
+	wingbuffet = "FiremawWingBuffet"..module.revision,
+	shadowflame = "FiremawShadowflame"..module.revision,
 }
 
 
@@ -157,7 +159,7 @@ function module:Event(msg)
 		self:Sync(syncName.shadowflame)
 	-- flamebuffet triggers too often on nefarian and therefor this warning doesn't make any sense
 	--elseif (string.find(msg, L["flamebuffetafflicted_trigger"]) or string.find(msg, L["flamebuffetresisted_trigger"]) or string.find(msg, L["flamebuffetimmune_trigger"]) or string.find(msg, L["flamebuffetabsorb1_trigger"]) or string.find(msg, L["flamebuffetabsorb2_trigger"])) and self.db.profile.flamebuffet then
-	--	self:Bar(L["flamebuffet_bar"], 5, "Spell_Fire_Fireball", true, "White")
+	--	self:Bar(L["flamebuffet_bar"], timer.flameBuffet, icon.flameBuffet, true, "White")
 	end
 end
 
@@ -177,6 +179,6 @@ function module:BigWigs_RecvSync(sync, rest, nick)
         self:Message(L["shadowflame_warning"], "Important", true, "Alarm")
 		self:RemoveBar(L["shadowflame_Nextbar"]) -- remove timer bar
 		self:Bar(L["shadowflame_bar"], timer.shadowflameCast, icon.shadowflame) -- show cast bar
-        self:DelayedBar(timer.shadowflameCast, L["shadowflame_Nextbar"], timer.shadowflame, icon.shadowflame) -- delayed timer bar
+        self:DelayedBar(timer.shadowflameCast, L["shadowflame_Nextbar"], timer.shadowflame-timer.shadowflameCast, icon.shadowflame) -- delayed timer bar
 	end
 end

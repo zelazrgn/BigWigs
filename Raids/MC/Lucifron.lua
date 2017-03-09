@@ -5,7 +5,7 @@
 
 local module, L = BigWigs:ModuleDeclaration("Lucifron", "Molten Core")
 
-module.revision = 20006 -- To be overridden by the module!
+module.revision = 20007 -- To be overridden by the module!
 module.enabletrigger = module.translatedName -- string or table {boss, add1, add2}
 
 module.toggleoptions = {"adds", "curse", "doom", "shock", "mc", "bosskill"}
@@ -19,8 +19,9 @@ module.defaultDB = {
 ---------------------------------
 
 local timer = {
-	curse = 20,
-	doom = 15,
+	curse = 15,
+	firstCurse = 20,
+	doom = 20,
 	firstDoom = 10,
 	mc = 15,
 }
@@ -30,11 +31,11 @@ local icon = {
 	mc = "Spell_Shadow_ShadowWordDominate",
 }
 local syncName = {
-	curse = "LucifronCurseRep1",
-	doom = "LucifronDoomRep1",
-	shock = "LucifronShock1",
-	mc = "LucifronMC_",
-	mcEnd = "LucifronMCEnd_",
+	curse = "LucifronCurseRep"..module.revision,
+	doom = "LucifronDoomRep"..module.revision,
+	shock = "LucifronShock"..module.revision,
+	mc = "LucifronMC"..module.revision.."_",
+	mcEnd = "LucifronMCEnd"..module.revision.."_",
 	add = "LucifronAddDead",
 }
 
@@ -167,7 +168,7 @@ function module:OnEnable()
 	self:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_SELF_DAMAGE", "Event")
 	self:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_PARTY_DAMAGE", "Event")
 	self:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_CREATURE_DAMAGE", "Event")
-	--self:RegisterEvent("CHAT_MSG_COMBAT_FRIENDLY_DEATH", "Event")
+	self:RegisterEvent("CHAT_MSG_COMBAT_FRIENDLY_DEATH", "Event")
 
 	self:ThrottleSync(0.5, syncName.mc .. "(.*)")
 	self:ThrottleSync(0.5, syncName.mcEnd .. "(.*)")
@@ -208,7 +209,7 @@ end
 function module:Event(msg)
 	local _,_,mindcontrolother,_ = string.find(msg, L["mindcontrolother_trigger"])
 	local _,_,mindcontrolotherend,_ = string.find(msg, L["mindcontrolotherend_trigger"])
-	--local _,_,mindcontrolotherdeath,_ = string.find(msg, L["deathother_trigger"])
+	local _,_,mindcontrolotherdeath,_ = string.find(msg, L["deathother_trigger"])
 	if ((string.find(msg, L["curse_trigger"])) or (string.find(msg, L["curse_trigger2"]))) then
 		self:Sync(syncName.curse)
 	elseif ((string.find(msg, L["doom_trigger"])) or (string.find(msg, L["doom_trigger2"]))) then
@@ -225,8 +226,8 @@ function module:Event(msg)
 		self:Sync(syncName.mc .. mindcontrolother)
 	elseif mindcontrolotherend then
 		self:Sync(syncName.mcEnd .. mindcontrolotherend)
-	--elseif mindcontrolotherdeath then
-	--	self:Sync(syncName.mcEnd .. mindcontrolotherdeath)
+	elseif mindcontrolotherdeath then
+		self:Sync(syncName.mcEnd .. mindcontrolotherdeath)
 	end
 end
 
@@ -254,7 +255,7 @@ function module:BigWigs_RecvSync(sync, rest, nick)
 		--self:Bar(L["shock_bar"], 6, "Spell_Shadow_Shadowbolt")
 	elseif string.find(sync, syncName.mc) then
 		if self.db.profile.mc then
-			chosenone = string.sub(sync,12)
+			chosenone = string.sub(sync,17)
 			if chosenone == UnitName("player") then
 				self:Message(L["mindcontrol_message_you"], "Attention")
 				self:Bar(string.format(L["mindcontrol_bar"], UnitName("player")), timer.mc, icon.mc)
@@ -265,7 +266,7 @@ function module:BigWigs_RecvSync(sync, rest, nick)
 		end
 	elseif string.find(sync, syncName.mcEnd) then
 		if self.db.profile.mc then
-			luckyone = string.sub(sync,15)
+			luckyone = string.sub(sync,20)
 			self:RemoveBar(string.format(L["mindcontrol_bar"], luckyone))
 		end
 	elseif sync == syncName.add and rest and rest ~= "" then

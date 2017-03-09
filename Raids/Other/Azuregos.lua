@@ -6,6 +6,15 @@ local boss = AceLibrary("Babble-Boss-2.2")["Azuregos"]
 local L = AceLibrary("AceLocale-2.2"):new("BigWigs"..boss)
 
 ----------------------------
+--      Timers      --
+----------------------------
+
+local teleport_time = 30
+local teleport_offset1 = 10
+local teleport_offset2 = 5
+local shield_time = 5
+
+----------------------------
 --      Localization      --
 ----------------------------
 
@@ -28,8 +37,7 @@ L:RegisterTranslations("enUS", function() return {
 	warn2 = "Magic Shield down!",
 	warn3 = "Magic Shield UP!",
 	tele = "Teleport",
-	twarn1 = "Teleport in 10sec",
-	twarn2 = "Teleport in 5sec",
+	twarn = "Teleport in %dsec",
 
 	shieldbar = "Magic Shield",
 } end )
@@ -42,7 +50,7 @@ BigWigsAzuregos = BigWigs:NewModule(boss)
 BigWigsAzuregos.zonename = { AceLibrary("AceLocale-2.2"):new("BigWigs")["Outdoor Raid Bosses Zone"], AceLibrary("Babble-Zone-2.2")["Azshara"] }
 BigWigsAzuregos.enabletrigger = boss
 BigWigsAzuregos.toggleoptions = {"teleport", "shield", "bosskill"}
-BigWigsAzuregos.revision = 20006
+BigWigsAzuregos.revision = 20007
 
 ------------------------------
 --      Initialization      --
@@ -57,10 +65,9 @@ end
 function BigWigsAzuregos:CHAT_MSG_MONSTER_YELL( msg )
 	if self.db.profile.teleport and string.find(msg, L["trigger1"]) then
 		self:TriggerEvent("BigWigs_Message", L["warn1"], "Important")
-		self:TriggerEvent("BigWigs_StartBar", self, L["tele"], 30, "Interface\\Icons\\Spell_Arcane_Blink")
-		self:ScheduleEvent("BigWigs_Message", 20, L["twarn1"], "Important")
-		self:ScheduleEvent("BigWigs_Message", 25, L["twarn2"], "Important", true, "Alert")
-		self:KTM_Reset()
+		self:TriggerEvent("BigWigs_StartBar", self, L["tele"], teleport_time, "Interface\\Icons\\Spell_Arcane_Blink")
+		self:ScheduleEvent("BigWigs_Message", teleport_time-teleport_offset1, string.format(L["twarn"],teleport_offset1), "Important")
+		self:ScheduleEvent("BigWigs_Message", teleport_time-teleport_offset2, string.format(L["twarn"],teleport_offset2), "Important", true, "Alert")
 	end
 end
 
@@ -73,7 +80,7 @@ end
 function BigWigsAzuregos:CHAT_MSG_SPELL_PERIODIC_CREATURE_BUFFS( msg )
 	if self.db.profile.shield and string.find(arg1, L["trigger3"]) then
 		self:TriggerEvent("BigWigs_Message", L["warn3"], "Important", true, "Alert")
-		self:TriggerEvent("BigWigs_StartBar", self, L["shieldbar"], 10, "Interface\\Icons\\Spell_Frost_FrostShock")
+		self:TriggerEvent("BigWigs_StartBar", self, L["shieldbar"], shield_time, "Interface\\Icons\\Spell_Frost_FrostShock")
 	end
 end
 

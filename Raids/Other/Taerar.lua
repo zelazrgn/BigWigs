@@ -27,8 +27,8 @@ L:RegisterTranslations("enUS", function() return {
 
 	warn1 = "Taerar banished! Kill Shades!",
 	warn2 = "Fear in 1.5sec!",
-	warn3 = "5 seconds until Noxious Breath!",
-	warn4 = "Noxious Breath! 18 seconds till next!",
+	warn3 = "3 seconds until Noxious Breath!",
+	warn4 = "Noxious Breath! 10-14 seconds till next!",
 	warn5 = "Taerar engaged! Noxious Breath in 8 seconds!",
 	fearwarn = "AoE Fear soon!",
 
@@ -72,8 +72,8 @@ function BigWigsTaerar:Event( msg )
 		self.prior = true
 		if self.db.profile.noxious then 
 			self:TriggerEvent("BigWigs_Message", L["warn4"], "Important")
-			self:ScheduleEvent("BigWigs_Message", 13, L["warn3"], "Important", true, "Alert")
-			self:TriggerEvent("BigWigs_StartBar", self, L["bar1text"], 18, "Interface\\Icons\\Spell_Shadow_LifeDrain02")
+			self:ScheduleEvent("BigWigs_Message", 7, L["warn3"], "Important", true, "Alert")
+			self:TriggerEvent("BigWigs_StartBar", self, L["bar1text"], 10, "Interface\\Icons\\Spell_Shadow_LifeDrain02")
 		end
 	end
 end
@@ -82,7 +82,7 @@ function BigWigsTaerar:CHAT_MSG_MONSTER_YELL(msg)
 	if (msg == L["trigger3"]) then
 		if self.db.profile.noxious then
 			self:TriggerEvent("BigWigs_Message", L["warn5"], "Important")
-			self:ScheduleEvent("BigWigs_Message", 3, L["warn3"], "Important", true, "Alert")
+			self:ScheduleEvent("BigWigs_Message", 5, L["warn3"], "Important", true, "Alert")
 			self:TriggerEvent("BigWigs_StartBar", self, L["bar1text"], 8, "Interface\\Icons\\Spell_Shadow_LifeDrain02")
 		elseif self.db.profile.fear then
 			self:ScheduleEvent("BigWigs_Message", 25, L["fearwarn"], "Important", true, "Alert")
@@ -101,7 +101,7 @@ end
 function BigWigsTaerar:CHAT_MSG_SPELL_CREATURE_VS_CREATURE_DAMAGE(msg)
 	if msg == L["trigger1"] and self.db.profile.fear then
 		self:TriggerEvent("BigWigs_Message", L["warn2"], "Important", "Alert")
-		 self:ScheduleEvent("BigWigs_Message", 18, L["fearwarn"], "Important", true, "Alert")
-		 self:TriggerEvent("BigWigs_StartBar", self, L["fearbar"], 8, "Interface\\Icons\\Spell_Shadow_PsychicScream")
+		 self:ScheduleEvent("BigWigs_Message", 16, L["fearwarn"], "Important", true, "Alert")
+		 self:TriggerEvent("BigWigs_StartBar", self, L["fearbar"], 18, "Interface\\Icons\\Spell_Shadow_PsychicScream")
 	end
 end

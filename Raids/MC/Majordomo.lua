@@ -5,7 +5,7 @@
 
 local module, L = BigWigs:ModuleDeclaration("Majordomo Executus", "Molten Core")
 
-module.revision = 20006 -- To be overridden by the module!
+module.revision = 20007 -- To be overridden by the module!
 module.enabletrigger = module.translatedName -- string or table {boss, add1, add2}
 module.toggleoptions = {"magic", "dmg", "adds", "bosskill"}
 
@@ -19,8 +19,8 @@ module.defaultDB = {
 
 local timer = {
 	shieldDuration = 10,
-	shieldInterval = 15,
-	firstShield = 15,
+	shieldInterval = 30,
+	firstShield = 30,
 }
 local icon = {
 	shield = "Spell_Shadow_DetectLesserInvisibility",
@@ -28,8 +28,8 @@ local icon = {
 	dmg = "Spell_Shadow_AntiShadow",
 }
 local syncName = {
-	dmg = "DomoAuraDamage",
-	magic = "DomoAuraMagic",
+	dmg = "DomoAuraDamage"..module.revision,
+	magic = "DomoAuraMagic"..module.revision,
 	healerDead = "DomoHealerDead",
 	eliteDead = "DomoEliteDead",
 }

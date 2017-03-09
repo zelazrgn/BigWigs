@@ -5,7 +5,7 @@
 
 local module, L = BigWigs:ModuleDeclaration("Shazzrah", "Molten Core")
 
-module.revision = 20003 -- To be overridden by the module!
+module.revision = 20004 -- To be overridden by the module!
 module.enabletrigger = module.translatedName -- string or table {boss, add1, add2}
 module.toggleoptions = {"curse", "deaden", "blink", "counterspell", "bosskill"}
 
@@ -18,14 +18,14 @@ module.toggleoptions = {"curse", "deaden", "blink", "counterspell", "bosskill"}
 ---------------------------------
 
 local timer = {
-	cs = 19,
-    firstCS = 10,
-    curse =  22, 
+	cs = 16,
+    firstCS = 15,
+    curse =  20, 
     firstCurse = 10,
-    blink = 45,
-    firstBlink = 30,
-    deaden = 24,
-    firstDeaden = 15,
+    blink = 25,
+    firstBlink = 25,
+    deaden = 7,
+    firstDeaden = 5,
 }
 local icon = {
     cs = "Spell_Frost_IceShock",
@@ -34,32 +34,12 @@ local icon = {
     deaden = "Spell_Holy_SealOfSalvation",
 }
 local syncName = {
-	cs = "ShazzrahCounterspell2",
-    curse = "ShazzrahCurse2",
-    blink = "ShazzrahBlink1",
-    deaden = "ShazzrahDeadenMagicOn",
-    deadenOver = "ShazzrahDeadenMagicOff",
+	cs = "ShazzrahCounterspell"..module.revision,
+    curse = "ShazzrahCurse"..module.revision,
+    blink = "ShazzrahBlink"..module.revision,
+    deaden = "ShazzrahDeadenMagicOn"..module.revision,
+    deadenOver = "ShazzrahDeadenMagicOff"..module.revision,
 }
---[[
-pull:   28:55:06 
-cs:     29:05:01    9.83
-deaden: 29:10:07    15.0
-cs:     29:19:09    14.27
-blink:  29:25:01    30.0
-cs:     29:33:03    13.8
-deaden: 29:34:07    24.0
-cs:     29:46:10    13.23
-deaden: 29:58:03    24.0
-cs:     29:59:10    13.0
-
-pull:   19:59:07    
-curse:  20:07:19    8.4
-cs:     20:09:04    9.9
-curse:  20:26:26    19.23
-blink:  20:29:06    30.0
-cs:     20:35:16    26.4 (13.2)
-deaden: 20:35:29    36
-]]
 
 local _, playerClass = UnitClass("player")
 local firstblink = true

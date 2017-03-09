@@ -182,15 +182,15 @@ module.toggleoptions = {"phase", "heal", "flay", "fear", "swarm", "bomb", "annou
 
 -- locals
 local timer = {
-	firstFear = 23,
-	fear = 22,
-	firstSilence = 31,
+	firstFear = 12,
+	fear = 30,
+	firstSilence = 12,
 	healCast = 4,
 	nextHeal = 20,
 	fear2 = 39.5,
 	fireBombs = 10,
-	mindflay = 10,
-	bats = 68,
+	mindflay = 25,
+	bats = 45,
 }
 local icon = {
 	fear = "Spell_Shadow_SummonImp",

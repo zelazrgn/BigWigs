@@ -23,7 +23,7 @@ L:RegisterTranslations("enUS", function() return {
 	wingbuffetcast_bar = "Wing Buffet",
 	wingbuffet_bar = "Next Wing Buffet",
 	wingbuffet1_bar = "Initial Wing Buffet",
-	shadowflame_bar = "Possible Shadow Flame",
+	shadowflame_bar = "Shadow Flame",
 	shadowflame_Nextbar = "Next Shadow Flame",
 	shadowcurse_bar = "%s - Shadow of Ebonroc",
     shadowcurse_Firstbar = "Initial Shadow of Ebonroc",
@@ -57,7 +57,7 @@ L:RegisterTranslations("deDE", function() return {
 	wingbuffetcast_bar = "Fl\195\188gelsto\195\159",
 	wingbuffet_bar = "N\195\164chster Fl\195\188gelsto\195\159",
 	wingbuffet1_bar = "Erster Fl\195\188gelsto\195\159",
-	shadowflame_bar = "Mögliche Schattenflamme",
+	shadowflame_bar = "Schattenflamme",
 	shadowflame_Nextbar = "Nächste Schattenflamme",
 	shadowcurse_bar = "%s - Schattenschwinges Schatten",
     shadowcurse_Firstbar = "Erster Schattenschwinges Schatten",
@@ -83,7 +83,7 @@ L:RegisterTranslations("deDE", function() return {
 ---------------------------------
 
 -- module variables
-module.revision = 20006 -- To be overridden by the module!
+module.revision = 20007 -- To be overridden by the module!
 module.enabletrigger = module.translatedName -- string or table {boss, add1, add2}
 --module.wipemobs = { L["add_name"] } -- adds which will be considered in CheckForEngage
 module.toggleoptions = {"curse", "wingbuffet", "shadowflame", "bosskill"}
@@ -103,9 +103,9 @@ local icon = {
 	shadowflame = "Spell_Fire_Incinerate",	
 }
 local syncName = {
-	wingbuffet = "EbonrocWingBuffet1",
-	shadowflame = "EbonrocShadowflame1",
-	curse = "EbonrocShadow1",
+	wingbuffet = "EbonrocWingBuffet"..module.revision,
+	shadowflame = "EbonrocShadowflame"..module.revision,
+	curse = "EbonrocShadow"..module.revision,
 }
 
 
@@ -142,7 +142,7 @@ function module:OnEngage()
 		self:Bar(L["shadowcurse_Firstbar"], timer.curse, icon.curse, true, "white")
 	end
 	if self.db.profile.shadowflame then
-		self:Bar(L["shadowflame_Nextbar"], timer.shadowflameCast, icon.shadowflame)
+		self:Bar(L["shadowflame_Nextbar"], timer.shadowflame, icon.shadowflame)
 	end
 end
 
@@ -213,6 +213,6 @@ function module:ShadowFlame()
 		self:Message(L["shadowflame_warning"], "Important", true, "Alarm")
 		self:RemoveBar(L["shadowflame_Nextbar"]) -- remove timer bar
 		self:Bar(L["shadowflame_bar"], timer.shadowflameCast, icon.shadowflame, true, "red") -- show cast bar
-		self:DelayedBar(timer.shadowflameCast, L["shadowflame_Nextbar"], timer.shadowflame, icon.shadowflame) -- delayed timer bar
+		self:DelayedBar(timer.shadowflameCast, L["shadowflame_Nextbar"], timer.shadowflame-timer.shadowflameCast, icon.shadowflame) -- delayed timer bar
 	end
 end

@@ -5,7 +5,7 @@
 
 local module, L = BigWigs:ModuleDeclaration("Sulfuron Harbinger", "Molten Core")
 
-module.revision = 20006 -- To be overridden by the module!
+module.revision = 20007 -- To be overridden by the module!
 module.enabletrigger = module.translatedName -- string or table {boss, add1, add2}
 module.toggleoptions = {"heal", "adds", "knockback", "bosskill"}
 
@@ -18,10 +18,10 @@ module.defaultDB = {
 ---------------------------------
 
 local timer = {
-	knockback = 13.5,
-    firstKnockback = 5.8,
+	knockback = 12,
+    firstKnockback = 6,
     heal = 2,
-    flame_spear = 13,
+    flame_spear = 12,
 }
 local icon = {
 	knockback = "Spell_Fire_Fireball",
@@ -29,9 +29,9 @@ local icon = {
     flame_spear = "Spell_Fire_FlameBlades",
 }
 local syncName = {
-	knockback = "SulfuronKnockback",
-    heal = "SulfuronAddHeal",
-    flame_spear = "SulfuronSpear",
+	knockback = "SulfuronKnockback"..module.revision,
+    heal = "SulfuronAddHeal"..module.revision,
+    flame_spear = "SulfuronSpear"..module.revision,
     add_dead = "SulfuronAddDead",
 }
 

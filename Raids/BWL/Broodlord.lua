@@ -68,7 +68,7 @@ L:RegisterTranslations("deDE", function() return {
 ---------------------------------
 
 -- module variables
-module.revision = 20003 -- To be overridden by the module!
+module.revision = 20004 -- To be overridden by the module!
 module.enabletrigger = module.translatedName -- string or table {boss, add1, add2}
 --module.wipemobs = { L["add_name"] } -- adds which will be considered in CheckForEngage
 module.toggleoptions = {"ms", "bw", "bosskill"}
@@ -76,8 +76,9 @@ module.toggleoptions = {"ms", "bw", "bosskill"}
 
 -- locals
 local timer = {
-	blastWave = 12,
+	blastWave = 20,
 	mortalStrike = 5,
+	firstMortal = 25
 }
 local icon = {
 	blastWave = "Spell_Holy_Excorcism_02",
@@ -117,6 +118,9 @@ end
 function module:OnEngage()
 	if self.db.profile.bw then
 		self:Bar(L["bw_bar"], timer.blastWave, icon.blastWave, true, "Red")
+	end
+	if self.db.profile.ms then
+		self:Bar("First Mortal Strike", timer.firstMortal, icon.mortalStrike, true, "Black")
 	end
 end
 

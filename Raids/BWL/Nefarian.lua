@@ -56,6 +56,8 @@ L:RegisterTranslations("enUS", function() return {
 
 	classcall_bar = "Class call",
 	fear_bar = "Possible fear",
+	
+	curse_bar = "Veil Of Shadow",
 
 	cmd = "Nefarian",
 
@@ -74,6 +76,10 @@ L:RegisterTranslations("enUS", function() return {
 	otherwarn_cmd = "otherwarn",
 	otherwarn_name = "Other alerts",
 	otherwarn_desc = "Landing and Zerg warnings",
+	
+	curse_cmd = "curse",
+	curse_name = "Veil Of Shadow",
+	curse_desc = "Shows a timer bar for Veil Of Shadow.",
             
     mc_cmd = "mc",
 	mc_name = "Mind Control Alert",
@@ -187,24 +193,26 @@ L:RegisterTranslations("deDE", function() return {
 ---------------------------------
 
 -- module variables
-module.revision = 20004 -- To be overridden by the module!
+module.revision = 20005 -- To be overridden by the module!
 module.enabletrigger = {boss, victor} -- string or table {boss, add1, add2}
 --module.wipemobs = { L["add_name"] } -- adds which will be considered in CheckForEngage
-module.toggleoptions = {"mc", "shadowflame", "fear", "classcall", "otherwarn", "bosskill"}
+module.toggleoptions = {"curse", "mc", "shadowflame", "fear", "classcall", "otherwarn", "bosskill"}
 
 
 -- locals
 local timer = {
-	mobspawn = 6,
-	classcall = 30,
+	mobspawn = 10,
+	classcall = 25,
 	mc = 15,
-	shadowflame = 19,
+	shadowflame = 18,
 	shadowflameCast = 2,
-	fear = 27,
+	fear = 25,
 	fearCast = 1.5,
-	landing = 15,
-	firstClasscall = 24,
+	landing = 13,
+	firstClasscall = 25,
 	firstFear = 25,
+	firstCurse = 15,
+	curse = 10
 }
 local icon = {
 	mobspawn = "Spell_Holy_PrayerOfHealing",
@@ -213,12 +221,14 @@ local icon = {
 	fear = "Spell_Shadow_Possession",
 	shadowflame = "Spell_Fire_Incinerate",
 	landing = "INV_Misc_Head_Dragon_Black",
+	curse = "Spell_Shadow_GatherShadows"
 }
 local syncName = {
-	shadowflame = "NefarianShadowflame",
-	fear = "NefarianFear",
-	landing = "NefarianLandingNOW",
-	addDead = "NefCounter"
+	shadowflame = "NefarianShadowflame"..module.revision,
+	fear = "NefarianFear"..module.revision,
+	landing = "NefarianLandingNOW"..module.revision,
+	addDead = "NefCounter"..module.revision,
+	curse = "NefarianCurse"..module.revision
 }
 
 
@@ -236,10 +246,13 @@ module:RegisterYellEngage(L["engage_trigger"])
 -- called after module is enabled
 function module:OnEnable()	
 	self:RegisterEvent("CHAT_MSG_MONSTER_YELL")
-	self:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_CREATURE_DAMAGE")
     self:RegisterEvent("CHAT_MSG_SPELL_AURA_GONE_SELF")
     self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_HOSTILEPLAYER_DAMAGE")
 	self:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_CREATURE_DAMAGE")
+	
+	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_SELF_DAMAGE", "Event")
+	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_FRIENDLYPLAYER_DAMAGE", "Event")
+	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_PARTY_DAMAGE", "Event")
     
 	if not warnpairs then 
 		warnpairs = {
@@ -260,6 +273,7 @@ function module:OnEnable()
 	self:ThrottleSync(10, syncName.shadowflame)
 	self:ThrottleSync(15, syncName.fear)
 	self:ThrottleSync(0, syncName.addDead)
+	self:ThrottleSync(5, syncName.curse)
 end
 
 -- called after module is enabled and after each wipe
@@ -292,6 +306,14 @@ end
 ------------------------------
 --      Event Handlers      --
 ------------------------------
+function module:Event(msg)
+	local _,_,shadowcurseother,_ = string.find(msg, L["shadowcurseother_trigger"])
+	if string.find(msg, L["shadowcurseyou_trigger"]) then
+		self:Sync(syncName.curse)
+	elseif shadowcurseother then
+		self:Sync(syncName.curse)
+	end
+end
 
 function module:CHAT_MSG_COMBAT_HOSTILE_DEATH(msg)
     BigWigs:CheckForBossDeath(msg, self)
@@ -330,7 +352,7 @@ function module:CHAT_MSG_MONSTER_YELL(msg)
 				end
 			else
 				if self.db.profile.otherwarn and string.find(msg, L["landing_trigger"]) then 
-					self:Message(v[1], "Important", true, "Long")
+					--self:Message(v[1], "Important", true, "Long")  --- threw this when boss was 5%
 				elseif self.db.profile.otherwarn and string.find(msg, L["zerg_trigger"]) then 
 					self:Message(v[1], "Important", true, "Long")
 				end
@@ -381,19 +403,27 @@ function module:BigWigs_RecvSync(sync, rest, nick)
 		self:Landing()
 	elseif sync == syncName.addDead and rest then
 		self:NefCounter(rest)
-    end
+    elseif sync == syncName.curse then
+		self:Curse()
+	end
 end
 
 ------------------------------
 --      Sync Handlers	    --
 ------------------------------
+function module:Curse()
+	if self.db.profile.curse then
+		self:RemoveBar(L["curse_bar"]) -- remove timer bar
+		self:Bar(L["curse_bar"], timer.curse, icon.curse)
+	end
+end
 
 function module:Shadowflame()
 	if self.db.profile.shadowflame then
 		self:RemoveBar(L["shadowflame_bar"]) -- remove timer bar
 		self:Bar(L["shadowflame_bar"], timer.shadowflameCast, icon.shadowflame) -- show cast bar
 		self:Message(L["shadowflame_warning"], "Important", true, "Alarm")
-		self:DelayedBar(timer.shadowflameCast, L["shadowflame_bar"], timer.shadowflame, icon.shadowflame) -- delayed timer bar
+		self:DelayedBar(timer.shadowflameCast, L["shadowflame_bar"], timer.shadowflame-timer.shadowflameCast, icon.shadowflame) -- delayed timer bar
 	end
 end
 
@@ -419,6 +449,7 @@ function module:Landing()
 		-- landing in 15s
 		self:DelayedBar(timer.landing, L["classcall_bar"], timer.firstClasscall, icon.classcall)
         self:DelayedBar(timer.landing, L["fear_bar"], timer.firstFear, icon.fear)
+		self:DelayedBar(timer.landing, L["curse_bar"], timer.firstCurse, icon.curse)
         
         -- set ktm
         local function setKTM()

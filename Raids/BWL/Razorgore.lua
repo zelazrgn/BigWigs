@@ -46,6 +46,7 @@ L:RegisterTranslations("enUS", function() return {
 	volley_message = "Hide!",
 	conflagration_trigger = "afflicted by Conflagration",
 	conflagration_bar = "Conflagration",
+	warstomp_bar = "War Stomp",
 	orb_bar = "Orb control: %s",
 	destroyegg_yell1 = "You'll pay for forcing me to do this\.",
 	destroyegg_yell2 = "Fools! These eggs are more precious than you know!",
@@ -70,10 +71,6 @@ L:RegisterTranslations("enUS", function() return {
 	orb_cmd = "orb",
 	orb_name = "Orb Control",
 	orb_desc = "Shows you who is controlling the boss and starts a clickable bar for easy selection.",
-
-	ktm_cmd = "ktm",
-	ktm_name = "Phase 2 KTM reset",
-	ktm_desc = "Default is to not reset KTM (to avoid spam from too many assistants). Uncheck to reset KTM.\n\n(Requires assistant or higher)",
 
 	fireballvolley_cmd = "fireballvolley",
 	fireballvolley_name = "Fireball Volley",
@@ -127,6 +124,7 @@ L:RegisterTranslations("deDE", function() return {
 	volley_message = "Verstecken!",
 	conflagration_trigger = "von Gro\195\159brand betroffen",
 	conflagration_bar = "Gro\195\159brand",
+	warstomp_bar = "War Stomp",
 	orb_bar = "Orb Kontrolle: %s",
 	destroyegg_yell1 = "You'll pay for forcing me to do this\.",
 	destroyegg_yell2 = "Fools! These eggs are more precious than you know!",
@@ -152,10 +150,6 @@ L:RegisterTranslations("deDE", function() return {
 	orb_name = "Orb Kontrolle",
 	orb_desc = "Zeigt Ihnen, wer ist die Steuerung der Boss und beginnt einen anklickbaren Balken f\195\188r einfache Auswahl.",
 
-	ktm_cmd = "ktm",
-	ktm_name = "Phase 2 KTM zur\195\188ckgesetzt",
-	ktm_desc = "Standardm\195\164\195\159ig wird KTM nicht zur\195\188ckgesetzt (um Spam von zu vielen Helfer zu vermeiden). Deaktivieren Sie, um KTM zur\195\188ckzusetzen.\n\n(Ben\195\182tigt Schlachtzugleiter oder Assistent)",
-
 	fireballvolley_cmd = "fireballvolley",
 	fireballvolley_name = "Feuerballsalve",
 	fireballvolley_desc = "Gibt bekannt, wenn der Boss wirft Feuerballsalve.",
@@ -180,18 +174,21 @@ L:RegisterTranslations("deDE", function() return {
 
 -- module variables
 local controller = AceLibrary("Babble-Boss-2.2")["Grethok the Controller"]
-module.revision = 20003 -- To be overridden by the module!
+module.revision = 20004 -- To be overridden by the module!
 module.enabletrigger = {module.translatedName, controller} -- string or table {boss, add1, add2}
 --module.wipemobs = { L["add_name"] } -- adds which will be considered in CheckForEngage
-module.toggleoptions = {"phase", "mobs", "eggs", "polymorph", "mc", "icon", "orb", "fireballvolley", "conflagration", "ktm", "bosskill"}
+module.toggleoptions = {"phase", "mobs", "eggs", "polymorph", "mc", "icon", "orb", "fireballvolley", "conflagration", "bosskill"}
 
 
 -- locals
 local timer = {
-	mobspawn = 35,
+	mobspawn = 46,
 	mc = 15,
 	polymorph = 20,
-	conflagrate = 10,
+	conflagrate = 15,
+	firstConflagrate = 12,
+	firstVolley = 7,
+	firstWarStomp = 22,
 	volley = 2,
 	egg = 3,
 	orb = 90,
@@ -203,12 +200,12 @@ local icon = {
 	volley = "Spell_Fire_FlameBolt",
 }
 local syncName = {
-	egg = "RazorgoreEgg",
-	eggStart = "RazorgoreEggStart",
-	orb = "RazorgoreOrbStart_", -- 19 characters
-	orbOver = "RazorgoreOrbStop_",
-	volley = "RazorgoreVolleyCast",
-	phase2 = "RazorgorePhaseTwo",
+	egg = "RazorgoreEgg"..module.revision,
+	eggStart = "RazorgoreEggStart"..module.revision,
+	orb = "RazorgoreOrbStart_"..module.revision, -- 19 characters
+	orbOver = "RazorgoreOrbStop_"..module.revision,
+	volley = "RazorgoreVolleyCast"..module.revision,
+	phase2 = "RazorgorePhaseTwo"..module.revision,
 }
 
 
@@ -418,7 +415,7 @@ function module:BigWigs_RecvSync(sync, rest, nick)
 		end
 		self:Sync(syncName.egg .. " " .. tostring(self.eggs + 1))
 	elseif string.find(sync, syncName.orb) then
-		rest = string.sub(sync, 19)
+		rest = string.sub(sync, 24)
 		self:CancelScheduledEvent("destroyegg_check")
 		self:CancelScheduledEvent("orbcontrol_check")
 		if self.db.profile.orb then
@@ -459,6 +456,10 @@ function module:BigWigs_RecvSync(sync, rest, nick)
 		if self.db.profile.phase then
 			self:Message(L["phase2_message"], "Attention")
 		end
+		self:TriggerEvent("BigWigs_StopCounterBar", self, "Eggs destroyed")
+		self:Bar(L["conflagration_bar"], timer.firstConflagrate, "Spell_Fire_Incinerate", true, "red")
+		self:Bar(L["volley_bar"], timer.firstVolley, icon.volley, true, "blue")
+		self:Bar(L["warstomp_bar"], timer.firstWarStomp, "Ability_BullRush")
 		
 		self:KTM_SetTarget(self.translatedName)
 		self:KTM_Reset()

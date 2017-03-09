@@ -128,9 +128,9 @@ module.toggleoptions = {"gaze", "announce", "puticon", "whirlwind", "enraged", "
 local timer = {
 	firstCharge = 15,
 	firstWhirlwind = 20,
-	firstGaze = 29.5,
+	firstGaze = 33,
 	
-	gaze = 28.1,
+	gaze = 20,
 }
 local icon = {
 	charge = "Ability_Warrior_Charge",

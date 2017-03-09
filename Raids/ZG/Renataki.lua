@@ -62,8 +62,8 @@ module.toggleoptions = {"vanish", "enraged", "bosskill"}
 
 -- locals
 local timer = {
-	vanishSoon = 22,
-	unvanish = 30,
+	vanishSoon = 28,
+	unvanish = 20,
 }
 local icon = {
 	vanish = "Ability_Stealth",

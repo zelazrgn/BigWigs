@@ -102,9 +102,9 @@ module.toggleoptions = {"phase", "whirlwind", "vanish", "mark", "puticon", "boss
 
 -- locals
 local timer = {
-	firstVanish = 29,
-	vanish = 8,
-    unvanish = 8,
+	firstVanish = 35,
+	vanish = 75,
+    unvanish = 35,
 	whirlwind = 2,
 }
 local icon = {

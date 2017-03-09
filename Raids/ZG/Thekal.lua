@@ -208,7 +208,7 @@ module.toggleoptions = {"bloodlust", "silence", "cleave", "heal", "disarm", -1, 
 -- locals
 local timer = {
     forcePunch = 1,
-    knockback = 7,
+    knockback = 12,
     adds = 28,
     bloodlust = 33,
 }

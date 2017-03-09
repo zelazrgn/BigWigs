@@ -17,13 +17,17 @@ L:RegisterTranslations("enUS", function() return {
 	["range"] = true,
 	["Options for the combat log's range."] = true,
 
---~~ 	["party"] = true,
---~~ 	["Party"] = true,
---~~ 	["Party combat log range."] = true,
+ 	["party"] = true,
+ 	["Party"] = true,
+ 	["Party combat log range."] = true,
 
---~~ 	["friend"] = true,
---~~ 	["Friendlies"] = true,
---~~ 	["Friendly players combat log range."] = true,
+ 	["friend"] = true,
+ 	["Friendlies"] = true,
+ 	["Friendly players combat log range."] = true,
+	
+	["hostile"] = true,
+	["Hostiles"] = true,
+	["Hostile players combat log range."] = true,
 
 	["mob"] = true,
 	["Creatures"] = true,
@@ -42,11 +46,11 @@ L:RegisterTranslations("koKR", function() return {
 	["Range"] = "범위",
 	["Options for the combat log's range."] = "전투 로그의 범위에 대한 설정",
 
---~~ 	["Party"] = true,
---~~ 	["Party combat log range."] = true,
+ 	["Party"] = true,
+ 	["Party combat log range."] = true,
 
---~~ 	["Friendlies"] = true,
---~~ 	["Friendly players combat log range."] = true,
+ 	["Friendlies"] = true,
+ 	["Friendly players combat log range."] = true,
 
 	["Creatures"] = "NPC",
 	["Creature combat log range."] = "NPC 전투 로그 범위",
@@ -62,13 +66,13 @@ L:RegisterTranslations("zhCN", function() return {
 	["Range"] = "范围",
 	["Options for the combat log's range."] = "设置战斗记录范围。",
 
---~~ 	["party"] = "",
---~~ 	["Party"] = "",
---~~ 	["Party combat log range."] = "",
+-- 	["party"] = "",
+-- 	["Party"] = "",
+-- 	["Party combat log range."] = "",
 
---~~ 	["friend"] = "",
---~~ 	["Friendlies"] = "",
---~~ 	["Friendly players combat log range."] = "",
+-- 	["friend"] = "",
+-- 	["Friendlies"] = "",
+ --	["Friendly players combat log range."] = "",
 
 	["Creatures"] = "生物",
 	["Creature combat log range."] = "生物战斗记录范围。",
@@ -84,13 +88,13 @@ L:RegisterTranslations("zhTW", function() return {
 	["Range"] = "範圍",
 	["Options for the combat log's range."] = "戰鬥記錄範圍的選項。",
 
---~~ 	["party"] = "",
---~~ 	["Party"] = "",
---~~ 	["Party combat log range."] = "",
+-- 	["party"] = "",
+-- 	["Party"] = "",
+-- 	["Party combat log range."] = "",
 
---~~ 	["friend"] = "",
---~~ 	["Friendlies"] = "",
---~~ 	["Friendly players combat log range."] = "",
+-- 	["friend"] = "",
+-- 	["Friendlies"] = "",
+-- 	["Friendly players combat log range."] = "",
 
 	["Creatures"] = "生物",
 	["Creature combat log range."] = "生物戰鬥記錄範圍。",
@@ -107,13 +111,13 @@ L:RegisterTranslations("deDE", function() return {
 	-- ["range"] = true,
 	["Options for the combat log's range."] = "Optionen f\195\188r die Reichweite des Kampflogs.",
 
---~~ 	["party"] = true,
---~~ 	["Party"] = true,
---~~ 	["Party combat log range."] = true,
+ 	["party"] = true,
+ 	["Party"] = true,
+ 	["Party combat log range."] = true,
 
---~~ 	["friend"] = true,
---~~ 	["Friendlies"] = true,
---~~ 	["Friendly players combat log range."] = true,
+ 	["friend"] = true,
+ 	["Friendlies"] = true,
+ 	["Friendly players combat log range."] = true,
 
 	-- ["mob"] = true,
 	["Creatures"] = "Kreaturen",
@@ -132,11 +136,11 @@ L:RegisterTranslations("frFR", function() return {
 	["Range"] = "Portée",
 	["Options for the combat log's range."] = "Options concernant la portée du journal de combat.",
 
---~~  	["Party"] = "Groupe",
---~~  	["Party combat log range."] = "Portée du journal de combat du groupe.",
+  	["Party"] = "Groupe",
+  	["Party combat log range."] = "Portée du journal de combat du groupe.",
 
---~~  	["Friendlies"] = "Alliés",
---~~  	["Friendly players combat log range."] = "Portée du journal de combat des alliés.",
+  	["Friendlies"] = "Alliés",
+  	["Friendly players combat log range."] = "Portée du journal de combat des alliés.",
 
 	["Creatures"] = "Créatures",
 	["Creature combat log range."] = "Portée du journal de combat des créatures.",
@@ -159,39 +163,53 @@ BigWigsRange.consoleOptions = {
 	name = L["Range"],
 	desc = L["Options for the combat log's range."],
 	args   = {
---~~ 		[L["party"]] = {
---~~ 			type = "range",
---~~ 			name = L["Party"],
---~~ 			desc = L["Party combat log range."],
---~~ 			order = 1,
---~~ 			min = 5,
---~~ 			max = 200,
---~~ 			step = 5,
---~~ 			get = function() return GetCVar("CombatLogRangeParty") end,
---~~ 			set = function(v)
---~~ 				SetCVar("CombatLogRangeParty", v)
---~~ 				SetCVar("CombatLogRangePartyPet", v)
---~~ 			end,
---~~ 		},
---~~ 		[L["friend"]] = {
---~~ 			type = "range",
---~~ 			name = L["Friendlies"],
---~~ 			desc = L["Friendly players combat log range."],
---~~ 			order = 2,
---~~ 			min = 5,
---~~ 			max = 200,
---~~ 			step = 5,
---~~ 			get = function() return GetCVar("CombatLogRangeFriendlyPlayers") end,
---~~ 			set = function(v)
---~~ 				SetCVar("CombatLogRangeFriendlyPlayers", v)
---~~ 				SetCVar("CombatLogRangeFriendlyPlayersPets", v)
---~~ 			end,
---~~ 		},
+ 		[L["party"]] = {
+ 			type = "range",
+ 			name = L["Party"],
+ 			desc = L["Party combat log range."],
+ 			order = 1,
+ 			min = 5,
+ 			max = 200,
+ 			step = 5,
+ 			get = function() return GetCVar("CombatLogRangeParty") end,
+ 			set = function(v)
+ 				SetCVar("CombatLogRangeParty", v)
+ 				SetCVar("CombatLogRangePartyPet", v)
+ 			end,
+ 		},
+ 		[L["friend"]] = {
+ 			type = "range",
+ 			name = L["Friendlies"],
+ 			desc = L["Friendly players combat log range."],
+ 			order = 2,
+ 			min = 5,
+ 			max = 200,
+ 			step = 5,
+ 			get = function() return GetCVar("CombatLogRangeFriendlyPlayers") end,
+ 			set = function(v)
+ 				SetCVar("CombatLogRangeFriendlyPlayers", v)
+ 				SetCVar("CombatLogRangeFriendlyPlayersPets", v)
+ 			end,
+ 		},
+ 		[L["hostile"]] = {
+ 			type = "range",
+ 			name = L["Hostiles"],
+ 			desc = L["Hostile players combat log range."],
+ 			order = 3,
+ 			min = 5,
+ 			max = 200,
+ 			step = 5,
+ 			get = function() return GetCVar("CombatLogRangeHostilePlayers") end,
+ 			set = function(v)
+ 				SetCVar("CombatLogRangeHostilePlayers", v)
+ 				SetCVar("CombatLogRangeHostilePlayersPets", v)
+ 			end,
+ 		},
 		[L["mob"]] = {
 			type = "range",
 			name = L["Creatures"],
 			desc = L["Creature combat log range."],
-			order = 3,
+			order = 4,
 			min = 5,
 			max = 200,
 			step = 5,
@@ -202,7 +220,7 @@ BigWigsRange.consoleOptions = {
 			type = "range",
 			name = L["Deaths"],
 			desc = L["Death message range."],
-			order = 4,
+			order = 5,
 			min = 5,
 			max = 200,
 			step = 5,
@@ -215,12 +233,14 @@ BigWigsRange.consoleOptions = {
 			order = -1,
 			desc = L["Resets all ranges to defaults."],
 			func = function()
---~~ 				SetCVar("CombatLogRangeParty", 50)
---~~ 				SetCVar("CombatLogRangePartyPet", 50)
---~~ 				SetCVar("CombatLogRangeFriendlyPlayers", 50)
---~~ 				SetCVar("CombatLogRangeFriendlyPlayersPets", 50)
-				SetCVar("CombatLogRangeCreature", 200)
 				SetCVar("CombatDeathLogRange", 200)
+				SetCVar("CombatLogRangeParty", 200)
+				SetCVar("CombatLogRangePartyPet", 200)
+				SetCVar("CombatLogRangeFriendlyPlayers", 200)
+				SetCVar("CombatLogRangeFriendlyPlayersPets", 200)
+				SetCVar("CombatLogRangeHostilePlayers", 200)
+				SetCVar("CombatLogRangeHostilePlayersPets", 200)
+				SetCVar("CombatLogRangeCreature", 200)
 			end,
 		},
 	},

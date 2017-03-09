@@ -163,7 +163,7 @@ L:RegisterTranslations("deDE", function() return {
 ---------------------------------
 
 -- module variables
-module.revision = 20006 -- To be overridden by the module!
+module.revision = 20007 -- To be overridden by the module!
 module.enabletrigger = module.translatedName -- string or table {boss, add1, add2}
 --module.wipemobs = { L["add_name"] } -- adds which will be considered in CheckForEngage
 module.toggleoptions = {"enrage", "frenzy", "breath", "breathcd", "vulnerability", "bosskill"}
@@ -171,12 +171,12 @@ module.toggleoptions = {"enrage", "frenzy", "breath", "breathcd", "vulnerability
 
 -- locals
 local timer = {
-	firstBreath = 28.5,
-	secondBreath = 58.5,
-	breathInterval = 60,
+	firstBreath = 30,
+	secondBreath = 60,
+	breathInterval = 58,
 	breathCast = 2,
 	frenzy = 8,
-	nextFrenzy = 11,
+	nextFrenzy = 15,
 	vulnerability = 45,
 }
 local icon = {
@@ -191,9 +191,9 @@ local icon = {
 	vulnerability = "Spell_Shadow_BlackPlague",
 }
 local syncName = {
-	breath = "ChromaggusBreath",
-	frenzy = "ChromaggusFrenzyStart",
-	frenzyOver = "ChromaggusFrenzyStop",
+	breath = "ChromaggusBreath"..module.revision,
+	frenzy = "ChromaggusFrenzyStart"..module.revision,
+	frenzyOver = "ChromaggusFrenzyStop"..module.revision,
 }
 
 local lastFrenzy = 0

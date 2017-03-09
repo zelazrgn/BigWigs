@@ -1,11 +1,11 @@
 ## Interface: 11200
 
-## Title: Big Wigs |cff7fff7fClassic-WoW|r
-## Title-zhCN: |cff7fff7fClassic-WoW|r Big Wigs 
+## Title: Big Wigs |cff7fff7fElysium|r
+## Title-zhCN: |cff7fff7fElysium|r Big Wigs 
 ## Notes: Boss Mods with Timer bars.
 ## Notes-zhCN: 团队首领战信息提示插件，带有计时条。
 ## Notes-zhTW: 團隊首領戰訊息提示插件，帶有計時條。
-## Author: Tekkub Stoutwrithe, Ammo, Shyva, Rabbit, LYQ, Dorann & Others
+## Author: Tekkub Stoutwrithe, Ammo, Shyva, Rabbit, LYQ, Dorann, Hosq & Others
 ## Version: 2.0.0
 ## X-Website: https://github.com/xorann/BigWigs/releases
 ## X-Email: xorann@gmail.com
@@ -64,7 +64,7 @@ Plugins\BossBlock.lua
 Plugins\RaidIcon.lua
 Plugins\Range.lua
 Plugins\CommonAuras.lua
-Plugins\contribute.lua
+# Plugins\contribute.lua
 Plugins\Version.lua
 Plugins\Test.lua
 Plugins\CustomBar.lua
@@ -79,7 +79,7 @@ Plugins\BossRecords.lua
 Plugins\RaidOfficer.lua
 Plugins\AutoReply.lua
 Plugins\Proximity.lua
-Plugins\DousedRunes.lua
+#Plugins\DousedRunes.lua
 #Plugins\Enrage.lua
 Plugins\Ignite.lua
 
@@ -163,3 +163,5 @@ Raids\Naxxramas\Horsemen.lua
 Raids\Naxxramas\Sapphiron.lua
 Raids\Naxxramas\Kelthuzad.lua
 
+Raids\Trash\CoreHound.lua
+Raids\Trash\GurubashiBerserker.lua

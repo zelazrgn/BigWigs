@@ -28,7 +28,7 @@ L:RegisterTranslations("enUS", function() return {
 	wingbuffet_bar = "Next Wing Buffet",
 	wingbuffet1_bar = "Initial Wing Buffet",
 	shadowflame_bar = "Shadow Flame",
-	shadowflame_Nextbar = "Possible Shadow Flame",
+	shadowflame_Nextbar = "Next Shadow Flame",
 
 	cmd = "Flamegor",
 
@@ -62,7 +62,7 @@ L:RegisterTranslations("deDE", function() return {
 	wingbuffet_bar = "N\195\164chster Fl\195\188gelsto\195\159",
 	wingbuffet1_bar = "Erster Fl\195\188gelsto\195\159",
 	shadowflame_bar = "Schattenflamme",
-	shadowflame_Nextbar = "Mögliche Schattenflamme",
+	shadowflame_Nextbar = "Nächste Schattenflamme",
 
 	cmd = "Flamegor",
 
@@ -84,7 +84,7 @@ L:RegisterTranslations("deDE", function() return {
 ---------------------------------
 
 -- module variables
-module.revision = 20007 -- To be overridden by the module!
+module.revision = 20008 -- To be overridden by the module!
 module.enabletrigger = module.translatedName -- string or table {boss, add1, add2}
 --module.wipemobs = { L["add_name"] } -- adds which will be considered in CheckForEngage
 module.toggleoptions = {"wingbuffet", "shadowflame", "frenzy", "bosskill"}
@@ -92,10 +92,10 @@ module.toggleoptions = {"wingbuffet", "shadowflame", "frenzy", "bosskill"}
 
 -- locals
 local timer = {
-	firstWingbuffet = 33.5,
+	firstWingbuffet = 30,
 	wingbuffet = 30,
 	wingbuffetCast = 1,
-	firstShadowflame = 15,
+	firstShadowflame = 16,
 	shadowflame = 16,
 	shadowflameCast = 2,
 	firstFrenzy = 10,
@@ -108,10 +108,10 @@ local icon = {
 	tranquil = "Spell_Nature_Drowsy",
 }
 local syncName = {
-	wingbuffet = "FlamegorWingBuffetX",
-	shadowflame = "FlamegorShadowflameX",
-	frenzy = "FlamegorFrenzyStart",
-	frenzyOver = "FlamegorFrenzyEnd",
+	wingbuffet = "FlamegorWingBuffet"..module.revision,
+	shadowflame = "FlamegorShadowflame"..module.revision,
+	frenzy = "FlamegorFrenzyStart"..module.revision,
+	frenzyOver = "FlamegorFrenzyEnd"..module.revision,
 }
 
 local lastFrenzy = 0
@@ -195,7 +195,7 @@ function module:BigWigs_RecvSync(sync, rest, nick)
         self:Message(L["shadowflame_warning"], "Important", true, "Alarm")
 		self:RemoveBar(L["shadowflame_Nextbar"]) -- remove timer bar
 		self:Bar(L["shadowflame_bar"], timer.shadowflameCast, icon.shadowflame, true, "red") -- show cast bar
-        self:DelayedBar(timer.shadowflameCast, L["shadowflame_Nextbar"], timer.shadowflame, icon.shadowflame) -- delayed timer bar
+        self:DelayedBar(timer.shadowflameCast, L["shadowflame_Nextbar"], timer.shadowflame-timer.shadowflameCast, icon.shadowflame) -- delayed timer bar
 	elseif sync == syncName.frenzy and self.db.profile.frenzy then
 		self:Message(L["frenzy_message"], "Important", nil, true, "Alert")
 		self:Bar(L["frenzy_bar"], timer.frenzy, icon.frenzy, true, "red")

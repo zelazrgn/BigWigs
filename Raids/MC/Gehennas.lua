@@ -5,7 +5,7 @@
 
 local module, L = BigWigs:ModuleDeclaration("Gehennas", "Molten Core")
 
-module.revision = 20006 -- To be overridden by the module!
+module.revision = 20007 -- To be overridden by the module!
 module.enabletrigger = module.translatedName -- string or table {boss, add1, add2}
 module.toggleoptions = {"adds", "curse", "rain", "bosskill"}
 
@@ -18,19 +18,19 @@ module.defaultDB = {
 ---------------------------------
 
 local timer = {
-	firstCurse = 20,
-	firstRain = 4,
+	firstCurse = 8,
+	firstRain = 7,
 	rainTick = 2,
 	rainDuration = 6,
 	nextRain = 19, -- 12, 18
-	curse = 30,
+	curse = 22,
 }
 local icon = {
 	curse = "Spell_Shadow_BlackPlague",
 	rain = "Spell_Shadow_RainOfFire",
 }
 local syncName = {
-	curse = "GehennasCurse1",
+	curse = "GehennasCurse"..module.revision,
 	add = "GehennasAddDead"
 }
 
