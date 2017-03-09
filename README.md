@@ -1,23 +1,15 @@
 # BigWigs
-<i>Diese Beschreibung auf <a href="README.de.md">Deutsch</a> lesen.</i>
 
 BigWigs is a World of Warcraft AddOn to predict certain AI behaviour to improve the players performance.<br \>
-This Modification is build for Patch 1.12.1 and its content for use on the <b>Classic-WoW/Nefarian</b> private Server.
+This Modification is build for Patch 1.12.1 and its content for use on the <b>Elysium/Anathema</b> private Server.
 
 ## License
 <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">BigWigs Classic-WoW</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="https://github.com/xorann/BigWigs" property="cc:attributionName" rel="cc:attributionURL">Dorann</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
 
-The adjustments were originally made by <a href="https://github.com/MOUZU"><b>LYQ</b></a>.<br \>
-Adjustments for Classic-WoW made by <b>Dorann</b>.<br \>
-<b><a href="https://github.com/xorann/BigWigs">Please refer to this repository for more information.</a></b>
+The adjustments were originally made by <a href="https://github.com/MOUZU"><b>LYQ</b></a> and <a href="https://github.com/xorann/BigWigs"><b>Dorann</b></a><br \>
+Adjustments for Elysium made by <b>Hosq</b>.<br \>
 
-# Download
 PLEASE NOTE THIS IS STILL A WORK IN PROGRESS <br>
-<b><a href="https://github.com/xorann/BigWigs/releases">Download the latest Release here</a></b>
-
-## How to install
-<b>a)</b> If you choose to download the .zip file from the <a href="https://github.com/xorann/BigWigs/releases">latest Release</a> all you have to do is extract the archive in your /World of Warcraft/Interface/AddOns/ directory. (Recommended)<br />
-<b>b)</b> If you download the raw code from GitHub (Download ZIP) you'll have to unzip the downloaded archive and rename the folder from 'BigWigs-master' to 'BigWigs' and place it in your /World of Warcraft/Interface/AddOns/ directory. (Not recommended)
 
 ## Included AddOns/Plugins
 The following Plugins are used for the boss modules.
@@ -45,21 +37,7 @@ Several other BigWigs Plugins are included in this repository, so you only need 
     <li><b>BigWigs_RespawnTimers</b> <i>(NEEDS REWORK)</i> <br>  Trash respawn timers</li>
 	<li><b>BossRecords</b>  <i>made by LYQ</i> <br> This Plugin will keep record of your time used in bossfights and compare it to your fastest.</li>
     <li><b>RaidOfficer</b>  <i>made by LYQ</i> <br> This Plugin will enable for Raid Assistants dragging Players of one Raid-subgroup to another. This was on vanilla previously only enabled for RaidLeaders but the API allows Assistants to do so too.</li>
-    <li><b>DousedRunes</b>  <i>made by Dorann</i> <br> Shows you which runes in Molten Core have been doused and which still have to be doused to summon Majordomus. The Frame will be shown after a Rune has been doused and after a boss has been killed (beginning at Magmadar).</li>
 </ul>
-
-## Raid Adjustments
-If you want to browse through all the changes and their status regarding each encounter in the Raid specific README files. On there you can also see whether changes are untested, working perfectly or working as good as they can be.
-<ul>
-    <li><a href="Raids/MC/"><b>(MC)</b> Molten Core</a></li>
-    <li><a href="Raids/Onyxia/"><b>(ONY)</b> Onyxia</a></li>
-    <li><a href="Raids/BWL/"><b>(BWL)</b> Blackwing Lair</a></li>
-    <li><a href="Raids/ZG/"><b>(ZG)</b> Zul'Gurub</a></li>
-    <li><a href="Raids/AQ20/"><b>(AQ20)</b> Ruins of Ahn'Qiraj</a></li>
-    <li><a href="Raids/AQ40/"><b>(AQ40)</b> Temple of Ahn'Qiraj</a></li>
-    <li><a href="Raids/Naxxramas/"><b>(NAXX)</b> Naxxramas</a></li>
-</ul>
-
 
 ## Core/General Adjustments
 - <b>(100%)</b> Reworked the core module and most boss modules to improve the maintainability (see Provided API).
