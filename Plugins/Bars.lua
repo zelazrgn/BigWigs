@@ -390,7 +390,9 @@ end
 ------------------------------
 --      Event Handlers      --
 ------------------------------
-
+local barCache = {
+    -- [i] = {text, module}
+}
 function BigWigsBars:Disable(module)
 	if self.frames.emphasizeAnchor and self.frames.emphasizeAnchor.moduleBars[module] then
 		if self.frames.emphasizeAnchor.emphasizeTimers[module] then
@@ -411,6 +413,7 @@ function BigWigsBars:Disable(module)
 			if self.frames.emphasizeAnchor.movingBars[k] then
 				self.frames.emphasizeAnchor.movingBars[k] = del(self.frames.emphasizeAnchor.movingBars[k])
 			end
+			DEFAULT_CHAT_FRAME:AddMessage(k)
 			self:UnregisterCandyBar(k)
 			self.frames.emphasizeAnchor.moduleBars[module][k] = nil
 		end
@@ -418,6 +421,11 @@ function BigWigsBars:Disable(module)
 		if not next(self.frames.emphasizeAnchor.movingBars) then
 			self:CancelScheduledEvent("BigWigsBarMover")
 		end
+	else
+		for i=1, table.getn(barCache) do
+			BigWigsBars:BigWigs_StopBar(barCache[i][2], barCache[i][1])
+		end
+		barCache = {}
 	end
 end
 
@@ -532,7 +540,7 @@ function BigWigsBars:BigWigs_StartBar(module, text, time, icon, otherc, c1, c2, 
     self:SetCandyBarScale(id, scale)
     
 	self:StartCandyBar(id, true)
-	
+	tinsert(barCache,{text, module})
 	--[[
 	local function OnBarClick(id)
 		local exists, time, elapsed, running, paused = self:CandyBarStatus(id)
