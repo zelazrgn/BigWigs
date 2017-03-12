@@ -121,7 +121,7 @@ function module:CHAT_MSG_SPELL_PERIODIC_CREATURE_BUFFS(msg)
 end
 
 function module:UNIT_HEALTH(arg1)
-	if UnitName(arg1) == boss then
+	if UnitName(arg1) == module.translatedName then
 		local health = UnitHealth(arg1)
 		if health > 25 and health <= 30 and not enrageannounced then
 			self:Sync(syncName.enrageSoon)

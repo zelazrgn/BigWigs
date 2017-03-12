@@ -290,7 +290,7 @@ end
 ------------------------------
 
 function module:UNIT_HEALTH( msg )
-	if self.db.profile.enrage and UnitName(msg) == boss then
+	if self.db.profile.enrage and UnitName(msg) == module.translatedName then
 		local health = UnitHealth(msg)
 		if health > 15 and health <= 20 and not twenty then
 			self:Message(L["enrage_warning"], "Important", true, "Beware")
@@ -313,7 +313,7 @@ function module:CHAT_MSG_SPELL_CREATURE_VS_CREATURE_DAMAGE( msg )
 end
 
 function module:CHAT_MSG_MONSTER_EMOTE(msg)
-	if string.find(msg, L["frenzy_trigger"]) and arg2 == boss then
+	if string.find(msg, L["frenzy_trigger"]) and arg2 == module.translatedName then
 		self:Sync(syncName.frenzy)
 	elseif string.find(msg, L["vulnerability_trigger"]) then
 		if self.db.profile.vulnerability then

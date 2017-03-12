@@ -224,7 +224,7 @@ function module:CHAT_MSG_MONSTER_YELL(msg)
 end
 
 function module:UNIT_HEALTH(arg1) --temporary workaround until Phase2 yell gets fixed
-	if UnitName(arg1) == boss then
+	if UnitName(arg1) == module.translatedName then
 		local health = UnitHealth(arg1)
 		if health > 60 and health <= 65 and not transitioned then
 			self:Sync(syncName.phase2)
