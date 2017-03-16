@@ -236,6 +236,11 @@ function module:CHAT_MSG_COMBAT_HOSTILE_DEATH(msg)
 	
 	if string.find(msg, L["deadaddtrigger"]) then
 		self:Sync(syncName.add .. " " .. tostring(self.protector + 1))
+	else
+		local _,_,mindcontrolotherdeath,_ = string.find(msg, L["deathother_trigger"])
+		if mindcontrolotherdeath then
+			self:Sync(syncName.mcEnd .. mindcontrolotherdeath)
+		end
 	end
 end
 

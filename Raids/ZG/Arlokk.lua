@@ -234,19 +234,7 @@ end
 --      Utility	Functions   --
 ------------------------------
 
-function module:IsArlokkVisible()
-    if UnitName("playertarget") == self.submergeCheckName then
-		return true
-	else
-		for i = 1, GetNumRaidMembers(), 1 do
-			if UnitName("Raid"..i.."target") == self.submergeCheckName then
-				return true
-			end
-		end
-	end
-    
-    return false
-end
+
 function module:CheckUnvanish()
     self:DebugMessage("CheckUnvanish")
     if module:IsArlokkVisible() then
@@ -272,8 +260,6 @@ function module:IsArlokkVisible()
     
     return false
 end
-
-
 
 function module:Test()
     -- /run local m=BigWigs:GetModule("High Priestess Arlokk");m:Test()

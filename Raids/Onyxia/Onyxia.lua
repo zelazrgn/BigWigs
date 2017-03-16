@@ -15,8 +15,8 @@ module.toggleoptions = {"flamebreath", "deepbreath", "wingbuffet", "fireball", "
 ---------------------------------
 
 local timer = {
-	firstFear = 9.3,
-	fear = 29.5,
+	firstFear = 5,
+	fear = 15,
 	fearCast = 1.5,
 	wingbuffet = 1,	
 }

@@ -18,6 +18,8 @@ L:RegisterTranslations("enUS", function() return {
 	fear_trigger = "Nefarian begins to cast Bellowing Roar",
 	fear_over_trigger = "Bellowing Roar",
 	shadowflame_trigger = "Nefarian begins to cast Shadow Flame",
+	shadowcurseyou_trigger = "You are afflicted by Veil of Shadow\.",
+	shadowcurseother_trigger = "(.+) is afflicted by Veil of Shadow\.",
 
 	triggerfear = "by Panic.",
 	land = "Estimated Landing",
