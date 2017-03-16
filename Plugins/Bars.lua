@@ -413,7 +413,6 @@ function BigWigsBars:Disable(module)
 			if self.frames.emphasizeAnchor.movingBars[k] then
 				self.frames.emphasizeAnchor.movingBars[k] = del(self.frames.emphasizeAnchor.movingBars[k])
 			end
-			DEFAULT_CHAT_FRAME:AddMessage(k)
 			self:UnregisterCandyBar(k)
 			self.frames.emphasizeAnchor.moduleBars[module][k] = nil
 		end
