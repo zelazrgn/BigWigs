@@ -205,8 +205,9 @@ function module:CHAT_MSG_SPELL_CREATURE_VS_CREATURE_DAMAGE(msg)
 end
 
 function module:CHAT_MSG_COMBAT_FRIENDLY_DEATH(msg)
-	BigWigs:CheckForWipe(self)
-	
+	if self.engaged then
+		BigWigs:CheckForWipe(self)
+	end
 	local _, _, deathother = string.find(msg, L["deathother_trigger"])
 	if msg == L["deathyou_trigger"] then
 		if self.db.profile.adrenaline then

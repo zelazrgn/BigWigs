@@ -168,7 +168,7 @@ BigWigs.cmdtable = {type = "group", handler = BigWigs, args = {
 }}
 BigWigs:RegisterChatCommand({"/bw", "/BigWigs"}, BigWigs.cmdtable)
 BigWigs.debugFrame = ChatFrame1
-BigWigs.revision = 20013
+BigWigs.revision = 20014
 
 
 function BigWigs:DebugMessage(msg, module)
@@ -395,6 +395,7 @@ function BigWigs:CHAT_MSG_MONSTER_YELL(msg)
             -- enable and engage
             self:EnableModule(mod:ToString())
 			--self:TriggerEvent("BigWigs_SendSync", "BossEngaged "..self:ToString())
+			mod:DebugMessage(mod:ToString() .. " CHAT_MSG_MONSTER_YELL Engage")
             mod:SendEngageSync()
         end
     end
@@ -442,7 +443,7 @@ function BigWigs:CheckForEngage(module)
         if inCombat then
             module:DebugMessage("Scan returned true, engaging ["..module:ToString().."].")
             module:CancelScheduledEvent(module:ToString().."_CheckStart")
-
+			module:Engage()
             module:SendEngageSync()
         elseif not running then
             module:ScheduleRepeatingEvent(module:ToString().."_CheckStart", module.CheckForEngage, .5, module)

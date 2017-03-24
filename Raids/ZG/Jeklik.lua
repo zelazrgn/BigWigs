@@ -203,14 +203,14 @@ local icon = {
 	bats = "Spell_Fire_SelfDestruct",
 }
 local syncName = {
-	fear = "JeklikFearRep",
-	fear2 = "JeklikFearTwoRep",
-	mindflay = "JeklikMindFlay",
-	mindflayOver = "JeklikMindFlayEnd",
-	heal = "JeklikHeal",
-	healOver = "JeklikHealStop",
-	bombBats = "JeklikBombBats",
-	swarmBats = "JeklikSwarmBats",
+	fear = "JeklikFearRep"..module.revision,
+	fear2 = "JeklikFearTwoRep"..module.revision,
+	mindflay = "JeklikMindFlay"..module.revision,
+	mindflayOver = "JeklikMindFlayEnd"..module.revision,
+	heal = "JeklikHeal"..module.revision,
+	healOver = "JeklikHealStop"..module.revision,
+	bombBats = "JeklikBombBats"..module.revision,
+	swarmBats = "JeklikSwarmBats"..module.revision,
 }
 
 local berserkannounced = nil

@@ -112,9 +112,9 @@ local icon = {
 	whirlwind = "Ability_Whirlwind",
 }
 local syncName = {
-	trollPhase = "ArlokkPhaseTroll",
-	vanishPhase = "ArlokkPhaseVanish",
-	pantherPhase = "ArlokkPhasePanther",
+	trollPhase = "ArlokkPhaseTroll"..module.revision,
+	vanishPhase = "ArlokkPhaseVanish"..module.revision,
+	pantherPhase = "ArlokkPhasePanther"..module.revision,
 }
 
 

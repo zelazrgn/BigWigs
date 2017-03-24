@@ -225,17 +225,17 @@ local icon = {
     phase2 = "Spell_Holy_PrayerOfHealing"
 }
 local syncName = {
-	phase2 = "ThekalPhaseTwo1",
-	heal = "ThekalLorkhanHeal",
-	frenzy = "ThekalFrenzyStart",
-	frenzyOver = "ThekalFrenzyStop",
-	bloodlust = "ThekalBloodlustStart",
-	bloodlustOver = "ThekalBloodlustStop",
-	silence = "ThekalSilenceStart",
-	silenceOver = "ThekalSilenceStop",
-	mortalcleave = "ThekalMortalCleave",
-	disarm = "ThekalDisarm",
-	enrage = "ThekalEnrage",
+	phase2 = "ThekalPhaseTwo"..module.revision,
+	heal = "ThekalLorkhanHeal"..module.revision,
+	frenzy = "ThekalFrenzyStart"..module.revision,
+	frenzyOver = "ThekalFrenzyStop"..module.revision,
+	bloodlust = "ThekalBloodlustStart"..module.revision,
+	bloodlustOver = "ThekalBloodlustStop"..module.revision,
+	silence = "ThekalSilenceStart"..module.revision,
+	silenceOver = "ThekalSilenceStop"..module.revision,
+	mortalcleave = "ThekalMortalCleave"..module.revision,
+	disarm = "ThekalDisarm"..module.revision,
+	enrage = "ThekalEnrage"..module.revision,
 }
 
 local berserkannounced = nil
@@ -297,7 +297,7 @@ end
 
 -- override: only check for boss death in phase 2
 function module:CheckForBossDeath(msg)
-    --self:DebugMessage("thekal death; phase: " .. self.phase .. " msg: " .. msg)
+    self:DebugMessage("thekal death; phase: " .. self.phase .. " msg: " .. msg)
 	if self.phase == 2 then
 		BigWigs:CheckForBossDeath(msg, self)
     elseif msg == string.format(UNITDIESOTHER, self:ToString()) or msg == string.format(L["You have slain %s!"], self.translatedName) then

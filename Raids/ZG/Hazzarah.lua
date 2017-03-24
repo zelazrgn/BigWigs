@@ -46,7 +46,7 @@ module.toggleoptions = {"nightmaresummon", "bosskill"}
 local timer = {}
 local icon = {}
 local syncName = {
-	illusions = "HazzarahIllusions",
+	illusions = "HazzarahIllusions"..module.revision,
 }
 
 ------------------------------

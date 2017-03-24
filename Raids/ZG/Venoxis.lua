@@ -159,13 +159,13 @@ local icon = {
 	holyfire = "Spell_Holy_SearingLight",
 }
 local syncName = {
-	phase2 = "VenoxisPhaseTwo",
-	renew = "VenoxisRenewStart",
-	renewOver = "VenoxisRenewStop",
-	holyfire = "VenoxisHolyFireStart",
-	holyfireOver = "VenoxisHolyFireStop",
-	enrage = "VenoxisEnrage",
-	addDead = "VenoxisAddDead",
+	phase2 = "VenoxisPhaseTwo"..module.revision,
+	renew = "VenoxisRenewStart"..module.revision,
+	renewOver = "VenoxisRenewStop"..module.revision,
+	holyfire = "VenoxisHolyFireStart"..module.revision,
+	holyfireOver = "VenoxisHolyFireStop"..module.revision,
+	enrage = "VenoxisEnrage"..module.revision,
+	addDead = "VenoxisAddDead"..module.revision,
 }
 
 local berserkannounced = nil

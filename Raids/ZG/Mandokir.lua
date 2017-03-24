@@ -138,13 +138,13 @@ local icon = {
 	gaze = "Spell_Shadow_Charm",
 }
 local syncName = {
-	whirlwind = "MandokirWWStart",
-	whirlwindOver = "MandokirWWStop",
-	enrage = "MandokirEnrageStart",
-	enrageOver = "MandokirEnrageEnd",
-	gazeCast = "MandokirGazeCast",
-	gazeAfflicted = "MandokirGazeAfflict",
-	gazeOver = "MandokirGazeEnd",
+	whirlwind = "MandokirWWStart"..module.revision,
+	whirlwindOver = "MandokirWWStop"..module.revision,
+	enrage = "MandokirEnrageStart"..module.revision,
+	enrageOver = "MandokirEnrageEnd"..module.revision,
+	gazeCast = "MandokirGazeCast"..module.revision,
+	gazeAfflicted = "MandokirGazeAfflict"..module.revision,
+	gazeOver = "MandokirGazeEnd"..module.revision,
 }
 
 --[[

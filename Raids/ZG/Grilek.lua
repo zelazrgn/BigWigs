@@ -87,10 +87,10 @@ local icon = {
 	avatar = "Ability_Creature_Cursed_05",
 }
 local syncName = {
-	meleeIni = "GrilekMeleeIni",
-	melee = "GrilekMelee",
-	avatar = "GrilekAvatar",
-	avatarOver = "GrilekAvatarStop",
+	meleeIni = "GrilekMeleeIni"..module.revision,
+	melee = "GrilekMelee"..module.revision,
+	avatar = "GrilekAvatar"..module.revision,
+	avatarOver = "GrilekAvatarStop"..module.revision,
 }
 
 

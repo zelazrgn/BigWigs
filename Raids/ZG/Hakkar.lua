@@ -232,18 +232,18 @@ local icon = {
 	thekal = "Ability_Druid_ChallangingRoar",
 }
 local syncName = {
-	bloodSiphon = "HakkarBloodSiphon",
-	mindcontrol = "HakkarMC",
+	bloodSiphon = "HakkarBloodSiphon"..module.revision,
+	mindcontrol = "HakkarMC"..module.revision,
 	
 	-- aspects
-	jeklik = "HakkarAspectJeklik",
-	arlokk = "HakkarAspectArlokk",
-	arlokkAvoid = "HakkarAspectArlokkAvoid",
-	venoxis = "HakkarAspectVenoxis",
-	marli = "HakkarAspectMarli",
-	marliAvoid = "HakkarAspectMarliAvoid",
-	thekalStart = "HakkarAspectThekalStart",
-	thekalStop = "HakkarAspectThekalStop",
+	jeklik = "HakkarAspectJeklik"..module.revision,
+	arlokk = "HakkarAspectArlokk"..module.revision,
+	arlokkAvoid = "HakkarAspectArlokkAvoid"..module.revision,
+	venoxis = "HakkarAspectVenoxis"..module.revision,
+	marli = "HakkarAspectMarli"..module.revision,
+	marliAvoid = "HakkarAspectMarliAvoid"..module.revision,
+	thekalStart = "HakkarAspectThekalStart"..module.revision,
+	thekalStop = "HakkarAspectThekalStop"..module.revision,
 }
 
 local berserkannounced = nil

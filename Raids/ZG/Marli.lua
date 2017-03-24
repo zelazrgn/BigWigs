@@ -116,12 +116,12 @@ local icon = {
 	teleport = "Spell_Arcane_Blink",
 }
 local syncName = {
-	drain = "MarliDrainStart",
-	drainOver = "MarliDrainEnd",
-	trollPhase = "MarliTrollPhase",
-	spiderPhase = "MarliSpiderPhase",
-	spiders = "MarliSpiders",
-	volley = "MarliVolley",
+	drain = "MarliDrainStart"..module.revision,
+	drainOver = "MarliDrainEnd"..module.revision,
+	trollPhase = "MarliTrollPhase"..module.revision,
+	spiderPhase = "MarliSpiderPhase"..module.revision,
+	spiders = "MarliSpiders"..module.revision,
+	volley = "MarliVolley"..module.revision,
 }
 
 

@@ -133,9 +133,9 @@ local icon = {
 	brainwash = "Spell_Totem_WardOfDraining",
 }
 local syncName = {
-	curse = "JindoCurse",
-	hex = "JindoHexStart",
-	hexOver = "JindoHexStop",
+	curse = "JindoCurse"..module.revision,
+	hex = "JindoHexStart"..module.revision,
+	hexOver = "JindoHexStop"..module.revision,
 }
 
 local berserkannounced = nil

@@ -65,7 +65,7 @@ local icon = {
 	chainlightning = "Spell_Nature_ChainLightning",
 }
 local syncName = {
-	chainlightning = "WushoolayChainLightning",
+	chainlightning = "WushoolayChainLightning"..module.revision,
 }
 
 ------------------------------
