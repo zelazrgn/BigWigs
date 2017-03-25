@@ -57,7 +57,7 @@ L:RegisterTranslations("deDE", function() return {
 ---------------------------------
 
 -- module variables
-module.revision = 20005 -- To be overridden by the module!
+module.revision = 20006 -- To be overridden by the module!
 module.enabletrigger = module.translatedName -- string or table {boss, add1, add2}
 module.toggleoptions = {"vanish", "enraged", "bosskill"}
 
@@ -104,9 +104,8 @@ end
 function module:OnEngage()
 	if self.db.profile.vanish then
 		self:Bar(L["vanish_bar"], timer.vanishSoon, icon.vanish)
-		self:DelayedMessage(timer.vanishSoon, L["vanishsoon_message"], "Urgent")
 	end
-	self:ScheduleRepeatingEvent("renatakivanishcheck", self.VanishCheck, 1, self)
+	self:ScheduleRepeatingEvent("renatakivanishcheck", self.CheckVanish, 1, self)
 end
 
 -- called after boss is disengaged (wipe(retreat) or victory)
@@ -147,72 +146,67 @@ function module:BigWigs_RecvSync(sync, rest, nick)
 	elseif sync == syncName.enrage and self.db.profile.enraged then
 		self:Message(L["enrage_message"], "Attention")
 	elseif sync == syncName.unvanish then
-		vanished = nil
-		if self.db.profile.vanish then
-			self:RemoveBar(L["vanish_bar"])
-			self:Bar(L["vanish_bar"], timer.vanishSoon, icon.vanish)
-			self:Message(L["unvanish_message"], "Attention")
-			self:DelayedMessage(timer.vanishSoon, L["vanishsoon_message"], "Urgent")
-		end
-		self:ScheduleRepeatingEvent("renatakivanishcheck", self.VanishCheck, 1, self)
+		self:VisiblePhase()
 	elseif sync == syncName.vanish then
-		self:IsVanished()
+		self:VanishPhase()
 	end
 end
 
+------------------------------
+--      Sync Handlers	    --
+------------------------------
+
+function module:VisiblePhase()
+    vanished = false
+	self:CancelScheduledEvent("renatakiunvanishcheck")
+	if self.db.profile.vanish then
+		self:RemoveBar(L["return_bar"])
+		self:Bar(L["vanish_bar"], timer.vanishSoon, icon.vanish)
+		self:Message(L["unvanish_message"], "Attention")
+	end
+    
+	if not vanished then
+		self:ScheduleRepeatingEvent("renatakivanishcheck", self.CheckVanish, 0.5, self)
+	end
+end
+
+function module:VanishPhase()
+	vanished = true
+	self:CancelScheduledEvent("renatakivanishcheck")
+	if self.db.profile.vanish then
+		self:RemoveBar(L["vanish_bar"])
+        self:Message(L["vanish_message"], "Attention")
+		self:Bar(L["return_bar"], timer.unvanish, icon.vanish)
+	end
+	self:ScheduleRepeatingEvent("renatakiunvanishcheck", self.CheckUnvanish, 0.5, self)
+end
 
 ------------------------------
 --      Utility	Functions   --
 ------------------------------
 
-function module:IsVanished()
-	vanished = true
-	self:CancelScheduledEvent("renatakivanishcheck")
-	if self.db.profile.vanish then
-		self:Message(L["vanish_message"], "Attention")
-		self:Bar(L["return_bar"], timer.unvanish, icon.vanish)
-	end
-	self:ScheduleRepeatingEvent("renatakiunvanishcheck", self.UnvanishCheck, 1, self)
-	self:ScheduleEvent(syncName.unvanish, self.Unvanish, timer.unvanish, self)
+function module:CheckUnvanish()
+    self:DebugMessage("CheckUnvanish")
+    if module:IsRenatakiVisible() then
+        self:Sync(syncName.unvanish)
+    end
 end
-
-function module:UnvanishCheck()
-	if UnitExists("target") and UnitName("target") == "Renataki" and UnitExists("targettarget") then
-		if vanished then
-			vanished = nil
-			self:Unvanish()
-			return
-		end
-	end
-	local num = GetNumRaidMembers()
-	for i = 1, num do
-		local raidUnit = string.format("raid%starget", i)
-		if UnitExists(raidUnit) and UnitName(raidUnit) == "Renataki" and UnitExists(raidUnit.."target") then
-			if vanished then
-				vanished = nil
-				self:Unvanish()
-				return
+function module:CheckVanish()
+    self:DebugMessage("CheckVanish")
+    if not module:IsRenatakiVisible() then
+        self:Sync(syncName.vanish)
+    end	
+end
+function module:IsRenatakiVisible()
+	if UnitName("playertarget") == self.translatedName then
+		return true
+	else
+		for i = 1, GetNumRaidMembers(), 1 do
+			if UnitName("Raid"..i.."target") == self.translatedName then
+				return true
 			end
 		end
 	end
-end
-
-function module:VanishCheck()
-	local num = GetNumRaidMembers()
-	for i = 1, num do
-		local raidUnit = string.format("raid%starget", i)
-		if UnitExists(raidUnit) and UnitClassification(raidUnit) == "worldboss" and UnitName(raidUnit) == self.translatedName then
-			if vanished then
-				vanished = nil
-			end
-			return
-		end
-	end
-	self:Sync(syncName.vanish)
-end
-
-function module:Unvanish()
-	self:CancelScheduledEvent("renatakiunvanishcheck")
-	self:CancelScheduledEvent("renatakiunvanish")
-	self:Sync(syncName.unvanish)
+    
+    return false
 end
