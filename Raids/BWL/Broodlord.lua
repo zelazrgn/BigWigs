@@ -23,6 +23,7 @@ L:RegisterTranslations("enUS", function() return {
 	bw_warn = "Blast Wave soon!",
 	ms_bar = "Mortal Strike: %s",
 	bw_bar = "Blast Wave",
+	knock_bar = "Knock Away",
 
 	you = "You",
 	are = "are",
@@ -30,6 +31,10 @@ L:RegisterTranslations("enUS", function() return {
 	ms_cmd = "ms",
 	ms_name = "Mortal Strike",
 	ms_desc = "Warn when someone gets Mortal Strike and starts a clickable bar for easy selection.",
+	
+	knock_cmd = "knock",
+	knock_name = "Knock Away",
+	knock_desc = "Shows a bar with the possible Knock Away cooldown.",
 
 	bw_cmd = "bw",
 	bw_name = "Blast Wave",
@@ -71,18 +76,20 @@ L:RegisterTranslations("deDE", function() return {
 module.revision = 20004 -- To be overridden by the module!
 module.enabletrigger = module.translatedName -- string or table {boss, add1, add2}
 --module.wipemobs = { L["add_name"] } -- adds which will be considered in CheckForEngage
-module.toggleoptions = {"ms", "bw", "bosskill"}
+module.toggleoptions = {"ms", "bw", "knock", "bosskill"}
 
 
 -- locals
 local timer = {
 	blastWave = 20,
 	mortalStrike = 5,
-	firstMortal = 25
+	firstMortal = 25,
+	knockAway = 20
 }
 local icon = {
 	blastWave = "Spell_Holy_Excorcism_02",
 	mortalStrike = "Ability_Warrior_SavageBlow",
+	knockAway = "INV_Gauntlets_05"
 }
 local syncName = {}
 
@@ -121,6 +128,9 @@ function module:OnEngage()
 	end
 	if self.db.profile.ms then
 		self:Bar("First Mortal Strike", timer.firstMortal, icon.mortalStrike, true, "Black")
+	end
+	if self.db.profile.knock then
+		self:Bar(L["knock_bar"], timer.knockAway, icon.knockAway)
 	end
 end
 
