@@ -50,6 +50,7 @@ L:RegisterTranslations("enUS", function() return {
 	fire_test = "^([%w]+)([%s's]*) ([%w%s:]+) crits ([%w%s:]+) for ([%d]+) ([%w]+) damage.",
 	ignite_stack_test = "^([%w%s:]+) is afflicted by Ignite.[%s%(]*([%d]*)",
 	ignite_damage_test = "^([%w%s:]+) suffers ([%d]+) Fire damage from ([%w]+)([%s's]*) Ignite.",
+	ignite_resist = "([%d]+) resisted",
 	ignite_fade_test = "^Ignite fades from ([%w%s:]+).",
 	
 	["Fireball"] = true,
@@ -337,6 +338,11 @@ function BigWigsIgnite:PlayerDamageEvents(msg)
         if owner == L["your"] then
             owner = UnitName("player")
         end
+		local _, _, resist = string.find(msg, L["ignite_resist"])
+		if resist then
+			--self:DebugMessage("Ignite damage: "..damage.." resist: "..resist.." total:"..damage+resist)
+			damage = damage+resist
+		end
         --self:DebugMessage("Ignite damage: owner: " .. owner .. " damage: " .. damage .. " victim: " .. victim)
         self.owner = owner
         self.damage = damage
