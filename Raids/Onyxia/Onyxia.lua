@@ -28,12 +28,12 @@ local icon = {
 	fireball = "Spell_Fire_FlameBolt",
 }
 local syncName = {
-	deepbreath = "OnyDeepBreath",
-	phase2 = "OnyPhaseTwo",
-	phase3 = "OnyPhaseThree",
-	flamebreath = "OnyFlameBreath",
-	fireball = "OnyFireball",
-	fear = "OnyBellowingRoar",
+	deepbreath = "OnyDeepBreath"..module.revision,
+	phase2 = "OnyPhaseTwo"..module.revision,
+	phase3 = "OnyPhaseThree"..module.revision,
+	flamebreath = "OnyFlameBreath"..module.revision,
+	fireball = "OnyFireball"..module.revision,
+	fear = "OnyBellowingRoar"..module.revision,
 }
 
 local transitioned = false

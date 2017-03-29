@@ -1,9 +1,38 @@
-------------------------------
---      Are you local?      --
-------------------------------
+----------------------------------
+--      Module Declaration      --
+----------------------------------
 
-local boss = AceLibrary("Babble-Boss-2.2")["Taerar"]
-local L = AceLibrary("AceLocale-2.2"):new("BigWigs"..boss)
+local module, L = BigWigs:ModuleDeclaration("Taerar", "Ashenvale")
+
+module.revision = 20008 -- To be overridden by the module!
+module.enabletrigger = module.translatedName -- string or table {boss, add1, add2}
+module.toggleoptions = {"noxious", "fear", "bosskill"}
+module.zonename = {
+	AceLibrary("AceLocale-2.2"):new("BigWigs")["Outdoor Raid Bosses Zone"],
+	AceLibrary("Babble-Zone-2.2")["Ashenvale"],
+	AceLibrary("Babble-Zone-2.2")["Duskwood"],
+	AceLibrary("Babble-Zone-2.2")["The Hinterlands"],
+	AceLibrary("Babble-Zone-2.2")["Feralas"]
+}
+
+---------------------------------
+--      Module specific Locals --
+---------------------------------
+
+local timer = {
+	firstBreath = 7,
+	breath = 9,
+	banish = 120,
+	firstFear = 27,
+	fear = 25,
+}
+local icon = {
+	breath = "Interface\\Icons\\Spell_Shadow_LifeDrain02",
+	fear = "Interface\\Icons\\Spell_Shadow_PsychicScream",
+	banish = "Interface\\Icons\\Spell_Nature_Sleep",
+}
+local syncName = {
+}
 
 ----------------------------
 --      Localization      --
@@ -20,46 +49,28 @@ L:RegisterTranslations("enUS", function() return {
 	fear_name = "Fear",
 	fear_desc = "Warn for Bellowing Roar",
 
-	trigger1 = "Taerar begins to cast Bellowing Roar.",
-	trigger2 = "afflicted by Noxious Breath",
-	trigger3 = "Peace is but a fleeting dream! Let the NIGHTMARE reign!",
-	trigger4 = "Children of Madness - I release you upon this world!",
+	fear_trigger = "Taerar begins to cast Bellowing Roar.",
+	breath_trigger = "afflicted by Noxious Breath",
+	engage_trigger = "Peace is but a fleeting dream! Let the NIGHTMARE reign!",
+	shades_trigger = "Children of Madness - I release you upon this world!",
 
-	warn1 = "Taerar banished! Kill Shades!",
-	warn2 = "Fear in 1.5sec!",
-	warn3 = "3 seconds until Noxious Breath!",
-	warn4 = "Noxious Breath! 10-14 seconds till next!",
-	warn5 = "Taerar engaged! Noxious Breath in 8 seconds!",
-	fearwarn = "AoE Fear soon!",
+	shades_warn = "Taerar banished! Kill Shades!",
+	fearCast_warn = "Fear in 1.5sec!",
+	breathSoon_warn = "Noxious Breath soon!",
+	breath_warn = "Noxious Breath!",
+	fear_warn = "AoE Fear soon!",
 
-	bar1text = "Noxious Breath",
-	bar2text = "Banish",
-	fearbar = "AoE Fear",
+	breath_bar = "Noxious Breath",
+	banish_bar = "Banish",
+	fear_bar = "AoE Fear",
 
 } end )
-
-----------------------------------
---      Module Declaration      --
-----------------------------------
-
-BigWigsTaerar = BigWigs:NewModule(boss)
-BigWigsTaerar.zonename = {
-	AceLibrary("AceLocale-2.2"):new("BigWigs")["Outdoor Raid Bosses Zone"],
-	AceLibrary("Babble-Zone-2.2")["Ashenvale"],
-	AceLibrary("Babble-Zone-2.2")["Duskwood"],
-	AceLibrary("Babble-Zone-2.2")["The Hinterlands"],
-	AceLibrary("Babble-Zone-2.2")["Feralas"]
-}
-BigWigsTaerar.enabletrigger = boss
-BigWigsTaerar.toggleoptions = {"noxious", "fear", "bosskill"}
-BigWigsTaerar.revision = tonumber(string.sub("$Revision: 16941 $", 12, -3))
 
 ------------------------------
 --      Initialization      --
 ------------------------------
 
-function BigWigsTaerar:OnEnable()
-	self:RegisterEvent("BigWigs_Message")
+function module:OnEnable()
 	self:RegisterEvent("CHAT_MSG_MONSTER_YELL")
 	self:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_CREATURE_DAMAGE")
 	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_FRIENDLYPLAYER_DAMAGE", "Event")
@@ -67,41 +78,60 @@ function BigWigsTaerar:OnEnable()
 	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_SELF_DAMAGE", "Event")
 end
 
-function BigWigsTaerar:Event( msg )
-	if (not self.prior and string.find(msg, L["trigger2"])) then
-		self.prior = true
+-- called after module is enabled and after each wipe
+function module:OnSetup()
+end
+
+-- called after boss is engaged
+function module:OnEngage()
+end
+
+-- called after boss is disengaged (wipe(retreat) or victory)
+function module:OnDisengage()
+end
+
+------------------------------
+--      Event Handlers      --
+------------------------------
+
+function module:Event( msg )
+	if string.find(msg, L["breath_trigger"]) then
 		if self.db.profile.noxious then 
-			self:TriggerEvent("BigWigs_Message", L["warn4"], "Important")
-			self:ScheduleEvent("BigWigs_Message", 7, L["warn3"], "Important", true, "Alert")
-			self:TriggerEvent("BigWigs_StartBar", self, L["bar1text"], 10, "Interface\\Icons\\Spell_Shadow_LifeDrain02")
+			self:Message(L["breath_warn"], "Important")
+			self:CancelDelayedMessage(L["breathSoon_warn"])
+			self:DelayedMessage(timer.breath-3, L["breathSoon_warn"], "Important", true, "Alert")
+			self:RemoveBar(L["breath_bar"])
+			self:Bar(L["breath_bar"], timer.breath, icon.breath)
 		end
 	end
 end
 
-function BigWigsTaerar:CHAT_MSG_MONSTER_YELL(msg)
-	if (msg == L["trigger3"]) then
+function module:CHAT_MSG_MONSTER_YELL(msg)
+	if (msg == L["engage_trigger"]) then
 		if self.db.profile.noxious then
-			self:TriggerEvent("BigWigs_Message", L["warn5"], "Important")
-			self:ScheduleEvent("BigWigs_Message", 5, L["warn3"], "Important", true, "Alert")
-			self:TriggerEvent("BigWigs_StartBar", self, L["bar1text"], 8, "Interface\\Icons\\Spell_Shadow_LifeDrain02")
+			self:CancelDelayedMessage(L["breathSoon_warn"])
+			self:DelayedMessage(timer.firstBreath-3, L["breathSoon_warn"], "Important", true, "Alert")
+			self:RemoveBar(L["breath_bar"])
+			self:Bar(L["breath_bar"], timer.firstBreath, icon.breath)
 		elseif self.db.profile.fear then
-			self:ScheduleEvent("BigWigs_Message", 25, L["fearwarn"], "Important", true, "Alert")
-			self:TriggerEvent("BigWigs_StartBar", self, L["fearbar"], 30, "Interface\\Icons\\Spell_Shadow_PsychicScream")
-end
-	elseif (string.find(msg, L["trigger4"])) then
-		 self:TriggerEvent("BigWigs_Message", L["warn1"], "Important")
-		 self:TriggerEvent("BigWigs_StartBar", self, L["bar2text"], 60, "Interface\\Icons\\Spell_Nature_Sleep")
+			self:CancelDelayedMessage(L["fear_warn"])
+			self:DelayedMessage(timer.firstFear-3, L["fear_warn"], "Important", true, "Alert")
+			self:RemoveBar(L["fear_bar"])
+			self:Bar(L["fear_bar"], timer.firstFear, icon.fear)
+	end
+	elseif (string.find(msg, L["shades_trigger"])) then
+		 self:Message(L["shades_warn"], "Important")
+		 self:RemoveBar(L["banish_bar"])
+		 self:Bar(L["banish_bar"], timer.banish, icon.banish)
 	end
 end
 
-function BigWigsTaerar:BigWigs_Message(text)
-	if text == L["warn3"] then self.prior = nil end
-end
-
-function BigWigsTaerar:CHAT_MSG_SPELL_CREATURE_VS_CREATURE_DAMAGE(msg)
-	if msg == L["trigger1"] and self.db.profile.fear then
-		self:TriggerEvent("BigWigs_Message", L["warn2"], "Important", "Alert")
-		 self:ScheduleEvent("BigWigs_Message", 16, L["fearwarn"], "Important", true, "Alert")
-		 self:TriggerEvent("BigWigs_StartBar", self, L["fearbar"], 18, "Interface\\Icons\\Spell_Shadow_PsychicScream")
+function module:CHAT_MSG_SPELL_CREATURE_VS_CREATURE_DAMAGE(msg)
+	if msg == L["fear_trigger"] and self.db.profile.fear then
+		self:Message(L["fearCast_warn"], "Important", "Alert")
+		self:CancelDelayedMessage(L["fear_warn"])
+		self:DelayedMessage(timer.fear-3, L["fear_warn"], "Important", true, "Alert")
+		self:RemoveBar(L["fear_bar"])
+		self:Bar(L["fear_bar"], timer.fear, icon.fear)
 	end
 end

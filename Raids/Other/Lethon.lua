@@ -1,9 +1,33 @@
-------------------------------
---      Are you local?      --
-------------------------------
+----------------------------------
+--      Module Declaration      --
+----------------------------------
 
-local boss = AceLibrary("Babble-Boss-2.2")["Lethon"]
-local L = AceLibrary("AceLocale-2.2"):new("BigWigs"..boss)
+local module, L = BigWigs:ModuleDeclaration("Lethon", "Ashenvale")
+
+module.revision = 20008 -- To be overridden by the module!
+module.enabletrigger = module.translatedName -- string or table {boss, add1, add2}
+module.toggleoptions = {"noxious", "bosskill"}
+module.zonename = {
+	AceLibrary("AceLocale-2.2"):new("BigWigs")["Outdoor Raid Bosses Zone"],
+	AceLibrary("Babble-Zone-2.2")["Ashenvale"],
+	AceLibrary("Babble-Zone-2.2")["Duskwood"],
+	AceLibrary("Babble-Zone-2.2")["The Hinterlands"],
+	AceLibrary("Babble-Zone-2.2")["Feralas"]
+}
+
+---------------------------------
+--      Module specific Locals --
+---------------------------------
+
+local timer = {
+	firstBreath = 7,
+	breath = 9,
+}
+local icon = {
+	breath = "Interface\\Icons\\Spell_Shadow_LifeDrain02",
+}
+local syncName = {
+}
 
 ----------------------------
 --      Localization      --
@@ -16,71 +40,66 @@ L:RegisterTranslations("enUS", function() return {
 	noxious_name = "Noxious breath alert",
 	noxious_desc = "Warn for noxious breath",
 
-	trigger1 = "I can sense the SHADOW on your hearts. There can be no rest for the wicked!",
-	trigger2 = "afflicted by Noxious Breath",
-	trigger3 = "Your wicked souls shall feed my power!",
+	engage_trigger = "I can sense the SHADOW on your hearts. There can be no rest for the wicked!",
+	breath_trigger = "afflicted by Noxious Breath",
+	shadow_trigger = "Your wicked souls shall feed my power!",
 	
-	warn1 = "Shadows spawned!",
-	warn2 = "Lethon egaged! 8 seconds till Noxious Breath!",
-	warn3 = "3 seconds until Noxious Breath!",
-	warn4 = "Noxious Breath! 10-14 seconds till next!",
+	shadow_warn = "Shadows spawned!",
+	breathSoon_warn = "Noxious Breath soon!",
+	breath_warn = "Noxious Breath!",
 
 	
-	bar1text = "Noxious Breath",
+	breath_bar = "Noxious Breath",
 	
 } end )
-
-----------------------------------
---      Module Declaration      --
-----------------------------------
-
-BigWigsLethon = BigWigs:NewModule(boss)
-BigWigsLethon.zonename = {
-	AceLibrary("AceLocale-2.2"):new("BigWigs")["Outdoor Raid Bosses Zone"],
-	AceLibrary("Babble-Zone-2.2")["Ashenvale"],
-	AceLibrary("Babble-Zone-2.2")["Duskwood"],
-	AceLibrary("Babble-Zone-2.2")["The Hinterlands"],
-	AceLibrary("Babble-Zone-2.2")["Feralas"]
-}
-BigWigsLethon.enabletrigger = boss
-BigWigsLethon.toggleoptions = {"noxious", "bosskill"}
-BigWigsLethon.revision = tonumber(string.sub("$Revision: 16941 $", 12, -3))
 
 ------------------------------
 --      Initialization      --
 ------------------------------
 
-function BigWigsLethon:OnEnable()
-	self:RegisterEvent("BigWigs_Message")
+function module:OnEnable()
 	self:RegisterEvent("CHAT_MSG_MONSTER_YELL")
 	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_FRIENDLYPLAYER_DAMAGE", "Event")
 	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_PARTY_DAMAGE", "Event")
 	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_SELF_DAMAGE", "Event")
 end
 
-	function BigWigsLethon:Event( msg )
-		if (not self.prior and string.find(msg, L["trigger2"])) then
-			self.prior = true
-			if self.db.profile.noxious then 
-				self:TriggerEvent("BigWigs_Message", L["warn4"], "Important")
-				self:ScheduleEvent("BigWigs_Message", 7, L["warn3"], "Important", true, "Alert")
-				self:TriggerEvent("BigWigs_StartBar", self, L["bar1text"], 10, "Interface\\Icons\\Spell_Shadow_LifeDrain02")	
-			end
-		end
+-- called after module is enabled and after each wipe
+function module:OnSetup()
+end
+
+-- called after boss is engaged
+function module:OnEngage()
+end
+
+-- called after boss is disengaged (wipe(retreat) or victory)
+function module:OnDisengage()
+end
+
+------------------------------
+--      Event Handlers      --
+------------------------------
+
+function module:Event( msg )
+	if string.find(msg, L["breath_trigger"]) then
+		if self.db.profile.noxious then 
+			self:CancelDelayedMessage(L["breathSoon_warn"])
+			self:DelayedMessage(timer.firstBreath-3, L["breathSoon_warn"], "Important", true, "Alert")
+			self:RemoveBar(L["breath_bar"])
+			self:Bar(L["breath_bar"], timer.firstBreath, icon.breath)
+		end			
 	end
-
-function BigWigsLethon:BigWigs_Message(text)
-	if text == L["warn3"] then self.prior = nil end
 end
 
-function BigWigsLethon:CHAT_MSG_MONSTER_YELL(msg)
-	if (msg == L["trigger1"]) then
+function module:CHAT_MSG_MONSTER_YELL(msg)
+	if (msg == L["engage_trigger"]) then
 		if self.db.profile.noxious then
-		 self:TriggerEvent("BigWigs_Message", L["warn2"], "Important")
-		 self:ScheduleEvent("BigWigs_Message", 5, L["warn3"], "Important", true, "Alert")
-		 self:TriggerEvent("BigWigs_StartBar", self, L["bar1text"], 8, "Interface\\Icons\\Spell_Shadow_LifeDrain02")
-end
-	elseif (string.find(msg, L["trigger3"])) then
-		 self:TriggerEvent("BigWigs_Message", L["warn1"], "Important")
+			self:CancelDelayedMessage(L["breathSoon_warn"])
+			self:DelayedMessage(timer.firstBreath-3, L["breathSoon_warn"], "Important", true, "Alert")
+			self:RemoveBar(L["breath_bar"])
+			self:Bar(L["breath_bar"], timer.firstBreath, icon.breath)
+	end
+	elseif (string.find(msg, L["shadow_trigger"])) then
+		 self:Message(L["shadow_warn"], "Important")
 	end
 end

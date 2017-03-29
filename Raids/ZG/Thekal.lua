@@ -199,7 +199,7 @@ L:RegisterTranslations("deDE", function() return {
 ---------------------------------
 
 -- module variables
-module.revision = 20006 -- To be overridden by the module!
+module.revision = 20007 -- To be overridden by the module!
 module.enabletrigger = module.translatedName -- string or table {boss, add1, add2}
 module.wipemobs = {L["roguename"], L["shamanname"]} -- adds which will be considered in CheckForEngage
 module.toggleoptions = {"bloodlust", "silence", "cleave", "heal", "disarm", -1, "phase", "punch", "tigers", "frenzy", "enraged", "bosskill"}
@@ -208,9 +208,10 @@ module.toggleoptions = {"bloodlust", "silence", "cleave", "heal", "disarm", -1, 
 -- locals
 local timer = {
     forcePunch = 1,
-    knockback = 12,
-    adds = 28,
-    bloodlust = 33,
+	phase2 = 9,
+    knockback = 4,
+    adds = 25,
+    bloodlust = 30,
 }
 local icon = {
     forcePunch = "INV_Gauntlets_31",
@@ -226,6 +227,7 @@ local icon = {
 }
 local syncName = {
 	phase2 = "ThekalPhaseTwo"..module.revision,
+	phasechange = "ThekalPhaseChange"..module.revision,
 	heal = "ThekalLorkhanHeal"..module.revision,
 	frenzy = "ThekalFrenzyStart"..module.revision,
 	frenzyOver = "ThekalFrenzyStop"..module.revision,
@@ -245,11 +247,9 @@ local berserkannounced = nil
 --      Initialization      --
 ------------------------------
 
-module:RegisterYellEngage(L["phase2_trigger"]) -- the phase2 trigger is used on engage on nefarian ...
-
 -- called after module is enabled
 function module:OnEnable()	
-    --self:RegisterEvent("CHAT_MSG_MONSTER_YELL") -- phase transition
+    self:RegisterEvent("CHAT_MSG_MONSTER_YELL") -- phase transition
 	self:RegisterEvent("CHAT_MSG_MONSTER_EMOTE")
 	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_CREATURE_BUFFS")
 	self:RegisterEvent("CHAT_MSG_SPELL_AURA_GONE_SELF", "Fades")
@@ -262,6 +262,7 @@ function module:OnEnable()
 	self:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_CREATURE_DAMAGE")
 
 	self:ThrottleSync(10, syncName.phase2)
+	self:ThrottleSync(10, syncName.phasechange)
 	self:ThrottleSync(5, syncName.heal)
 	self:ThrottleSync(3, syncName.frenzy)
 	self:ThrottleSync(3, syncName.frenzyOver)
@@ -284,6 +285,7 @@ end
 -- called after boss is engaged
 function module:OnEngage()
 	self.phase = 1
+	self:ScheduleRepeatingEvent("checkphasechange", self.PhaseChangeCheck, 0.5, self)
 end
 
 -- called after boss is disengaged (wipe(retreat) or victory)
@@ -300,15 +302,35 @@ function module:CheckForBossDeath(msg)
     self:DebugMessage("thekal death; phase: " .. self.phase .. " msg: " .. msg)
 	if self.phase == 2 then
 		BigWigs:CheckForBossDeath(msg, self)
-    elseif msg == string.format(UNITDIESOTHER, self:ToString()) or msg == string.format(L["You have slain %s!"], self.translatedName) then
-        self:Sync(syncName.phase2)
     end
 end
---[[function module:CHAT_MSG_MONSTER_YELL(msg) -- yell missing on nefarian, workaround in CheckForBossDeath function; 2016-09-25: phase2 trigger used as engage trigger ..
+function module:CHAT_MSG_MONSTER_YELL(msg)
     if string.find(msg, L["phase2_trigger"]) then
         self:Sync(syncName.phase2)
     end
-end]]
+end
+
+function module:PhaseChangeCheck()
+	if self.phase == 1 then
+		self:DebugMessage("PhaseChangeCheck")
+		thekaldead = true
+		zathdead = true
+		lorkhandead = true
+		for i = 1, GetNumRaidMembers(), 1 do
+			if UnitName("Raid"..i.."target") == self.translatedName and not UnitIsDead("Raid"..i.."target") then
+				thekaldead = nil
+			elseif UnitName("Raid"..i.."target") == L["roguename"] and not UnitIsDead("Raid"..i.."target") then
+				zathdead = nil
+			elseif UnitName("Raid"..i.."target") == L["shamanname"] and not UnitIsDead("Raid"..i.."target") then
+				lorkhandead = nil
+			end
+		end
+
+		if lorkhandead and zathdead and thekaldead then
+			self:Sync(syncName.phasechange)
+		end
+	end
+end
 
 function module:Event(msg)
 	local _,_,silenceother_triggerword = string.find(msg, L["silenceother_trigger"])
@@ -330,24 +352,6 @@ function module:Event(msg)
 		self:Sync(syncName.mortalcleave .. " "..UnitName("player"))
 	elseif mortalcleaveother_triggerword then
 		self:Sync(syncName.mortalcleave .. " "..mortalcleaveother_triggerword)
-	elseif msg == L["thekalrescast_trigger"] then
-		if zathdead and lorkhandead then
-			self:ScheduleEvent(self.CheckZealots, 2, self)
-		else
-			thekaldead = nil
-		end
-	elseif msg == L["zathrescast_trigger"] then
-		zathdead = nil
-	elseif msg == L["lorkhanrescast_trigger"] then
-		lorkhandead = nil
-	end
-end
-
-function module:CheckZealots()
-	if zathdead and lorkhandead then
-		self:Sync(syncName.phase2)
-	else
-		thekaldead = nil
 	end
 end
 
@@ -411,17 +415,12 @@ end
 function module:BigWigs_RecvSync(sync, rest, nick)
 	if sync == syncName.phase2 and self.phase < 2 then
         self.phase = 2
-		if self.db.profile.heal then
-			self:RemoveBar(L["heal_bar"])
-		end
-		if self.db.profile.bloodlust then
-			self:Bar(L["Next Bloodlust"], timer.bloodlust, icon.bloodlust)
-		end
-		if self.db.profile.phase then
-			self:Message(L["phasetwo_message"], "Attention")
-		end
-        self:Bar(L["New Adds"], timer.adds, icon.adds)
-        self:Bar(L["Knockback"], timer.knockback, icon.knockback)
+		self:RemoveBar(L["phasetwo_bar"])
+		self:TigerPhase()
+	elseif sync == syncName.phasechange then
+		self:CancelScheduledEvent("checkphasechange")
+		self.phase = 1.5
+		self:Bar(L["phasetwo_bar"], timer.phase2, icon.phase2)
 	elseif sync == syncName.heal and self.db.profile.heal then
 		self:Message(L["heal_message"], "Attention", "Alarm")
 		self:Bar(L["heal_bar"], 4, icon.heal, true, "Black")
@@ -449,54 +448,16 @@ function module:BigWigs_RecvSync(sync, rest, nick)
 	end
 end
 
-function module:PhaseSwitch()
-    BigWigs:ToggleModuleActive(module, true)
-    module:Bar(L["phasetwo_bar"], 9, icon.phase2)
-    module.phase = 1.5;
-end
-
-function module:Test()
-    -- /run local m=BigWigs:GetModule("High Priest Thekal");m:Test()
-    
-	local function testPhaseSwitch()
-		module:CheckForBossDeath(string.format(UNITDIESOTHER, self:ToString()))
-    end
-    local function testRemoveBars()
-        BigWigs:Print("testRemoveBars")
-        self:Sync(syncName.frenzyOver) 
-        self:Sync(syncName.bloodlustOver) 
-        self:Sync(syncName.silenceOver) 
-    end
-	local function testDisable()
-		--module:SendWipeSync()
-		BigWigs:TriggerEvent("BigWigs_RebootModule", self:ToString())
-		BigWigs:DisableModule(module:ToString())
+function module:TigerPhase()
+	if self.db.profile.heal then
+		self:RemoveBar(L["heal_bar"])
 	end
-    
-    -- short test
-    local testTimer = 0
-    self:SendEngageSync()
-
-    -- phase switch
-    testTimer = testTimer + 3
-    self:ScheduleEvent(self:ToString() .. "testPhaseSwitch", testPhaseSwitch, testTimer, self)
-    BigWigs:Print("testPhaseSwitch in " .. testTimer)
-    
-    self:Sync(syncName.heal)
-    self:Sync(syncName.frenzy)
-    self:Sync(syncName.bloodlust)
-    self:Sync(syncName.silence)
-    self:Sync(syncName.mortalcleave)
-    self:Sync(syncName.disarm)
-    self:Sync(syncName.enrage)
-    self:PhaseSwitch()
-
-    testTimer = testTimer + 3
-    self:ScheduleEvent(self:ToString() .. "testRemoveBars", testRemoveBars, testTimer, self)
-    BigWigs:Print("testRemoveBars in " .. testTimer)
-    
-    -- disable
-    testTimer = testTimer + 10
-    self:ScheduleEvent(self:ToString() .. "testDisable", testDisable, testTimer, self)
-    BigWigs:Print("testDisable in " .. testTimer)
+	if self.db.profile.bloodlust then
+		self:Bar(L["Next Bloodlust"], timer.bloodlust, icon.bloodlust)
+	end
+	if self.db.profile.phase then
+		self:Message(L["phasetwo_message"], "Attention")
+	end
+    self:Bar(L["New Adds"], timer.adds, icon.adds)
+    self:Bar(L["Knockback"], timer.knockback, icon.knockback)
 end

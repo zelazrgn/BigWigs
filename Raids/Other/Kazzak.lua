@@ -1,11 +1,40 @@
-------------------------------
---      Are you local?      --
-------------------------------
+----------------------------------
+--      Module Declaration      --
+----------------------------------
 
-local boss = AceLibrary("Babble-Boss-2.2")["Lord Kazzak"]
-local L = AceLibrary("AceLocale-2.2"):new("BigWigs"..boss)
+local module, L = BigWigs:ModuleDeclaration("Lord Kazzak", "Blasted Lands")
 
-local supremetime = 180
+module.revision = 20008 -- To be overridden by the module!
+module.enabletrigger = module.translatedName -- string or table {boss, add1, add2}
+module.toggleoptions = {"markofkazzak", "puticon", "twistedreflection", "voidbolt", "corruptsoul", "supreme", "bosskill"}
+
+---------------------------------
+--      Module specific Locals --
+---------------------------------
+
+local timer = {
+	supreme = 180,
+	mark = 10,
+	twisted = 45,
+	voidbolt = 1.5,
+}
+local icon = {
+	mark = "Interface\\Icons\\Spell_Shadow_Antishadow",
+	twisted = "Interface\\Icons\\Spell_Arcane_PortalDarnassus",
+	voidbolt = "Interface\\Icons\\Spell_Shadow_Haunting",
+}
+local syncName = {
+	markStart = "LordKazzakMarkStart"..module.revision,
+	markStop = "LordKazzakMarkStop"..module.revision,
+	reflectionStart = "LordKazzakReflectionStart"..module.revision,
+	reflectionStop = "LordKazzakReflectionStop"..module.revision,
+	voidboltStart = "LordKazzakVoidBoltStart"..module.revision,
+	voidboltStop = "LordKazzakVoidBoltStop"..module.revision,
+	supreme = "LordKazzakSupreme"..module.revision,
+	dead = "LordKazzakDead"..module.revision,
+	randomDeath = "LordKazzakRandomDeath"..module.revision,
+	
+}
 
 ----------------------------
 --      Localization      --
@@ -77,24 +106,11 @@ L:RegisterTranslations("enUS", function() return {
 	puticon_name = "Raid Icon on Mark target",
 	puticon_desc = "Put a Raid Icon on the person who got Mark of Kazzak.\n\n(Requires assistant or higher)",
 } end )
-
-----------------------------------
---      Module Declaration      --
-----------------------------------
-
-BigWigsKazzak = BigWigs:NewModule(boss)
-BigWigsKazzak.zonename = { AceLibrary("AceLocale-2.2"):new("BigWigs")["Outdoor Raid Bosses Zone"], AceLibrary("Babble-Zone-2.2")["Blasted Lands"] }
-BigWigsKazzak.enabletrigger = boss
-BigWigsKazzak.toggleoptions = {"markofkazzak", "puticon", "twistedreflection", "voidbolt", "corruptsoul", "supreme", "bosskill"}
-BigWigsKazzak.revision = tonumber(string.sub("$Revision: 11202 $", 12, -3))
-
 ------------------------------
 --      Initialization      --
 ------------------------------
 
-function BigWigsKazzak:OnEnable()
-	voidbolttime = 0
-	castingvoidbolt = false
+function module:OnEnable()
 	self:RegisterEvent("CHAT_MSG_MONSTER_YELL")
 	self:RegisterEvent("CHAT_MSG_SPELL_AURA_GONE_SELF", "EventSelf")
 	self:RegisterEvent("CHAT_MSG_SPELL_AURA_GONE_PARTY", "Event")
@@ -111,182 +127,198 @@ function BigWigsKazzak:OnEnable()
 	self:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_CREATURE_DAMAGE")
 	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_CREATURE_BUFFS")
 	
-	self:RegisterEvent("BigWigs_RecvSync")
-	self:TriggerEvent("BigWigs_ThrottleSync", "LordKazzakMarkStart", 2)
-	self:TriggerEvent("BigWigs_ThrottleSync", "LordKazzakMarkStop", 2)
-	self:TriggerEvent("BigWigs_ThrottleSync", "LordKazzakReflectionStart", 2)
-	self:TriggerEvent("BigWigs_ThrottleSync", "LordKazzakReflectionStop", 2)
-	self:TriggerEvent("BigWigs_ThrottleSync", "LordKazzakVoidBoltStart", 5)
-	self:TriggerEvent("BigWigs_ThrottleSync", "LordKazzakVoidBoltStop", 5)
-	self:TriggerEvent("BigWigs_ThrottleSync", "LordKazzakSupreme", 5)
-	self:TriggerEvent("BigWigs_ThrottleSync", "LordKazzakDead", 5)
+	self:ThrottleSync(2, syncName.markStart)
+	self:ThrottleSync(2, syncName.markStop)
+	self:ThrottleSync(2, syncName.reflectionStart)
+	self:ThrottleSync(2, syncName.reflectionStop)
+	self:ThrottleSync(5, syncName.voidboltStart)
+	self:ThrottleSync(5, syncName.voidboltStop)
+	self:ThrottleSync(5, syncName.supreme)
+	self:ThrottleSync(5, syncName.dead)
+
 end
 
-function BigWigsKazzak:OnSetup()
+-- called after module is enabled and after each wipe
+function module:OnSetup()
 	self:RegisterEvent("CHAT_MSG_COMBAT_FRIENDLY_DEATH")
+	voidbolttime = 0
+	castingvoidbolt = false
 end
-function BigWigsKazzak:CHAT_MSG_COMBAT_FRIENDLY_DEATH(msg)
+
+-- called after boss is engaged
+function module:OnEngage()
+end
+
+-- called after boss is disengaged (wipe(retreat) or victory)
+function module:OnDisengage()
+end
+
+------------------------------
+--      Event Handlers      --
+------------------------------
+
+function module:CHAT_MSG_COMBAT_FRIENDLY_DEATH(msg)
 	BigWigs:CheckForWipe(self)
 	local _,_,otherdeath,_ = string.find(msg, L["deathother_trigger"])
 	if msg == L["deathyou_trigger"] then
 		if self.db.profile.markofkazzak then
-			self:TriggerEvent("BigWigs_StopBar", self, string.format(L["mark_bar"], UnitName("player")))
+			self:RemoveBar(string.format(L["mark_bar"], UnitName("player")))
 		end
 		if self.db.profile.puticon then
-			self:TriggerEvent("BigWigs_RemoveRaidIcon")
+			self:RemoveIcon()
 		end
 		if self.db.profile.twistedreflection then
-			self:TriggerEvent("BigWigs_StopBar", self, string.format(L["twisted_bar"], UnitName("player")))
+			self:RemoveBar(string.format(L["twisted_bar"], UnitName("player")))
 		end
 		if self.db.profile.corruptsoul then
-			self:TriggerEvent("BigWigs_Message", L["corruptsoul_warn_you"], "Attention")
+			self:Message(L["corruptsoul_warn_you"], "Attention")
 		end
-		self:TriggerEvent("BigWigs_SendSync", "LordKazzakRandomDeath "..UnitName("player"))
+		self:Sync(syncName.randomDeath.." "..UnitName("player"))
 	elseif otherdeath then
-		self:TriggerEvent("BigWigs_SendSync", "LordKazzakRandomDeath "..otherdeath)
+		self:Sync(syncName.randomDeath.." "..otherdeath)
 	end
 end
 
-function BigWigsKazzak:CHAT_MSG_MONSTER_YELL(msg)
+function module:CHAT_MSG_MONSTER_YELL(msg)
 	if self.db.profile.supreme and msg == L["starttrigger1"] or msg == L["starttrigger2"] then 
-		self:TriggerEvent("BigWigs_Message", L["engagewarn"], "Important")
-		self:ScheduleEvent("BigWigs_Message", supremetime - 60, L["supreme1min"], "Attention")
-		self:ScheduleEvent("BigWigs_Message", supremetime - 30, L["supreme30sec"], "Urgent")
-		self:ScheduleEvent("BigWigs_Message", supremetime - 10, L["supreme10sec"], "Important")
-		self:TriggerEvent("BigWigs_StartBar", self, L["enrage_bar"], supremetime, "Interface\\Icons\\Spell_Shadow_ShadowWordPain", "Green", "Yellow", "Orange", "Red")
+		self:Message(L["engagewarn"], "Important")
+		self:DelayedMessage(timer.supreme - 60, L["supreme1min"], "Attention")
+		self:DelayedMessage(timer.supreme - 30, L["supreme30sec"], "Urgent")
+		self:DelayedMessage(timer.supreme - 10, L["supreme10sec"], "Important")
+		self:Bar(L["enrage_bar"], timer.supreme, "Interface\\Icons\\Spell_Shadow_ShadowWordPain", "Green", "Yellow", "Orange", "Red")
 	elseif self.db.profile.supreme and msg == L["enrageyell_trigger"] then
-		self:TriggerEvent("BigWigs_Message", L["enrage_warm"], "Important")
+		self:Message(L["enrage_warm"], "Important")
 	elseif msg == L["bosskill_trigger"] then
-		self:TriggerEvent("BigWigs_SendSync", "LordKazzakDead")
+		self:Sync(syncName.dead)
 	end
 end
 
-function BigWigsKazzak:CHAT_MSG_SPELL_CREATURE_VS_CREATURE_DAMAGE(msg)
+function module:CHAT_MSG_SPELL_CREATURE_VS_CREATURE_DAMAGE(msg)
 	if msg == L["voidbolt_trigger"] then 
-		self:TriggerEvent("BigWigs_SendSync", "LordKazzakVoidBoltStart")
+		self:Sync(syncName.voidboltStart)
 	end
 end
 
-function BigWigsKazzak:CHAT_MSG_SPELL_PERIODIC_CREATURE_BUFFS(msg)
+function module:CHAT_MSG_SPELL_PERIODIC_CREATURE_BUFFS(msg)
 	if msg == L["enrage_trigger"] then 
-		self:TriggerEvent("BigWigs_SendSync", "LordKazzakSupreme")
+		self:Sync(syncName.supreme)
 	end
 end
 
-function BigWigsKazzak:EventSelf(msg)
+function module:EventSelf(msg)
 	if string.find(msg, L["markofkazzakyou_trigger"]) then
 		if self.db.profile.markofkazzak then
-			self:TriggerEvent("BigWigs_Message", L["mark_message_you"], "Attention", true, "Alert")
-			self:TriggerEvent("BigWigs_StartBar", self, string.format(L["mark_bar"], UnitName("player")), 10, "Interface\\Icons\\Spell_Shadow_Antishadow", true, "white")
+			self:Message(L["mark_message_you"], "Attention", true, "Alert")
+			self:Bar(string.format(L["mark_bar"], UnitName("player")), timer.mark, icon.mark, true, "white")
 		end
 		if self.db.profile.puticon then
-			self:TriggerEvent("BigWigs_SetRaidIcon", UnitName("player"))
+			self:Icon(UnitName("player"))
 		end
-		self:TriggerEvent("BigWigs_SendSync", "LordKazzakMarkStart "..UnitName("player"))
+		self:Sync(syncName.markStart.." "..UnitName("player"))
 	elseif string.find(msg, L["markofkazzakyouend_trigger"]) then
 		if self.db.profile.markofkazzak then
-			self:TriggerEvent("BigWigs_StopBar", self, string.format(L["mark_bar"], UnitName("player")))
+			self:RemoveBar(string.format(L["mark_bar"], UnitName("player")))
 		end
 		if self.db.profile.puticon then
-			self:TriggerEvent("BigWigs_RemoveRaidIcon")
+			self:RemoveIcon()
 		end
-		self:TriggerEvent("BigWigs_SendSync", "LordKazzakMarkStop "..UnitName("player"))
+		self:Sync(syncName.markStop.." "..UnitName("player"))
 	elseif string.find(msg, L["twistedreflectionyou_trigger"]) then
 		if self.db.profile.twistedreflection then
-			self:TriggerEvent("BigWigs_Message", L["reflection_message_you"], "Attention")
-			self:TriggerEvent("BigWigs_StartBar", self, string.format(L["twisted_bar"], UnitName("player")), 45, "Interface\\Icons\\Spell_Arcane_PortalDarnassus", true, "magenta")
+			self:Message(L["reflection_message_you"], "Attention")
+			self:Bar(string.format(L["twisted_bar"], UnitName("player")), timer.twisted, icon.twisted, true, "magenta")
 		end
-		self:TriggerEvent("BigWigs_SendSync", "LordKazzakReflectionStart "..UnitName("player"))
+		self:Sync(syncName.reflectionStart.." "..UnitName("player"))
 	elseif string.find(msg, L["twistedreflectionyouend_trigger"]) then
 		if self.db.profile.twistedreflection then
-			self:TriggerEvent("BigWigs_StopBar", self, string.format(L["twisted_bar"], UnitName("player")))
+			self:RemoveBar(string.format(L["twisted_bar"], UnitName("player")))
 		end
-		self:TriggerEvent("BigWigs_SendSync", "LordKazzakReflectionStop "..UnitName("player"))
+		self:Sync(syncName.reflectionStop.." "..UnitName("player"))
 	end
 end
 
-function BigWigsKazzak:Event(msg)
+function module:Event(msg)
 	local _,_,markofkazzakother,_ = string.find(msg, L["markofkazzakother_trigger"])
 	local _,_,markofkazzakotherend,_ = string.find(msg, L["markofkazzakotherend_trigger"])
 	local _,_,twistedreflectionother,_ = string.find(msg, L["twistedreflectionother_trigger"])
 	local _,_,twistedreflectionotherend,_ = string.find(msg, L["twistedreflectionotherend_trigger"])
 	if markofkazzakother then
-		self:TriggerEvent("BigWigs_SendSync", "LordKazzakMarkStart "..markofkazzakother)
+		self:Sync(syncName.markStart.." "..markofkazzakother)
 	elseif markofkazzakotherend then
-		self:TriggerEvent("BigWigs_SendSync", "LordKazzakMarkStop "..markofkazzakotherend)
+		self:Sync(syncName.markStop.." "..markofkazzakotherend)
 	elseif twistedreflectionother then
-		self:TriggerEvent("BigWigs_SendSync", "LordKazzakReflectionStart "..twistedreflectionother)
+		self:Sync(syncName.reflectionStart.." "..twistedreflectionother)
 	elseif twistedreflectionotherend then
-		self:TriggerEvent("BigWigs_SendSync", "LordKazzakReflectionStop "..twistedreflectionotherend)
+		self:Sync(syncName.reflectionStop.." "..twistedreflectionotherend)
 	end
 end
 
-function BigWigsKazzak:BigWigs_RecvSync(sync, rest, nick)
-	if sync == "LordKazzakMarkStart" and rest ~= UnitName("player") then
+function module:BigWigs_RecvSync(sync, rest, nick)
+	if sync == syncName.markStart and rest ~= UnitName("player") then
 		if self.db.profile.markofkazzak then
-		    self:TriggerEvent("BigWigs_Message", string.format(L["makrofkazzak_warn"], rest), "Important")
+		    self:Message(string.format(L["makrofkazzak_warn"], rest), "Important")
 			self:TriggerEvent("BigWigs_SendTell", rest, L["mark_message_you"])
-			self:TriggerEvent("BigWigs_StartBar", self, string.format(L["mark_bar"], rest), 10, "Interface\\Icons\\Spell_Shadow_Antishadow", true, "white")
+			self:Bar(string.format(L["mark_bar"], rest), timer.mark, icon.mark, true, "white")
 		end
 		if self.db.profile.puticon then
-			self:TriggerEvent("BigWigs_SetRaidIcon", rest)
+			self:Icon(rest)
 		end
-	elseif sync == "LordKazzakMarkStop" and rest ~= UnitName("player") then
+	elseif sync == syncName.markStop and rest ~= UnitName("player") then
 		if self.db.profile.markofkazzak then
-			self:TriggerEvent("BigWigs_StopBar", self, string.format(L["mark_bar"], rest))
+			self:RemoveBar(string.format(L["mark_bar"], rest))
 		end
 		if self.db.profile.puticon then
-			self:TriggerEvent("BigWigs_RemoveRaidIcon")
+			self:RemoveIcon()
 		end
-	elseif sync == "LordKazzakReflectionStart" and rest ~= UnitName("player") then
+	elseif sync == syncName.reflectionStart and rest ~= UnitName("player") then
 		if self.db.profile.twistedreflection then
-			self:TriggerEvent("BigWigs_Message", string.format(L["twistedreflection_warn"], rest), "Important")
-			self:TriggerEvent("BigWigs_StartBar", self, string.format(L["twisted_bar"], rest), 45, "Interface\\Icons\\Spell_Arcane_PortalDarnassus", true, "magenta")
+			self:Message(string.format(L["twistedreflection_warn"], rest), "Important")
+			self:Bar(string.format(L["twisted_bar"], rest), timer.twisted, icon.twisted, true, "magenta")
 		end
-	elseif sync == "LordKazzakReflectionStop" and rest ~= UnitName("player") then
+	elseif sync == syncName.reflectionStop and rest ~= UnitName("player") then
 		if self.db.profile.twistedreflection then
-			self:TriggerEvent("BigWigs_StopBar", self, string.format(L["twisted_bar"], rest))
+			self:RemoveBar(string.format(L["twisted_bar"], rest))
 		end
-	elseif sync == "LordKazzakRandomDeath" and rest ~= UnitName("player") then
+	elseif sync == syncName.randomDeath and rest ~= UnitName("player") then
 		if self.db.profile.markofkazzak then
-			self:TriggerEvent("BigWigs_StopBar", self, string.format(L["mark_bar"], rest))
+			self:RemoveBar(string.format(L["mark_bar"], rest))
 		end
 		if self.db.profile.puticon then
-			self:TriggerEvent("BigWigs_RemoveRaidIcon")
+			self:RemoveIcon()
 		end
 		if self.db.profile.twistedreflection then
-			self:TriggerEvent("BigWigs_StopBar", self, string.format(L["twisted_bar"], rest))
+			self:RemoveBar(string.format(L["twisted_bar"], rest))
 		end
 		if self.db.profile.corruptsoul then
-			self:TriggerEvent("BigWigs_Message", string.format(L["corruptsoul_warn"], rest), "Important")
+			self:Message(string.format(L["corruptsoul_warn"], rest), "Important")
 		end
-	elseif sync == "LordKazzakVoidBoltStart" then
+	elseif sync == syncName.voidboltStart then
 		voidbolttime = GetTime()
 		castingvoidbolt = true
 		if self.db.profile.voidbolt then
-			self:TriggerEvent("BigWigs_StartBar", self, L["voidbolt_bar"], 1.5, "Interface\\Icons\\Spell_Shadow_Haunting", true, "purple")
+			self:Bar(L["voidbolt_bar"], timer.voidbolt, icon.voidbolt, true, "purple")
 		end
-	elseif sync == "LordKazzakVoidBoltStop" then
+	elseif sync == syncName.voidboltStop then
 		castingvoidbolt = false
 		if self.db.profile.voidbolt then
-			self:TriggerEvent("BigWigs_StopBar", self, L["voidbolt_bar"])
+			self:RemoveBar(L["voidbolt_bar"])
 		end
-	elseif sync == "LordKazzakSupreme" and self.db.profile.supreme then
-		self:TriggerEvent("BigWigs_Message", L["voidbolt_bar"], "Important")
-	elseif sync == "LordKazzakDead" then
+	elseif sync == syncName.supreme and self.db.profile.supreme then
+		self:Message(L["voidbolt_bar"], "Important")
+	elseif sync == syncName.dead then
 		if self.db.profile.bosskill then
-			self:TriggerEvent("BigWigs_Message", string.format(AceLibrary("AceLocale-2.2"):new("BigWigs")["%s has been defeated"], boss), "Bosskill", nil, "Victory")
+			self:Message(string.format(AceLibrary("AceLocale-2.2"):new("BigWigs")["%s has been defeated"], boss), "Bosskill", nil, "Victory")
 		end
-		self:TriggerEvent("BigWigs_RemoveRaidIcon")
+		self:RemoveIcon()
 		self.core:ToggleModuleActive(self, false)
 	end
 end
 
-function BigWigsKazzak:Melee(msg)
+function module:Melee(msg)
 	if string.find(msg, L["attack_trigger1"]) or string.find(msg, L["attack_trigger2"]) or string.find(msg, L["attack_trigger3"]) or string.find(msg, L["attack_trigger4"]) then
 		if castingvoidbolt then 
 			if (GetTime() - voidbolttime) < 1.5 then
-				self:TriggerEvent("BigWigs_SendSync", "LordKazzakVoidBoltStop")
+				self:Sync(syncName.voidboltStop)
 			elseif (GetTime() - voidbolttime) >= 1.5 then
 				castingvoidbolt = false
 			end

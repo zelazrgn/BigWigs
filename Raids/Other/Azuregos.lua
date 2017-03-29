@@ -1,18 +1,28 @@
-------------------------------
---      Are you local?      --
-------------------------------
+----------------------------------
+--      Module Declaration      --
+----------------------------------
 
-local boss = AceLibrary("Babble-Boss-2.2")["Azuregos"]
-local L = AceLibrary("AceLocale-2.2"):new("BigWigs"..boss)
+local module, L = BigWigs:ModuleDeclaration("Azuregos", "Azshara")
 
-----------------------------
---      Timers      --
-----------------------------
+module.revision = 20008 -- To be overridden by the module!
+module.enabletrigger = module.translatedName -- string or table {boss, add1, add2}
+module.toggleoptions = {"teleport", "shield", "bosskill"}
 
-local teleport_time = 30
-local teleport_offset1 = 10
-local teleport_offset2 = 5
-local shield_time = 5
+---------------------------------
+--      Module specific Locals --
+---------------------------------
+
+local timer = {
+	--firstTeleport = 20,
+	teleport = 30,
+	shield = 5,
+}
+local icon = {
+	teleport = "Interface\\Icons\\Spell_Arcane_Blink",
+	shield = "Interface\\Icons\\Spell_Frost_FrostShock",
+}
+local syncName = {
+}
 
 ----------------------------
 --      Localization      --
@@ -29,58 +39,63 @@ L:RegisterTranslations("enUS", function() return {
 	shield_name = "Shield Alert",
 	shield_desc = "Warn for shield",
 
-	trigger1 = "Come, little ones",
-	trigger2 = "^Reflection fades from Azuregos",
-	trigger3 = "^Azuregos gains Reflection",
+	teleport_trigger = "Come, little ones",
+	shieldDown_trigger = "^Reflection fades from Azuregos",
+	shieldUp_trigger = "^Azuregos gains Reflection",
 
-	warn1 = "Teleport!",
-	warn2 = "Magic Shield down!",
-	warn3 = "Magic Shield UP!",
-	tele = "Teleport",
-	twarn = "Teleport in %dsec",
+	teleport_warn = "Teleport!",
+	shieldDown_warn = "Magic Shield down!",
+	shieldUp_warn = "Magic Shield UP!",
+	teleport_bar = "Teleport",
+	teleportSoon_warn = "Teleport soon",
 
-	shieldbar = "Magic Shield",
+	shield_bar = "Magic Shield",
 } end )
-
-----------------------------------
---      Module Declaration      --
-----------------------------------
-
-BigWigsAzuregos = BigWigs:NewModule(boss)
-BigWigsAzuregos.zonename = { AceLibrary("AceLocale-2.2"):new("BigWigs")["Outdoor Raid Bosses Zone"], AceLibrary("Babble-Zone-2.2")["Azshara"] }
-BigWigsAzuregos.enabletrigger = boss
-BigWigsAzuregos.toggleoptions = {"teleport", "shield", "bosskill"}
-BigWigsAzuregos.revision = 20007
 
 ------------------------------
 --      Initialization      --
 ------------------------------
 
-function BigWigsAzuregos:OnEnable()
+function module:OnEnable()
 	self:RegisterEvent("CHAT_MSG_MONSTER_YELL")
 	self:RegisterEvent("CHAT_MSG_SPELL_AURA_GONE_OTHER")
 	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_CREATURE_BUFFS")
 end
 
-function BigWigsAzuregos:CHAT_MSG_MONSTER_YELL( msg )
-	if self.db.profile.teleport and string.find(msg, L["trigger1"]) then
-		self:TriggerEvent("BigWigs_Message", L["warn1"], "Important")
-		self:TriggerEvent("BigWigs_StartBar", self, L["tele"], teleport_time, "Interface\\Icons\\Spell_Arcane_Blink")
-		self:ScheduleEvent("BigWigs_Message", teleport_time-teleport_offset1, string.format(L["twarn"],teleport_offset1), "Important")
-		self:ScheduleEvent("BigWigs_Message", teleport_time-teleport_offset2, string.format(L["twarn"],teleport_offset2), "Important", true, "Alert")
+-- called after module is enabled and after each wipe
+function module:OnSetup()
+end
+
+-- called after boss is engaged
+function module:OnEngage()
+end
+
+-- called after boss is disengaged (wipe(retreat) or victory)
+function module:OnDisengage()
+end
+
+------------------------------
+--      Event Handlers      --
+------------------------------
+
+function module:CHAT_MSG_MONSTER_YELL( msg )
+	if self.db.profile.teleport and string.find(msg, L["teleport_trigger"]) then
+		self:Message(L["teleport_warn"], "Important")
+		self:Bar(self, L["teleport_bar"], timer.teleport, icon.teleport)
+		self:DelayedMessage(teleport_time-5, L["teleportSoon_warn"], "Important", true, "Alert")
 	end
 end
 
-function BigWigsAzuregos:CHAT_MSG_SPELL_AURA_GONE_OTHER( msg )
-	if self.db.profile.shield and string.find(msg, L["trigger2"]) then
-		self:TriggerEvent("BigWigs_Message", L["warn2"], "Attention")
+function module:CHAT_MSG_SPELL_AURA_GONE_OTHER( msg )
+	if self.db.profile.shield and string.find(msg, L["shieldDown_trigger"]) then
+		self:Message(L["shieldDown_warn"], "Attention")
+		self:RemoveBar(L["shield_bar"])
 	end
 end
 
-function BigWigsAzuregos:CHAT_MSG_SPELL_PERIODIC_CREATURE_BUFFS( msg )
-	if self.db.profile.shield and string.find(arg1, L["trigger3"]) then
-		self:TriggerEvent("BigWigs_Message", L["warn3"], "Important", true, "Alert")
-		self:TriggerEvent("BigWigs_StartBar", self, L["shieldbar"], shield_time, "Interface\\Icons\\Spell_Frost_FrostShock")
+function module:CHAT_MSG_SPELL_PERIODIC_CREATURE_BUFFS( msg )
+	if self.db.profile.shield and string.find(arg1, L["shieldUp_trigger"]) then
+		self:Message(L["shieldUp_warn"], "Important", true, "Alert")
+		self:Bar(self, L["shield_bar"], timer.shield, icon.shield)
 	end
 end
-

@@ -1,9 +1,35 @@
-------------------------------
---      Are you local?      --
-------------------------------
+----------------------------------
+--      Module Declaration      --
+----------------------------------
 
-local boss = AceLibrary("Babble-Boss-2.2")["Emeriss"]
-local L = AceLibrary("AceLocale-2.2"):new("BigWigs"..boss)
+local module, L = BigWigs:ModuleDeclaration("Emeriss", "Ashenvale")
+
+module.revision = 20008 -- To be overridden by the module!
+module.enabletrigger = module.translatedName -- string or table {boss, add1, add2}
+module.toggleoptions = {"noxious", "volatileyou", "volatileother", "bosskill"}
+module.zonename = {
+	AceLibrary("AceLocale-2.2"):new("BigWigs")["Outdoor Raid Bosses Zone"],
+	AceLibrary("Babble-Zone-2.2")["Ashenvale"],
+	AceLibrary("Babble-Zone-2.2")["Duskwood"],
+	AceLibrary("Babble-Zone-2.2")["The Hinterlands"],
+	AceLibrary("Babble-Zone-2.2")["Feralas"]
+}
+
+---------------------------------
+--      Module specific Locals --
+---------------------------------
+
+local timer = {
+	firstBreath = 7,
+	breath = 9,
+	corruption = 10,
+}
+local icon = {
+	breath = "Interface\\Icons\\Spell_Shadow_LifeDrain02",
+	corruption = "Interface\\Icons\\Ability_Creature_Cursed_03",
+}
+local syncName = {
+}
 
 ----------------------------
 --      Localization      --
@@ -24,91 +50,88 @@ L:RegisterTranslations("enUS", function() return {
 	volatileother_name = "Volatile infection on others alert",
 	volatileother_desc = "Warn for volatile infection on others",
 
-	trigger1 = "^([^%s]+) ([^%s]+) afflicted by Volatile Infection",
-	trigger2 = "afflicted by Noxious Breath",
-	trigger3 = "Hope is a DISEASE of the soul! This land shall wither and die!",
-	trigger4 = "Taste your world's corruption!",
+	volatile_trigger = "^([^%s]+) ([^%s]+) afflicted by Volatile Infection",
+	breath_trigger = "afflicted by Noxious Breath",
+	engage_trigger = "Hope is a DISEASE of the soul! This land shall wither and die!",
+	corruption_trigger = "Taste your world's corruption!",
 
-	warn1 = "You are afflicted by Volatile Infection!",
-	warn2 = " is afflicted by Volatile Infection!",
-	warn3 = "3 seconds until Noxious Breath!",
-	warn4 = "Noxious Breath! 10-14 seconds till next!",
-	warn5 = "Emeriss engaged! 8 seconds till Noxious Breath!",
-	warn6 = "Corruption of the Earth! Heal NoW!",
+	volatileYou_warn = "You are afflicted by Volatile Infection!",
+	volatileOther_warn = " is afflicted by Volatile Infection!",
+	breathSoon_warn = "Noxious Breath soon!",
+	breath_warn = "Noxious Breath!",
+	corruption_warn = "Corruption of the Earth! Heal NoW!",
 
 	isyou = "You",
 	isare = "are",
 
-	bar1text = "Noxious Breath",
-	bar2text = "Corruption of the Earth",
+	breath_bar = "Noxious Breath",
+	corruption_bar = "Corruption of the Earth",
 	
 } end )
-
-----------------------------------
---      Module Declaration      --
-----------------------------------
-
-BigWigsEmeriss = BigWigs:NewModule(boss)
-BigWigsEmeriss.zonename = {
-	AceLibrary("AceLocale-2.2"):new("BigWigs")["Outdoor Raid Bosses Zone"],
-	AceLibrary("Babble-Zone-2.2")["Ashenvale"],
-	AceLibrary("Babble-Zone-2.2")["Duskwood"],
-	AceLibrary("Babble-Zone-2.2")["The Hinterlands"],
-	AceLibrary("Babble-Zone-2.2")["Feralas"]
-}
-BigWigsEmeriss.enabletrigger = boss
-BigWigsEmeriss.toggleoptions = {"noxious", "volatileyou", "volatileother", "bosskill"}
-BigWigsEmeriss.revision = tonumber(string.sub("$Revision: 16941 $", 12, -3))
 
 ------------------------------
 --      Initialization      --
 ------------------------------
 
-function BigWigsEmeriss:OnEnable()
-	self:RegisterEvent("BigWigs_Message")
+function module:OnEnable()
 	self:RegisterEvent("CHAT_MSG_MONSTER_YELL")
 	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_FRIENDLYPLAYER_DAMAGE", "Event")
 	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_PARTY_DAMAGE", "Event")
 	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_SELF_DAMAGE", "Event")
 end
 
-	function BigWigsEmeriss:Event( msg )
-		if (not self.prior and string.find(msg, L["trigger2"])) then
-			self.prior = true
-			if self.db.profile.noxious then 
-				self:TriggerEvent("BigWigs_Message", L["warn4"], "Important")
-				self:ScheduleEvent("BigWigs_Message", 7, L["warn3"], "Important", true, "Alert")
-				self:TriggerEvent("BigWigs_StartBar", self, L["bar1text"], 10, "Interface\\Icons\\Spell_Shadow_LifeDrain02")
-			end			
-		else
-			local _,_, EPlayer, EType = string.find(msg, L["trigger1"])
-			if (EPlayer and EType) then
-				if (EPlayer == L["isyou"] and EType == L["isare"]) then
-					if self.db.profile.volatileyou then self:TriggerEvent("BigWigs_Message", L["warn1"], "Important", true) end
-				else
-					if self.db.profile.volatileother then
-						self:TriggerEvent("BigWigs_Message", EPlayer .. L["warn2"], "Attention")
-						self:TriggerEvent("BigWigs_SendTell", EPlayer, L["warn1"])
-					end
+-- called after module is enabled and after each wipe
+function module:OnSetup()
+end
+
+-- called after boss is engaged
+function module:OnEngage()
+end
+
+-- called after boss is disengaged (wipe(retreat) or victory)
+function module:OnDisengage()
+end
+
+------------------------------
+--      Event Handlers      --
+------------------------------
+
+function module:Event( msg )
+	if string.find(msg, L["breath_trigger"]) then
+		if self.db.profile.noxious then 
+			self:CancelDelayedMessage(L["breathSoon_warn"])
+			self:DelayedMessage(timer.firstBreath-3, L["breathSoon_warn"], "Important", true, "Alert")
+			self:RemoveBar(L["breath_bar"])
+			self:Bar(L["breath_bar"], timer.firstBreath, icon.breath)
+		end			
+	else
+		local _,_, EPlayer, EType = string.find(msg, L["volatile_trigger"])
+		if (EPlayer and EType) then
+			if (EPlayer == L["isyou"] and EType == L["isare"]) then
+				if self.db.profile.volatileyou then 
+					self:Message(L["volatileYou_warn"], "Important", true) 
+				end
+			else
+				if self.db.profile.volatileother then
+					self:Message(EPlayer .. L["volatileOther_warn"], "Attention")
+					self:TriggerEvent("BigWigs_SendTell", EPlayer, L["volatileYou_warn"])
 				end
 			end
 		end
 	end
-
-function BigWigsEmeriss:CHAT_MSG_MONSTER_YELL(msg)
-	if (msg == L["trigger3"]) then
-		if self.db.profile.noxious then
-		 self:TriggerEvent("BigWigs_Message", L["warn5"], "Important")
-		 self:ScheduleEvent("BigWigs_Message", 5, L["warn3"], "Important", true, "Alert")
-		 self:TriggerEvent("BigWigs_StartBar", self, L["bar1text"], 8, "Interface\\Icons\\Spell_Shadow_LifeDrain02")
 end
-	elseif (string.find(msg, L["trigger4"])) then
-		 self:TriggerEvent("BigWigs_Message", L["warn6"], "Important")
-		 self:TriggerEvent("BigWigs_StartBar", self, L["bar2text"], 10, "Interface\\Icons\\Ability_Creature_Cursed_03")
+
+function module:CHAT_MSG_MONSTER_YELL(msg)
+	if (msg == L["engage_trigger"]) then
+		if self.db.profile.noxious then
+			self:CancelDelayedMessage(L["breathSoon_warn"])
+			self:DelayedMessage(timer.firstBreath-3, L["breathSoon_warn"], "Important", true, "Alert")
+			self:RemoveBar(L["breath_bar"])
+			self:Bar(L["breath_bar"], timer.firstBreath, icon.breath)
+	end
+	elseif (string.find(msg, L["corruption_trigger"])) then
+		 self:Message(L["corruption_warn"], "Important")
+		 self:RemoveBar(L["corruption_bar"])
+		 self:Bar(L["corruption_bar"], timer.corruption, icon.corruption)
 	end
 end
-
-function BigWigsEmeriss:BigWigs_Message(text)
-	if text == L["warn3"] then self.prior = nil end
-end
-
