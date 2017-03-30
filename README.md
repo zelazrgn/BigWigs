@@ -1,12 +1,12 @@
 # BigWigs
 
-BigWigs is a World of Warcraft AddOn to predict certain AI behaviour to improve the players performance.<br \>
+BigWigs is a World of Warcraft AddOn to predict certain AI behaviour to improve the players performance.<br>
 This Modification is build for Patch 1.12.1 and its content for use on the <b>Elysium/Anathema</b> private Server.
 
 ## License
 
-The adjustments were originally made by <a href="https://github.com/MOUZU"><b>LYQ</b></a> and <a href="https://github.com/xorann/BigWigs"><b>Dorann</b></a><br \>
-Adjustments for Elysium made by <b>Hosq</b>.<br \>
+The adjustments were originally made by <a href="https://github.com/MOUZU"><b>LYQ</b></a> and <a href="https://github.com/xorann/BigWigs"><b>Dorann</b></a><br>
+Adjustments for Elysium made by <b>Hosq</b>.<br>
 
 PLEASE NOTE THIS IS STILL A WORK IN PROGRESS <br>
 
@@ -29,8 +29,8 @@ Several other BigWigs Plugins are included in this repository, so you only need 
 <ul>
     <li><b>CustomBar</b> <br> Allows you to create a custom bar with the following command: /bwcb <seconds> <message></li>
 	<li><b>Version</b>  <i>modified by Dorann</i> <br> Checks your BigWigs version and warns you if there is a newer version available.</li>
-	<li><b>BigWigs_CommonAuras</b> <br \>  Keeps track of certain Buffs and Cooldowns eg. Shield Wall and Challenging Shout</li>
-    <li><b>BigWigs_NefCount</b> <i>deactivated atm (NEEDS REWORK)</i> <br \>  improved mechanism for Nefarian phase 1, keeps track of the Adds killed since that triggers phase 2.</li>
+	<li><b>BigWigs_CommonAuras</b> <br>  Keeps track of certain Buffs and Cooldowns eg. Shield Wall and Challenging Shout</li>
+    <li><b>BigWigs_NefCount</b> <i>deactivated atm (NEEDS REWORK)</i> <br>  improved mechanism for Nefarian phase 1, keeps track of the Adds killed since that triggers phase 2.</li>
     <li><b>BigWigs_ZombieFood</b> <i>modified by LYQ</i> <br> announces if a player is getting dazed</li>
     <li><b>BigWigs_LoathebTactical</b> <br> Spore and Consumable warnings for Loatheb</li>
     <li><b>BigWigs_RespawnTimers</b> <i>(NEEDS REWORK)</i> <br>  Trash respawn timers</li>
