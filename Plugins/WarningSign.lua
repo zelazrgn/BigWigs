@@ -380,7 +380,15 @@ function BigWigsWarningSign:CreateAnchor()
 	self.frames.rightbuttontext:SetText(L["Close"])
 	self.frames.rightbuttontext:SetAllPoints(self.frames.rightbutton)
 
-	self:ResetPosition()
+	local x = self.db.profile.posx
+	local y = self.db.profile.posy
+	if x and y then
+		local s = self.frames.anchor:GetEffectiveScale()
+		self.frames.anchor:ClearAllPoints()
+		self.frames.anchor:SetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", x / s, y / s)
+	else
+		self:ResetPosition()
+	end
 end
 
 function BigWigsWarningSign:CreateWarningSignFrame()
@@ -405,7 +413,7 @@ function BigWigsWarningSign:CreateWarningSignFrame()
 	
 	self.frames.sign:SetWidth(100) 
 	self.frames.sign:SetHeight(100)
-	self.frames.sign:SetAlpha(0.8)
+	self.frames.sign:SetAlpha(self.db.profile.alpha or 0.8)
 	
 	self.frames.sign:SetPoint("BOTTOM", self.frames.anchor, "TOP", 0, 0)
 	self.frames.sign:SetScale(self.db.profile.scale or 1)
