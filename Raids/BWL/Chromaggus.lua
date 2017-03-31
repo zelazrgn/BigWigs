@@ -519,10 +519,10 @@ function module:BigWigs_RecvSync(sync, rest, nick)
 		self:DelayedBar(timer.breathCast, spellName, timer.breathInterval, L["icon"..rest], true, L["breathcolor"..rest]) -- delayed timer bar
         
         if self.db.profile.breathcd then
-            self:DelayedSound(timer.breathInterval - 10, "Ten")
-            self:DelayedSound(timer.breathInterval - 3, "Three")
-            self:DelayedSound(timer.breathInterval - 2, "Two")
-            self:DelayedSound(timer.breathInterval - 1, "One")
+            self:DelayedSound(timer.breathInterval+timer.breathCast - 10, "Ten", spellName)
+            self:DelayedSound(timer.breathInterval+timer.breathCast - 3, "Three", spellName)
+            self:DelayedSound(timer.breathInterval+timer.breathCast - 2, "Two", spellName)
+            self:DelayedSound(timer.breathInterval+timer.breathCast - 1, "One", spellName)
         end
         
 	elseif sync == syncName.frenzy then
