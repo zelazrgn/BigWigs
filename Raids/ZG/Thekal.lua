@@ -299,7 +299,9 @@ end
 
 -- override: only check for boss death in phase 2
 function module:CheckForBossDeath(msg)
-    self:DebugMessage("thekal death; phase: " .. self.phase .. " msg: " .. msg)
+	if self.phase then
+		self:DebugMessage("thekal death; phase: " .. self.phase .. " msg: " .. msg)
+	end
 	if self.phase == 2 then
 		BigWigs:CheckForBossDeath(msg, self)
     end
