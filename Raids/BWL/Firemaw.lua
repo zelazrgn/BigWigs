@@ -98,12 +98,13 @@ local timer = {
 	wingbuffetCast = 1,
 	shadowflame = 16,
 	shadowflameCast = 2,
-	flameBuffet = 2,
+	firstFlameBuffet = 2,
+	flameBuffet = 1.8,
 }
 local icon = {
 	wingbuffet = "INV_Misc_MonsterScales_14",
 	shadowflame = "Spell_Fire_Incinerate",	
-	flamebuffet = "Spell_Fire_Fireball"
+	flameBuffet = "Spell_Fire_Fireball"
 }
 local syncName = {
 	wingbuffet = "FiremawWingBuffet"..module.revision,
@@ -142,6 +143,9 @@ function module:OnEngage()
 	if self.db.profile.shadowflame then
 		self:Bar(L["shadowflame_Nextbar"], timer.shadowflame, icon.shadowflame)
 	end
+	if self.db.profile.flamebuffet then
+		self:Bar(L["flamebuffet_bar"], timer.firstFlameBuffet, icon.flameBuffet, true, "White")
+	end
 end
 
 -- called after boss is disengaged (wipe(retreat) or victory)
@@ -158,8 +162,8 @@ function module:Event(msg)
 	elseif msg == L["shadowflame_trigger"] then 
 		self:Sync(syncName.shadowflame)
 	-- flamebuffet triggers too often on nefarian and therefor this warning doesn't make any sense
-	--elseif (string.find(msg, L["flamebuffetafflicted_trigger"]) or string.find(msg, L["flamebuffetresisted_trigger"]) or string.find(msg, L["flamebuffetimmune_trigger"]) or string.find(msg, L["flamebuffetabsorb1_trigger"]) or string.find(msg, L["flamebuffetabsorb2_trigger"])) and self.db.profile.flamebuffet then
-	--	self:Bar(L["flamebuffet_bar"], timer.flameBuffet, icon.flameBuffet, true, "White")
+	elseif (string.find(msg, L["flamebuffetafflicted_trigger"]) or string.find(msg, L["flamebuffetresisted_trigger"]) or string.find(msg, L["flamebuffetimmune_trigger"]) or string.find(msg, L["flamebuffetabsorb1_trigger"]) or string.find(msg, L["flamebuffetabsorb2_trigger"])) and self.db.profile.flamebuffet then
+		self:Bar(L["flamebuffet_bar"], timer.flameBuffet, icon.flameBuffet, true, "White")
 	end
 end
 
