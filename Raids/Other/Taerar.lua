@@ -113,12 +113,13 @@ function module:CHAT_MSG_MONSTER_YELL(msg)
 			self:DelayedMessage(timer.firstBreath-3, L["breathSoon_warn"], "Important", true, "Alert")
 			self:RemoveBar(L["breath_bar"])
 			self:Bar(L["breath_bar"], timer.firstBreath, icon.breath)
-		elseif self.db.profile.fear then
+		end
+		if self.db.profile.fear then
 			self:CancelDelayedMessage(L["fear_warn"])
 			self:DelayedMessage(timer.firstFear-3, L["fear_warn"], "Important", true, "Alert")
 			self:RemoveBar(L["fear_bar"])
 			self:Bar(L["fear_bar"], timer.firstFear, icon.fear)
-	end
+		end
 	elseif (string.find(msg, L["shades_trigger"])) then
 		 self:Message(L["shades_warn"], "Important")
 		 self:RemoveBar(L["banish_bar"])

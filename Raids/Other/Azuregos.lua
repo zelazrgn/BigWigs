@@ -15,7 +15,7 @@ module.toggleoptions = {"teleport", "shield", "bosskill"}
 local timer = {
 	--firstTeleport = 20,
 	teleport = 30,
-	shield = 5,
+	shield = 10,
 }
 local icon = {
 	teleport = "Interface\\Icons\\Spell_Arcane_Blink",
@@ -81,8 +81,8 @@ end
 function module:CHAT_MSG_MONSTER_YELL( msg )
 	if self.db.profile.teleport and string.find(msg, L["teleport_trigger"]) then
 		self:Message(L["teleport_warn"], "Important")
-		self:Bar(self, L["teleport_bar"], timer.teleport, icon.teleport)
-		self:DelayedMessage(teleport_time-5, L["teleportSoon_warn"], "Important", true, "Alert")
+		self:Bar(L["teleport_bar"], timer.teleport, icon.teleport)
+		self:DelayedMessage(timer.teleport-5, L["teleportSoon_warn"], "Important", true, "Alert")
 	end
 end
 
@@ -94,8 +94,8 @@ function module:CHAT_MSG_SPELL_AURA_GONE_OTHER( msg )
 end
 
 function module:CHAT_MSG_SPELL_PERIODIC_CREATURE_BUFFS( msg )
-	if self.db.profile.shield and string.find(arg1, L["shieldUp_trigger"]) then
+	if self.db.profile.shield and string.find(msg, L["shieldUp_trigger"]) then
 		self:Message(L["shieldUp_warn"], "Important", true, "Alert")
-		self:Bar(self, L["shield_bar"], timer.shield, icon.shield)
+		self:Bar(L["shield_bar"], timer.shield, icon.shield)
 	end
 end

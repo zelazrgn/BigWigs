@@ -84,9 +84,9 @@ function module:Event( msg )
 	if string.find(msg, L["breath_trigger"]) then
 		if self.db.profile.noxious then 
 			self:CancelDelayedMessage(L["breathSoon_warn"])
-			self:DelayedMessage(timer.firstBreath-3, L["breathSoon_warn"], "Important", true, "Alert")
+			self:DelayedMessage(timer.breath-3, L["breathSoon_warn"], "Important", true, "Alert")
 			self:RemoveBar(L["breath_bar"])
-			self:Bar(L["breath_bar"], timer.firstBreath, icon.breath)
+			self:Bar(L["breath_bar"], timer.breath, icon.breath)
 		end			
 	end
 end

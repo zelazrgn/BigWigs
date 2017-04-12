@@ -160,7 +160,7 @@ end
 function module:CHAT_MSG_COMBAT_FRIENDLY_DEATH(msg)
 	BigWigs:CheckForWipe(self)
 	local _,_,otherdeath,_ = string.find(msg, L["deathother_trigger"])
-	if msg == L["deathyou_trigger"] then
+	if string.find(msg, L["deathyou_trigger"]) then
 		if self.db.profile.markofkazzak then
 			self:RemoveBar(string.format(L["mark_bar"], UnitName("player")))
 		end
@@ -180,27 +180,27 @@ function module:CHAT_MSG_COMBAT_FRIENDLY_DEATH(msg)
 end
 
 function module:CHAT_MSG_MONSTER_YELL(msg)
-	if self.db.profile.supreme and msg == L["starttrigger1"] or msg == L["starttrigger2"] then 
+	if self.db.profile.supreme and string.find(msg, L["starttrigger1"]) or  string.find(msg, L["starttrigger2"]) then 
 		self:Message(L["engagewarn"], "Important")
 		self:DelayedMessage(timer.supreme - 60, L["supreme1min"], "Attention")
 		self:DelayedMessage(timer.supreme - 30, L["supreme30sec"], "Urgent")
 		self:DelayedMessage(timer.supreme - 10, L["supreme10sec"], "Important")
 		self:Bar(L["enrage_bar"], timer.supreme, "Interface\\Icons\\Spell_Shadow_ShadowWordPain", "Green", "Yellow", "Orange", "Red")
-	elseif self.db.profile.supreme and msg == L["enrageyell_trigger"] then
+	elseif self.db.profile.supreme and string.find(msg, L["enrageyell_trigger"]) then
 		self:Message(L["enrage_warm"], "Important")
-	elseif msg == L["bosskill_trigger"] then
+	elseif string.find(msg, L["bosskill_trigger"]) then
 		self:Sync(syncName.dead)
 	end
 end
 
 function module:CHAT_MSG_SPELL_CREATURE_VS_CREATURE_DAMAGE(msg)
-	if msg == L["voidbolt_trigger"] then 
+	if string.find(msg, L["voidbolt_trigger"]) then 
 		self:Sync(syncName.voidboltStart)
 	end
 end
 
 function module:CHAT_MSG_SPELL_PERIODIC_CREATURE_BUFFS(msg)
-	if msg == L["enrage_trigger"] then 
+	if string.find(msg, L["enrage_trigger"]) then 
 		self:Sync(syncName.supreme)
 	end
 end
@@ -307,7 +307,7 @@ function module:BigWigs_RecvSync(sync, rest, nick)
 		self:Message(L["voidbolt_bar"], "Important")
 	elseif sync == syncName.dead then
 		if self.db.profile.bosskill then
-			self:Message(string.format(AceLibrary("AceLocale-2.2"):new("BigWigs")["%s has been defeated"], boss), "Bosskill", nil, "Victory")
+			self:Message(string.format(AceLibrary("AceLocale-2.2"):new("BigWigs")["%s has been defeated"], self.translatedName), "Bosskill", nil, "Victory")
 		end
 		self:RemoveIcon()
 		self.core:ToggleModuleActive(self, false)
