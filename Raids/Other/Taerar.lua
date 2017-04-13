@@ -53,6 +53,7 @@ L:RegisterTranslations("enUS", function() return {
 	breath_trigger = "afflicted by Noxious Breath",
 	engage_trigger = "Peace is but a fleeting dream! Let the NIGHTMARE reign!",
 	shades_trigger = "Children of Madness - I release you upon this world!",
+	shadedies_trigger = "Shade of Taerar dies.",
 
 	shades_warn = "Taerar banished! Kill Shades!",
 	fearCast_warn = "Fear in 1.5sec!",
@@ -80,6 +81,8 @@ end
 
 -- called after module is enabled and after each wipe
 function module:OnSetup()
+	self:RegisterEvent("CHAT_MSG_COMBAT_HOSTILE_DEATH")
+	self.shades = 0
 end
 
 -- called after boss is engaged
@@ -94,9 +97,29 @@ end
 --      Event Handlers      --
 ------------------------------
 
+function module:CHAT_MSG_COMBAT_HOSTILE_DEATH(msg)
+    BigWigs:CheckForBossDeath(msg, self)
+    if msg == L["shadedies_trigger"] then
+		self.shades = self.shades + 1
+	end
+	if self.shades == 3 then
+		self:RemoveBar(L["banish_bar"])
+		self.shades = 0
+		local t1 = self.banish-self.lastbreath
+		local t2 = self.banish-self.lastfear
+		if self.db.profile.noxious then 
+			self:Bar(L["breath_bar"], timer.breath-t1, icon.breath)
+		end
+		if self.db.profile.fear then
+			self:Bar(L["fear_bar"], timer.fear-t2, icon.fear)
+		end
+	end
+end
+
 function module:Event( msg )
 	if string.find(msg, L["breath_trigger"]) then
 		if self.db.profile.noxious then 
+			self.lastbreath = GetTime()
 			self:Message(L["breath_warn"], "Important")
 			self:CancelDelayedMessage(L["breathSoon_warn"])
 			self:DelayedMessage(timer.breath-3, L["breathSoon_warn"], "Important", true, "Alert")
@@ -108,6 +131,8 @@ end
 
 function module:CHAT_MSG_MONSTER_YELL(msg)
 	if (msg == L["engage_trigger"]) then
+		self.lastbreath = GetTime()
+		self.lastfear = GetTime()
 		if self.db.profile.noxious then
 			self:CancelDelayedMessage(L["breathSoon_warn"])
 			self:DelayedMessage(timer.firstBreath-3, L["breathSoon_warn"], "Important", true, "Alert")
@@ -120,15 +145,19 @@ function module:CHAT_MSG_MONSTER_YELL(msg)
 			self:RemoveBar(L["fear_bar"])
 			self:Bar(L["fear_bar"], timer.firstFear, icon.fear)
 		end
-	elseif (string.find(msg, L["shades_trigger"])) then
+	elseif msg == L["shades_trigger"] then
+		 self.banish = GetTime()
 		 self:Message(L["shades_warn"], "Important")
 		 self:RemoveBar(L["banish_bar"])
 		 self:Bar(L["banish_bar"], timer.banish, icon.banish)
+		 self:RemoveBar(L["breath_bar"])
+		 self:RemoveBar(L["fear_bar"])
 	end
 end
 
 function module:CHAT_MSG_SPELL_CREATURE_VS_CREATURE_DAMAGE(msg)
 	if msg == L["fear_trigger"] and self.db.profile.fear then
+		self.lastfear = GetTime()
 		self:Message(L["fearCast_warn"], "Important", "Alert")
 		self:CancelDelayedMessage(L["fear_warn"])
 		self:DelayedMessage(timer.fear-3, L["fear_warn"], "Important", true, "Alert")
