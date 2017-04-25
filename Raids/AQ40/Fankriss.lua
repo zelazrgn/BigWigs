@@ -48,7 +48,7 @@ L:RegisterTranslations("deDE", function() return {
 ---------------------------------
 
 -- module variables
-module.revision = 20003 -- To be overridden by the module!
+module.revision = 20004 -- To be overridden by the module!
 module.enabletrigger = module.translatedName -- string or table {boss, add1, add2}
 --module.wipemobs = { L["add_name"] } -- adds which will be considered in CheckForEngage
 module.toggleoptions = {"worm", "entangle", "bosskill"}
@@ -63,8 +63,8 @@ local icon = {
 	entangle = "Spell_Nature_Web",
 }
 local syncName = {
-	worm = "FankrissWormSpawn",
-	entangle = "FankrissEntangle",
+	worm = "FankrissWormSpawn"..module.revision,
+	entangle = "FankrissEntangle"..module.revision,
 }
 
 local worms
@@ -118,7 +118,7 @@ function module:BigWigs_RecvSync(sync, rest, nick)
 	if sync == syncName.entangle then
         if self.db.profile.entangle then
             self:Message(L["entanglewarn"], "Urgent", true, "Alarm")
-                self:WarningSign(icon.entangle, 2)
+            self:WarningSign(icon.entangle, 2)
         end
     elseif sync == syncName.worm then 
 		if not rest then return end

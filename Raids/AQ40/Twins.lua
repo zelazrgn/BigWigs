@@ -143,7 +143,7 @@ L:RegisterTranslations("deDE", function() return {
 
 
 -- module variables
-module.revision = 20006 -- To be overridden by the module!
+module.revision = 20007 -- To be overridden by the module!
 local veklor = AceLibrary("Babble-Boss-2.2")["Emperor Vek'lor"]
 local veknilash = AceLibrary("Babble-Boss-2.2")["Emperor Vek'nilash"]
 module.enabletrigger = {veklor, veknilash} -- string or table {boss, add1, add2}
@@ -162,8 +162,8 @@ local icon = {
 	blizzard = "Spell_Frost_IceStorm",
 }
 local syncName = {
-	teleport = "TwinsTeleport43",
-	teleport_old = "TwinsTeleport",
+	teleport = "TwinsTeleport"..module.revision,
+	teleport_old = "TwinsTeleport"..module.revision,
 }
 
 local berserkannounced = nil
@@ -192,7 +192,6 @@ function module:OnEnable()
 	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_CREATURE_BUFFS")
 	self:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_CREATURE_DAMAGE")
 	self:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_CREATURE_BUFF")
-	--self:RegisterEvent("CHAT_MSG_COMBAT_HOSTILE_DEATH", "CheckForBossDeath") -- addition
 	
 	self:ThrottleSync(28, syncName.teleport)
 end

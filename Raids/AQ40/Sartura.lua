@@ -111,7 +111,7 @@ L:RegisterTranslations("deDE", function() return {
 ---------------------------------
 
 -- module variables
-module.revision = 20006 -- To be overridden by the module!
+module.revision = 20007 -- To be overridden by the module!
 module.enabletrigger = module.translatedName -- string or table {boss, add1, add2}
 module.wipemobs = { L["add_name"] } -- adds which will be considered in CheckForEngage
 module.toggleoptions = {"whirlwind", "adds", "enrage", "berserk", "bosskill"}
@@ -120,20 +120,20 @@ module.toggleoptions = {"whirlwind", "adds", "enrage", "berserk", "bosskill"}
 -- locals
 local timer = {
 	berserk = 600,
-	firstWhirlwind = 20.3,
+	firstWhirlwind = 8,
 	whirlwind = 15,
-	nextWhirlwind = 28,
+	nextWhirlwind = 8,
 }
 local icon = {
 	berserk = "Spell_Shadow_UnholyFrenzy",
 	whirlwind = "Ability_Whirlwind",
 }
 local syncName = {
-	whirlwind = "SarturaWhirlwindStart",
-	whirlwindOver = "SarturaWhirlwindEnd",
-	enrage = "SarturaEnrage",
-	berserk = "SarturaBerserk",
-	add = "SarturaAddDead",
+	whirlwind = "SarturaWhirlwindStart"..module.revision,
+	whirlwindOver = "SarturaWhirlwindEnd"..module.revision,
+	enrage = "SarturaEnrage"..module.revision,
+	berserk = "SarturaBerserk"..module.revision,
+	add = "SarturaAddDead"..module.revision,
 }
 
 local guard = 0
@@ -156,7 +156,6 @@ function module:OnEnable()
 	self:ThrottleSync(3, syncName.whirlwindOver)
 	self:ThrottleSync(5, syncName.enrage)
 	self:ThrottleSync(5, syncName.berserk)
-	self:ThrottleSync(2, syncName.add)
 end
 
 -- called after module is enabled and after each wipe
@@ -208,7 +207,7 @@ function module:CHAT_MSG_COMBAT_HOSTILE_DEATH(msg)
 	BigWigs:CheckForBossDeath(msg, self)
 	
 	if msg == L["deadaddtrigger"] then
-		self:Sync(syncName.add)
+		self:Sync(syncName.add.." "..guard+1)
 	end
 end
 
@@ -240,8 +239,8 @@ function module:BigWigs_RecvSync(sync, rest, nick)
 		self:Message(L["whirlwindonwarn"], "Important")
 		self:Bar(L["whirlwindbartext"], timer.whirlwind, icon.whirlwind)
 		
-		self:Bar(L["whirlwindnextbartext"], timer.nextWhirlwind, icon.whirlwind)
-		self:DelayedMessage(timer.nextWhirlwind - 3, L["whirlwindinctext"], "Attention", true, "Alarm")
+		self:DelayedBar(timer.whirlwind, L["whirlwindnextbartext"], timer.nextWhirlwind, icon.whirlwind)
+		self:DelayedMessage(timer.nextWhirlwind+timer.whirlwind - 3, L["whirlwindinctext"], "Attention", true, "Alarm")
 	elseif sync == syncName.whirlwindOver and self.db.profile.whirlwind then
 		self:RemoveBar(L["whirlwindbartext"])
 		self:Message(L["whirlwindoffwarn"], "Attention")
@@ -258,9 +257,12 @@ function module:BigWigs_RecvSync(sync, rest, nick)
 		self:CancelDelayedMessage(L["warn5"])
 		self:CancelDelayedMessage(L["warn6"])
 	elseif sync == syncName.add then
-		guard = guard + 1
-		if self.db.profile.adds then
-			self:Message(string.format(L["addmsg"], guard), "Positive")
+		rest = tonumber(rest)
+		if rest == guard + 1 then
+			guard = guard + 1
+			if self.db.profile.adds then
+				self:Message(string.format(L["addmsg"], guard), "Positive")
+			end
 		end
 	end
 end

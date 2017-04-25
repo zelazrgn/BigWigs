@@ -173,7 +173,7 @@ L:RegisterTranslations("deDE", function() return {
 ---------------------------------
 
 -- module variables
-module.revision = 20008 -- To be overridden by the module!
+module.revision = 20009 -- To be overridden by the module!
 local eyeofcthun = AceLibrary("Babble-Boss-2.2")["Eye of C'Thun"]
 local cthun = AceLibrary("Babble-Boss-2.2")["C'Thun"]
 module.enabletrigger = {eyeofcthun, cthun} -- string or table {boss, add1, add2}
@@ -187,7 +187,7 @@ module.proximitySilent = false
 
 -- locals
 local timer = {
-	p1RandomEyeBeams = 15, -- how long does eye of c'thun target the same player at the beginning
+	p1RandomEyeBeams = 9, -- how long does eye of c'thun target the same player at the beginning
 	p1Tentacle = 45,      -- tentacle timers for phase 1
 	p1TentacleStart = 45, -- delay for first tentacles from engage onwards
 	p1GlareStart = 50,    -- delay for first dark glare from engage onwards
@@ -195,13 +195,12 @@ local timer = {
 	p1GlareCasting = 5,   -- time it takes from casting dark glare until the spell starts
 	p1GlareDuration = 30, -- duration of dark glare
 	
-	p2Offset = 10,        -- delay for all timers to restart after the Eye dies
 	p2Tentacle = 30,      -- tentacle timers for phase 2
-	p2ETentacle = 40,     -- Eye tentacle timers for phase 2
-	p2GiantClaw = 40,     -- Giant Claw timer for phase 2
-	p2FirstGiantClaw = 25, -- first giant claw after eye of c'thun dies
-	p2FirstGiantEye = 56, -- first giant eye after eye of c'thun dies
-	p2FirstEyeTentacles = 45, -- first eye tentacles after eye of c'thun dies
+	p2ETentacle = 60,     -- Eye tentacle timers for phase 2
+	p2GiantClaw = 60,     -- Giant Claw timer for phase 2
+	p2FirstGiantClaw = 12, -- first giant claw after eye of c'thun dies
+	p2FirstGiantEye = 42, -- first giant eye after eye of c'thun dies
+	p2FirstEyeTentacles = 42, -- first eye tentacles after eye of c'thun dies
 	p2FirstGiantClawAfterWeaken = 10,
 	p2FirstGiantEyeAfterWeaken = 40,
 	
@@ -223,14 +222,14 @@ local icon = {
 	digestiveAcid = "ability_creature_disease_02",
 }
 local syncName = {
-	p2Start = "CThunP2Start1",
-	weaken = "CThunWeakened2",
-	weakenOver = "CThunWeakenedOver1",
-	giantEyeDown = "CThunGEdown1",
-	giantClawSpawn = "GiantClawSpawn1",
-    giantEyeSpawn = "GiantEyeSpawn",
-	giantEyeEyeBeam = "GiantEyeEyeBeam1",
-	cthunEyeBeam = "CThunEyeBeam1",
+	p2Start = "CThunP2Start"..module.revision,
+	weaken = "CThunWeakened"..module.revision,
+	weakenOver = "CThunWeakenedOver"..module.revision,
+	giantEyeDown = "CThunGEdown"..module.revision,
+	giantClawSpawn = "GiantClawSpawn"..module.revision,
+    giantEyeSpawn = "GiantEyeSpawn"..module.revision,
+	giantEyeEyeBeam = "GiantEyeEyeBeam"..module.revision,
+	cthunEyeBeam = "CThunEyeBeam"..module.revision,
 }
 
 local gianteye = "Giant Eye Tentacle"
@@ -318,9 +317,6 @@ function module:CHAT_MSG_COMBAT_HOSTILE_DEATH(msg)
 		self:Sync(syncName.p2Start)
 	elseif (msg == string.format(UNITDIESOTHER, gianteye)) then
 		self:Sync(syncName.giantEyeDown)
-	--[[elseif (msg == string.format(UNITDIESOTHER, cthun)) then
-		if self.db.profile.bosskill then self:Message(string.format(AceLibrary("AceLocale-2.2"):new("BigWigs")["%s has been defeated"], cthun), "Bosskill", nil, "Victory") end
-		self.core:ToggleModuleActive(self, false)]]
 	end
 end
 

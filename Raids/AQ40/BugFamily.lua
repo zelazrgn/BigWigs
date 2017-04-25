@@ -24,7 +24,7 @@ L:RegisterTranslations("enUS", function() return {
 	attack_trigger3 = "Princess Yauj hits",
 	attack_trigger4 = "Princess Yauj crits",
 	panic_bar = "Panic",
-	first_panic_bar = "Possible Panic (+/- 3s)",
+	first_panic_bar = "Possible Panic",
 	panic_message = "Fear in 3 Seconds!",
 	toxicvolleyhit_trigger = "Toxic Volley hits",
 	toxicvolleyafflicted_trigger = "afflicted by Toxic Volley\.",
@@ -153,7 +153,7 @@ L:RegisterTranslations("deDE", function() return {
 ---------------------------------
 
 -- module variables
-module.revision = 20006 -- To be overridden by the module!
+module.revision = 20007 -- To be overridden by the module!
 module.enabletrigger = {kri, yauj, vem} -- string or table {boss, add1, add2}
 --module.wipemobs = { L["add_name"] } -- adds which will be considered in CheckForEngage
 module.toggleoptions = {"panic", "toxicvolley", "heal", "announce", "deathspecials", "enrage", "bosskill"}
@@ -161,10 +161,10 @@ module.toggleoptions = {"panic", "toxicvolley", "heal", "announce", "deathspecia
 
 -- locals
 local timer = {
-	firstPanic = 17.5,
+	firstPanic = 10,
 	panic = 20,
-	firstVolley = 11.4,
-	volley = 5,
+	firstVolley = 8,
+	volley = 8,
 	enrage = 900,
 	heal = 2,
 }
@@ -176,15 +176,15 @@ local icon = {
 	heal = "Spell_Holy_Heal",
 }
 local syncName = {
-	volley = "BugTrioKriVolley",
-	heal = "BugTrioYaujHealStart",
-	healStop = "BugTrioYaujHealStop",
-	panic = "BugTrioYaujPanic",
-	enrage = "BugTrioEnraged",
-	kriDead = "BugTrioKriDead",
-	yaujDead = "BugTrioYaujDead",
-	vemDead = "BugTrioVemDead",
-	allDead = "BugTrioAllDead",
+	volley = "BugTrioKriVolley"..module.revision,
+	heal = "BugTrioYaujHealStart"..module.revision,
+	healStop = "BugTrioYaujHealStop"..module.revision,
+	panic = "BugTrioYaujPanic"..module.revision,
+	enrage = "BugTrioEnraged"..module.revision,
+	kriDead = "BugTrioKriDead"..module.revision,
+	yaujDead = "BugTrioYaujDead"..module.revision,
+	vemDead = "BugTrioVemDead"..module.revision,
+	allDead = "BugTrioAllDead"..module.revision,
 }
 	
 local kridead = nil

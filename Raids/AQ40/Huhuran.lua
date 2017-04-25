@@ -86,7 +86,7 @@ L:RegisterTranslations("deDE", function() return {
 ---------------------------------
 
 -- module variables
-module.revision = 20003 -- To be overridden by the module!
+module.revision = 20004 -- To be overridden by the module!
 module.enabletrigger = module.translatedName -- string or table {boss, add1, add2}
 --module.wipemobs = { L["add_name"] } -- adds which will be considered in CheckForEngage
 module.toggleoptions = {"wyvern", "frenzy", "berserk", "bosskill"}
@@ -95,7 +95,8 @@ module.toggleoptions = {"wyvern", "frenzy", "berserk", "bosskill"}
 -- locals
 local timer = {
 	berserk = 300,
-	sting = 20,
+	firstSting = 18,
+	sting = 15,
     frenzy = 10,
 }
 local icon = {
@@ -105,22 +106,14 @@ local icon = {
 	tranquil = "Spell_Nature_Drowsy",
 }
 local syncName = {
-    sting = "HuhuranWyvernSting",
-    frenzy = "HuhuranFrenzyGain",
-    frenzyOver = "HuhuranFrenzyFade",
+    sting = "HuhuranWyvernSting"..module.revision,
+    frenzy = "HuhuranFrenzyGain"..module.revision,
+    frenzyOver = "HuhuranFrenzyFade"..module.revision,
 }
 
 local berserkannounced = false
 --local lastFrenzy = 0
 local _, playerClass = UnitClass("player")
-
---[[
-38:47 pull
-39:09 wyvern
-39:28 wyvern
-39:48 wyvern
-40:08 wyvern
-]]
 
 ------------------------------
 --      Initialization      --
@@ -154,6 +147,10 @@ function module:OnEngage()
 		self:DelayedMessage(timer.berserk - 30, L["berserkwarn2"], "Urgent", nil, nil, true)
 		self:DelayedMessage(timer.berserk - 5, L["berserkwarn3"], "Important", nil, nil, true)
 	end
+	if self.db.profile.wyvern then 
+		self:Bar(L["bartext"], timer.firstSting, icon.sting)
+		self:DelayedMessage(timer.firstSting - 3, L["stingdelaywarn"], "Urgent", nil, nil, true)
+	end
 end
 
 -- called after boss is disengaged (wipe(retreat) or victory)
@@ -176,7 +173,8 @@ end
 function module:CHAT_MSG_MONSTER_EMOTE(arg1)
 	--[[if self.db.profile.frenzy and arg1 == L["frenzytrigger"] then
 		self:Message(L["frenzywarn"], "Urgent")
-	else]]if self.db.profile.berserk and arg1 == L["berserktrigger"] then
+	else]]
+	if self.db.profile.berserk and arg1 == L["berserktrigger"] then
 		self:CancelDelayedMessage(L["berserkwarn1"])
 		self:CancelDelayedMessage(L["berserkwarn2"])
 		self:CancelDelayedMessage(L["berserkwarn3"])
@@ -202,10 +200,8 @@ function module:UNIT_HEALTH(arg1)
 end
 
 function module:checkSting(arg1)
-	if self.db.profile.wyvern then 
-		if string.find(arg1, L["stingtrigger"]) then
-			self:Sync(syncName.sting)
-		end
+	if string.find(arg1, L["stingtrigger"]) then
+		self:Sync(syncName.sting)
 	end
 end
 
@@ -216,9 +212,11 @@ end
 
 function module:BigWigs_RecvSync(sync, rest, nick)
 	if sync == syncName.sting then
-        self:Message(L["stingwarn"], "Urgent")
-        self:Bar(L["bartext"], timer.sting, icon.sting)
-        self:DelayedMessage(timer.sting - 3, L["stingdelaywarn"], "Urgent", nil, nil, true)
+		if self.db.profile.wyvern then 
+			self:Message(L["stingwarn"], "Urgent")
+			self:Bar(L["bartext"], timer.sting, icon.sting)
+			self:DelayedMessage(timer.sting - 3, L["stingdelaywarn"], "Urgent", nil, nil, true)
+		end
     elseif sync == syncName.frenzyGain then
         self:FrenzyGain()
     elseif sync == syncName.frenzyOver then

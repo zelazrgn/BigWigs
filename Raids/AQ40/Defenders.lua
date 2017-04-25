@@ -105,7 +105,7 @@ L:RegisterTranslations("deDE", function() return {
 ---------------------------------
 
 -- module variables
-module.revision = 20003 -- To be overridden by the module!
+module.revision = 20004 -- To be overridden by the module!
 module.enabletrigger = module.translatedName -- string or table {boss, add1, add2}
 --module.wipemobs = { L["add_name"] } -- adds which will be considered in CheckForEngage
 module.toggleoptions = {"plagueyou", "plagueother", "icon", -1, "thunderclap", "explode", "enrage"--[[, "bosskill"]]}
@@ -124,9 +124,9 @@ local icon = {
 	plague = "Spell_Shadow_CurseOfTounges",
 }
 local syncName = {
-	enrage = "DefenderEnrage",
-	explode = "DefenderExplode",
-	thunderclap = "DefenderThunderclap",
+	enrage = "DefenderEnrage"..module.revision,
+	explode = "DefenderExplode"..module.revision,
+	thunderclap = "DefenderThunderclap"..module.revision,
 }
 
 
