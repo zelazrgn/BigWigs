@@ -42,7 +42,7 @@ L:RegisterTranslations("enUS", function() return {
     blizzard_name = "Blizzard Warning",
     blizzard_desc = "Shows an Icon if you are standing in a Blizzard",
 
-	porttrigger = "casts Twin Teleport.",
+	porttrigger = "gains Twin Teleport.",
 	portwarn = "Teleport!",
 	portdelaywarn = "Teleport in 5 seconds!",
 	portdelaywarn10 = "Teleport in 10 seconds!",
@@ -190,7 +190,6 @@ function module:OnEnable()
 	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_SELF_DAMAGE")
 	self:RegisterEvent("CHAT_MSG_SPELL_AURA_GONE_SELF")
 	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_CREATURE_BUFFS")
-	self:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_CREATURE_DAMAGE")
 	self:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_CREATURE_BUFF")
 	
 	self:ThrottleSync(28, syncName.teleport)
@@ -255,15 +254,12 @@ function module:CHAT_MSG_SPELL_AURA_GONE_SELF(msg)
 	end
 end
 
-function module:CHAT_MSG_SPELL_CREATURE_VS_CREATURE_DAMAGE(msg)
+function module:CHAT_MSG_SPELL_PERIODIC_CREATURE_BUFFS(msg)
 	if (string.find(msg, L["porttrigger"])) then
 		self:Sync(syncName.teleport_old)
         self:Sync(syncName.teleport)
         self:DebugMessage("real port trigger")
 	end
-end
-
-function module:CHAT_MSG_SPELL_PERIODIC_CREATURE_BUFFS(msg)
 	if (string.find(msg, L["explodebugtrigger"]) and self.db.profile.bug) then
 		self:Message(L["explodebugwarn"], "Personal", true)
 	end
@@ -302,8 +298,8 @@ function module:Teleport()
 	if self.db.profile.teleport then
 		self:Bar(L["bartext"], timer.teleport, icon.teleport)
         
-        self:DelayedSync(timer.teleport, syncName.teleport_old)
-        self:DelayedSync(timer.teleport, syncName.teleport)
+        --self:DelayedSync(timer.teleport, syncName.teleport_old)
+        --self:DelayedSync(timer.teleport, syncName.teleport)
         self:KTM_Reset()
         
         self:DelayedSound(timer.teleport - 10, "Ten")
