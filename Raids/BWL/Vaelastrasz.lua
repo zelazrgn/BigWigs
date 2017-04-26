@@ -122,9 +122,9 @@ local timer = {
 	adrenaline = 15,
 	flamebreath = 2,
 	tankburn = 45,
-	start1 = 38,
-	start2 = 28,
-	start3 = 12,
+	start1 = 36,
+	start2 = 26,
+	start3 = 10,
 }
 local icon = {
 	adrenaline = "INV_Gauntlets_03",
