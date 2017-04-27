@@ -190,10 +190,10 @@ local timer = {
 	p1RandomEyeBeams = 9, -- how long does eye of c'thun target the same player at the beginning
 	p1Tentacle = 45,      -- tentacle timers for phase 1
 	p1TentacleStart = 45, -- delay for first tentacles from engage onwards
-	p1GlareStart = 50,    -- delay for first dark glare from engage onwards
+	p1GlareStart = 45,    -- delay for first dark glare from engage onwards
 	p1Glare = 85,         -- interval for dark glare
-	p1GlareCasting = 5,   -- time it takes from casting dark glare until the spell starts
-	p1GlareDuration = 30, -- duration of dark glare
+	p1GlareCasting = 4,   -- time it takes from casting dark glare until the spell starts
+	p1GlareDuration = 39, -- duration of dark glare
 	
 	p2Tentacle = 30,      -- tentacle timers for phase 2
 	p2ETentacle = 60,     -- Eye tentacle timers for phase 2
@@ -201,8 +201,10 @@ local timer = {
 	p2FirstGiantClaw = 12, -- first giant claw after eye of c'thun dies
 	p2FirstGiantEye = 42, -- first giant eye after eye of c'thun dies
 	p2FirstEyeTentacles = 42, -- first eye tentacles after eye of c'thun dies
-	p2FirstGiantClawAfterWeaken = 10,
-	p2FirstGiantEyeAfterWeaken = 40,
+	p2FirstGiantClawAfterWeaken = 8,
+	p2FirstGiantEyeAfterWeaken = 38,
+	p2FirstEyeAfterWeaken = 38,
+	
 	
 	reschedule = 50,      -- delay from the moment of weakening for timers to restart
 	target = 1,           -- delay for target change checking on Eye of C'Thun and Giant Eye Tentacle
@@ -524,12 +526,17 @@ function module:CThunWeakened()
 	self:RemoveBar(L["barGiantC"])
 
     -- next eye tentacles 75s after last spawn / 45s delayed
+	self:RemoveBar(L["barTentacle"] )
+	self:RemoveBar(L["barNoRape"] )
+	self:CancelDelayedMessage(self.db.profile.rape and L["tentacle"] or L["norape"])
 	self:CancelScheduledEvent("bwcthuntentacles") -- ok
-    local nextEyeTentacles = timer.p2Tentacle - (GetTime() - timer.lastEyeTentaclesSpawn) + timer.weakened;
-    self:DebugMessage("nextEyeTentacles(".. nextEyeTentacles ..") = timer.p2Tentacle(".. timer.p2Tentacle ..") - (GetTime() - timer.lastEyeTentaclesSpawn)(".. (GetTime() - timer.lastEyeTentaclesSpawn) ..") + time.weakened(".. timer.weakened ..")")
-    self:Bar(self.db.profile.rape and L["barTentacle"] or L["barNoRape"], nextEyeTentacles, icon.eyeTentacles)    
-    self:ScheduleEvent("bwcthunstarttentacles", self.TentacleRape, nextEyeTentacles, self )
-    self:DelayedMessage(nextEyeTentacles - 5, self.db.profile.rape and L["tentacle"] or L["norape"], "Urgent", false, nil, true)
+    self:CancelScheduledEvent("bwcthuntentaclesstart") -- ok
+
+    --local nextEyeTentacles = timer.p2Tentacle - (GetTime() - timer.lastEyeTentaclesSpawn) + timer.weakened;
+    --self:DebugMessage("nextEyeTentacles(".. nextEyeTentacles ..") = timer.p2Tentacle(".. timer.p2Tentacle ..") - (GetTime() - timer.lastEyeTentaclesSpawn)(".. (GetTime() - timer.lastEyeTentaclesSpawn) ..") + time.weakened(".. timer.weakened ..")")
+    --self:Bar(self.db.profile.rape and L["barTentacle"] or L["barNoRape"], nextEyeTentacles, icon.eyeTentacles)    
+    --self:ScheduleEvent("bwcthunstarttentacles", self.TentacleRape, nextEyeTentacles, self )
+    --self:DelayedMessage(nextEyeTentacles - 5, self.db.profile.rape and L["tentacle"] or L["norape"], "Urgent", false, nil, true)
     
     self:ScheduleEvent("bwcthunweakenedover", self.CThunWeakenedOver, timer.weakened, self )
     timer.lastGiantEyeSpawn = 0 -- reset timer to force a refresh on the timer
@@ -561,6 +568,11 @@ function module:CThunWeakenedOver()
     self:Bar(L["barGiant"], timer.p2FirstGiantEyeAfterWeaken, icon.giantEye)
 	self:ScheduleEvent("bwcthunstartgiant", self.GTentacleRape, timer.p2FirstGiantEyeAfterWeaken, self )
     self:DelayedMessage(timer.p2FirstGiantEyeAfterWeaken - 5, L["GiantEye"], "Urgent", false, nil, true)
+	
+	--next rape party
+    self:Bar(self.db.profile.rape and L["barTentacle"] or L["barNoRape"], timer.p2FirstEyeAfterWeaken, icon.eyeTentacles)    
+    self:ScheduleEvent("bwcthunstarttentacles", self.TentacleRape, timer.p2FirstEyeAfterWeaken, self )
+    self:DelayedMessage(timer.p2FirstEyeAfterWeaken - 5, self.db.profile.rape and L["tentacle"] or L["norape"], "Urgent", false, nil, true)
 end
 
 function module:GiantEyeEyeBeam()
@@ -634,13 +646,13 @@ function module:DarkGlare()
         else
 			self:ScheduleEvent("bwcthundarkglare", self.DarkGlare, timer.p1Glare, self )
 			
-			self:WarningSign(icon.darkGlare, 5)
+			self:WarningSign(icon.darkGlare, timer.p1GlareCasting)
 			self:Message(L["glare"], "Urgent", true, false)
 			self:Bar(L["barGlareCasting"], timer.p1GlareCasting, icon.darkGlare)
 		        
 			self:DelayedBar(timer.p1GlareCasting, L["barGlareEnds"], timer.p1GlareDuration, icon.darkGlare)
             self:DelayedMessage(timer.p1GlareCasting + timer.p1GlareDuration - 5, L["msgGlareEnds"], "Urgent", false, nil, true)
-			self:DelayedBar(timer.p1GlareCasting + timer.p1GlareDuration, L["barGlare"], timer.p1Glare - timer.p1GlareCasting - timer.p1GlareDuration, icon.darkGlare)
+			self:DelayedBar(timer.p1GlareCasting + timer.p1GlareDuration, L["barGlare"], timer.p1Glare - timer.p1GlareCasting - timer.p1GlareDuration, icon.darkGlare)			
         end
     end
 end
