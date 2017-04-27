@@ -305,6 +305,7 @@ end
 
 -- called after boss is disengaged (wipe(retreat) or victory)
 function module:OnDisengage()
+	self:RemoveProximity()
 end
 
 
@@ -495,8 +496,6 @@ function module:CThunP2Start()
 		self:ScheduleRepeatingEvent("bwcthuntargetp2", self.CheckTarget, timer.target, self )
         
         timer.lastEyeTentaclesSpawn = GetTime() + 10
-        
-        self:RemoveProximity()
 	end
 
 end
