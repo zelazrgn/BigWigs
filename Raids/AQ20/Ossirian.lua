@@ -29,6 +29,12 @@ L:RegisterTranslations("enUS", function() return {
 	debuffwarn = "Ossirian now weak to %s!",
 	supreme_bar = "Supreme",
 	expose = "Expose",
+	
+	["cyclone_trigger"] = "Enveloping Winds",
+	["stomp_trigger"] = "War Stomp",
+	
+	["WarStomp"] = "War Stomp",
+	["Cyclone"] = "Cyclone",
 
 	["Shadow"] = true,
 	["Fire"] = true,
@@ -58,6 +64,12 @@ L:RegisterTranslations("deDE", function() return {
 	debuffwarn = "Ossirian für 45 Sekunden anfällig gegen: %s",
 	supreme_bar = "Stärke des Ossirian",
 	expose = "Schwäche",
+	
+	["cyclone_trigger"] = "Enveloping Winds",
+	["stomp_trigger"] = "War Stomp",
+	
+	["WarStomp"] = "War Stomp",
+	["Cyclone"] = "Cyclone",
 
 	["Shadow"] = "Schatten",
 	["Fire"] = "Feuer",
@@ -78,7 +90,7 @@ L:RegisterTranslations("deDE", function() return {
 ---------------------------------
 
 -- module variables
-module.revision = 20005 -- To be overridden by the module!
+module.revision = 20006 -- To be overridden by the module!
 module.enabletrigger = module.translatedName -- string or table {boss, add1, add2}
 --module.wipemobs = { L["add_name"] } -- adds which will be considered in CheckForEngage
 module.toggleoptions = {"supreme", "debuff", "bosskill"}
@@ -87,14 +99,21 @@ module.toggleoptions = {"supreme", "debuff", "bosskill"}
 local timer = {
 	weakness = 45,
 	supreme = 45,
+	firstCyclone = 20,
+	cyclone = 15,
+	warstomp = 25,
 }
 local icon = {
 	supreme = "Spell_Shadow_CurseOfTounges",
+	warstomp = "Ability_BullRush",
+	cyclone = "Spell_Nature_Cyclone",
 }
 local syncName = {
-	weakness = "OssirianWeakness",
-	crystal = "OssirianCrystal",
-	supreme = "OssirianSupreme",
+	weakness = "OssirianWeakness"..module.revision,
+	crystal = "OssirianCrystal"..module.revision,
+	supreme = "OssirianSupreme"..module.revision,
+	warstomp = "OssirianWarstomp"..module.revision,
+	cyclone = "OssirianCyclone"..module.revision,
 }
 
 local currentWeakness = nil
@@ -112,9 +131,18 @@ function module:OnEnable()
 	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_CREATURE_BUFFS")
 	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_CREATURE_DAMAGE")
 	
+	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_SELF_DAMAGE", "Debuff")
+	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_PARTY_DAMAGE", "Debuff")
+	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_FRIENDLYPLAYER_DAMAGE", "Debuff")
+	self:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_SELF_DAMAGE", "Debuff")
+	self:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_PARTY_DAMAGE", "Debuff")
+	self:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_CREATURE_DAMAGE", "Debuff")
+	
 	self:ThrottleSync(3, syncName.weakness)
 	self:ThrottleSync(3, syncName.crystal)
 	self:ThrottleSync(3, syncName.supreme)
+	self:ThrottleSync(3, syncName.cyclone)
+	self:ThrottleSync(3, syncName.warstomp)
 end
 
 -- called after module is enabled and after each wipe
@@ -125,6 +153,8 @@ end
 
 -- called after boss is engaged
 function module:OnEngage()
+	self:Bar(L["Cyclone"], timer.firstCyclone, icon.cyclone)
+	self:Bar(L["WarStomp"], timer.warstomp, icon.warstomp)
 end
 
 -- called after boss is disengaged (wipe(retreat) or victory)
@@ -171,6 +201,10 @@ function module:BigWigs_RecvSync(sync, rest, nick)
 		self:Crystal()
 	elseif sync == syncName.supreme then
 		self:Supreme()
+	elseif sync == syncName.cyclone then
+		self:Bar(L["Cyclone"], timer.cyclone, icon.cyclone)
+	elseif sync == syncName.warstomp then
+		self:Bar(L["WarStomp"], timer.warstomp, icon.warstomp)
 	end
 end
 
@@ -216,5 +250,14 @@ end
 function module:Supreme()
 	if self.db.profile.supreme then
 		self:Message(L["supremewarn"], "Attention", nil, "Beware")
+	end
+end
+
+function module:Debuff(msg)
+	if string.find(msg, L["cyclone_trigger"])then
+		self:Sync(syncName.cyclone)
+	end
+	if string.find(msg, L["stomp_trigger"])then
+		self:Sync(syncName.warstomp)
 	end
 end
