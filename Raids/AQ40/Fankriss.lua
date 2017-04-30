@@ -51,23 +51,23 @@ L:RegisterTranslations("deDE", function() return {
 module.revision = 20004 -- To be overridden by the module!
 module.enabletrigger = module.translatedName -- string or table {boss, add1, add2}
 --module.wipemobs = { L["add_name"] } -- adds which will be considered in CheckForEngage
-module.toggleoptions = {"worm", "entangle", "bosskill"}
+module.toggleoptions = {--[["worm",]] "entangle", "bosskill"}
 
 
 -- locals
 local timer = {
-	worm = 20,
+	--worm = 20,
 }
 local icon = {
-	worm = "Spell_Shadow_UnholyFrenzy",
+	--worm = "Spell_Shadow_UnholyFrenzy",
 	entangle = "Spell_Nature_Web",
 }
 local syncName = {
-	worm = "FankrissWormSpawn"..module.revision,
+	--worm = "FankrissWormSpawn"..module.revision,
 	entangle = "FankrissEntangle"..module.revision,
 }
 
-local worms
+--local worms
 
 
 ------------------------------
@@ -81,12 +81,12 @@ function module:OnEnable()
     self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_PARTY_DAMAGE", "Event")
 	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_FRIENDLYPLAYER_DAMAGE", "Event")
     
-	self:ThrottleSync(.1, syncName.worm)
+	--self:ThrottleSync(.1, syncName.worm)
 end
 
 -- called after module is enabled and after each wipe
 function module:OnSetup()
-	worms = 0
+	--worms = 0
 end
 
 -- called after boss is engaged
@@ -107,20 +107,20 @@ function module:Event(msg)
         self:Sync(syncName.entangle)
     end
 end
-
+--[[
 function module:CHAT_MSG_SPELL_CREATURE_VS_CREATURE_BUFF(msg)
 	if msg == L["wormtrigger"] then
 		self:Sync(syncName.worm .. " " .. tostring(worms + 1) )
 	end
 end
-
+]]
 function module:BigWigs_RecvSync(sync, rest, nick)
 	if sync == syncName.entangle then
         if self.db.profile.entangle then
             self:Message(L["entanglewarn"], "Urgent", true, "Alarm")
             self:WarningSign(icon.entangle, 2)
         end
-    elseif sync == syncName.worm then 
+    --[[elseif sync == syncName.worm then 
 		if not rest then return end
 		rest = tonumber(rest)
 		if rest == (worms + 1) then
@@ -132,6 +132,6 @@ function module:BigWigs_RecvSync(sync, rest, nick)
 				self:Message(string.format(L["wormwarn"], worms), "Urgent")
 				self:Bar(string.format(L["wormbar"], worms), timer.worm, icon.worm)
 			end	
-		end
+		end]]
 	end
 end

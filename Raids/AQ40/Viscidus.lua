@@ -28,11 +28,11 @@ L:RegisterTranslations("enUS", function() return {
 	freeze_name = "Freezing States Alert",
 	freeze_desc = "Warn for the different frozen states",
 
-	slow_trigger 	= "Viscidus begins to slow.",
-	freeze_trigger 	= "Viscidus is freezing up.",
-	frozen_trigger 	= "Viscidus is frozen solid.",
-	crack_trigger 	= "Viscidus begins to crack.",
-	shatter_trigger 	= "Viscidus looks ready to shatter.",
+	slow_trigger 	= "begins to slow",
+	freeze_trigger 	= "is freezing up",
+	frozen_trigger 	= "is frozen solid",
+	crack_trigger 	= "begins to crack",
+	shatter_trigger 	= "looks ready to shatter",
 	volley_trigger	= "afflicted by Poison Bolt Volley",
 	toxin_trigger 	= "^([^%s]+) ([^%s]+) afflicted by Toxin%.$",
 
@@ -167,16 +167,17 @@ function module:CheckVis(arg1)
 end
 
 function module:Emote(arg1)
+	BigWigs:Debug("Emote: "..arg1)
 	if not self.db.profile.freeze then return end
-	if arg1 == L["slow_trigger"] then
+	if string.find(arg1, L["slow_trigger"]) then
 		self:Message(L["freeze1_warn"], "Atention")
-	elseif arg1 == L["freeze_trigger"] then
+	elseif string.find(arg1, L["freeze_trigger"]) then
 		self:Message(L["freeze2_warn"], "Urgent")
-	elseif arg1 == L["frozen_trigger"] then
+	elseif string.find(arg1, L["frozen_trigger"]) then
 		self:Message(L["frozen_warn"], "Important")
-	elseif arg1 == L["crack_trigger"] then
+	elseif string.find(arg1, L["crack_trigger"]) then
 		self:Message(L["crack1_warn"], "Urgent")
-	elseif arg1 == L["shatter_trigger"] then
+	elseif string.find(arg1, L["shatter_trigger"]) then
 		self:Message(L["crack2_warn"], "Important")
 	end
 end

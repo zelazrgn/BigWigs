@@ -70,7 +70,7 @@ L:RegisterTranslations("deDE", function() return {
 module.revision = 20004 -- To be overridden by the module!
 module.enabletrigger = module.translatedName -- string or table {boss, add1, add2}
 --module.wipemobs = { L["add_name"] } -- adds which will be considered in CheckForEngage
-module.toggleoptions = {"mc", "split", "bosskill"}
+module.toggleoptions = {"mc", --[["split",]] "bosskill"}
 
 -- locals
 local timer = {

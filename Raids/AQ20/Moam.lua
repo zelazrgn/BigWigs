@@ -88,8 +88,8 @@ local firstunparalyze = nil
 
 -- called after module is enabled
 function module:OnEnable()
-	self:RegisterEvent("CHAT_MSG_MONSTER_EMOTE")
-    self:RegisterEvent("CHAT_MSG_RAID_BOSS_EMOTE")
+	self:RegisterEvent("CHAT_MSG_MONSTER_EMOTE", "Emote")
+    self:RegisterEvent("CHAT_MSG_RAID_BOSS_EMOTE", "Emote")
 	self:RegisterEvent("CHAT_MSG_SPELL_AURA_GONE_OTHER")
 	
 	self:ThrottleSync(10, syncName.paralyze)
@@ -118,21 +118,13 @@ end
 --      Event Handlers	    --
 ------------------------------
 
-function module:CHAT_MSG_RAID_BOSS_EMOTE(msg)
+function module:Emote(msg)
     self:DebugMessage("moam raid boss emote: " .. msg)
     if string.find(msg, L["addstrigger"]) then -- alternative trigger: Moam gains Energize.
 		self:Sync(syncName.paralyze)
 	elseif string.find(msg, L["returntrigger2"]) then
         self:Sync(syncName.unparalyze)
 	end
-end
-function module:CHAT_MSG_MONSTER_EMOTE(msg)
-    self:DebugMessage("moam monster emote: " .. msg)
-	if string.find(msg, L["addstrigger"]) then -- alternative trigger: Moam gains Energize.
-		self:Sync(syncName.paralyze)
-	elseif string.find(msg, L["returntrigger2"]) then
-        self:Sync(syncName.unparalyze)
-    end
 end
 
 function module:CHAT_MSG_SPELL_AURA_GONE_OTHER(msg)
@@ -159,6 +151,8 @@ end
 ------------------------------
 
 function module:Paralyze()
+	self:RemoveBar(L["paralyzebar"])
+	self:RemoveBar(L["addsbar"])
 	if self.db.profile.adds then
 		self:Message(L["addswarn"], "Important")
 	end
@@ -172,6 +166,8 @@ function module:Paralyze()
 end
 
 function module:Unparalyze()
+	self:RemoveBar(L["paralyzebar"])
+	self:RemoveBar(L["addsbar"])
 	if firstunparalyze then
 		firstunparalyze = false
 	elseif self.db.profile.paralyze then 

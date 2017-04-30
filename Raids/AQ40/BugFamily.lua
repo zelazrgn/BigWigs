@@ -33,9 +33,9 @@ L:RegisterTranslations("enUS", function() return {
 	toxicvolley_bar = "Toxic Volley",
 	toxicvolley_message = "Toxic Volley in 3 Seconds!",
 
-	panic_trigger = "is afflicted by Fear%.",
-	panicresist_trigger = "Princess Yauj 's Fear was resisted",
-	panicimmune_trigger = "Princess Yauj 's Fear fail(.+) immune",
+	panic_trigger = "afflicted by Panic%.",
+	panicresist_trigger = "Panic was resisted",
+	panicimmune_trigger = "Panic fail(.+) immune",
 	
     toxicvaporsyou_trigger = "You are afflicted by Toxic Vapors\.",
 	toxicvaporsother_trigger = "(.+) is afflicted by Toxic Vapors\.",
@@ -317,7 +317,7 @@ function module:Spells(msg)
 	elseif msg == L["toxicvaporsyou_trigger"] and self.db.profile.announce then		
 		self:Message(L["toxicvapors_message"], "Attention", "Alarm")
 	elseif toxicvaporsother and self.db.profile.announce then		
-		--self:TriggerEvent("BigWigs_SendTell", toxicvaporsother, L["toxicvapors_message"]) -- can cause whisper bug on nefarian
+		self:TriggerEvent("BigWigs_SendTell", toxicvaporsother, L["toxicvapors_message"]) -- can cause whisper bug on nefarian
 	end
 end
 
