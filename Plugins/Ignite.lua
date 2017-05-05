@@ -37,6 +37,8 @@ L:RegisterTranslations("enUS", function() return {
     ["Send Stop"] = true,
     ["Send Stop messages to all raid members"] = true,
     ["font"] = "Fonts\\FRIZQT__.TTF",
+	["Always show in raid"] = true,
+	["Always show in raid after ignite tick"] = true,
 	
 	["Stacks"] = true,
 	["Damage"] = true,
@@ -74,6 +76,8 @@ L:RegisterTranslations("deDE", function() return {
     ["Send Stop"] = "Sende Stop",
     ["Send Stop messages to all raid members"] = "Sende Stop Nachricht an alle Schlachtzugsteilnehmer.",
 	["font"] = "Fonts\\FRIZQT__.TTF",
+	["Always show in raid"] = true,
+	["Always show in raid after ignite tick"] = true,
 	
 	["Stacks"] = "Stapel",
 	["Damage"] = "Schaden",
@@ -108,6 +112,7 @@ BigWigsIgnite.defaultDB = {
 	posy = nil,
     isVisible = nil,
     showWarnings = nil,
+	showalways = nil,
 }
 BigWigsIgnite.stacks = 0
 BigWigsIgnite.damage = 0
@@ -175,12 +180,7 @@ BigWigsIgnite.consoleOptions = {
             order = 102,
             get = function() return BigWigsIgnite.db.profile.showWarnings end,
             set = function(v) 
-                BigWigsIgnite.db.profile.showWarnings = v
-                if v then
-                    BigWigsIgnite:Show()
-                else
-                    BigWigsIgnite:Hide()
-                end
+                BigWigsIgnite.db.profile.showWarnings = not BigWigsIgnite.db.profile.showWarnings
             end,
         },
         stop = {
@@ -191,6 +191,16 @@ BigWigsIgnite.consoleOptions = {
             func = function() 
                 --BigWigs:DebugMessage("going to send stop")
                 BigWigsIgnite:SendStop() 
+            end,
+        },
+        showalways = {
+            type = "toggle",
+            name = L["Always show in raid"],
+            desc = L["Always show in raid after ignite tick"],
+            order = 104,
+            get = function() return BigWigsIgnite.db.profile.alwaysShow end,
+            set = function(v) 
+                BigWigsIgnite.db.profile.alwaysShow = not BigWigsIgnite.db.profile.alwaysShow
             end,
         }
 		--[[spacer = {
@@ -364,7 +374,12 @@ function BigWigsIgnite:PlayerDamageEvents(msg)
 				end
 			end
 		end
-        
+        if BigWigsIgnite.db.profile.alwaysShow then
+			local _, class = UnitClass("player")
+			if class == "MAGE" then
+				BigWigsIgnite:Show()
+			end
+		end
         self:Update()
 		return
     end
