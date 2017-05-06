@@ -170,7 +170,6 @@ BigWigs:RegisterChatCommand({"/bw", "/BigWigs"}, BigWigs.cmdtable)
 BigWigs.debugFrame = ChatFrame1
 BigWigs.revision = 20017
 
-
 function BigWigs:DebugMessage(msg, module)
     if not msg then msg = "" end
     local prefix = "|cfB34DFFf[BigWigs Debug]|r - ";
