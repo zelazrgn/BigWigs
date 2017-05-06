@@ -154,7 +154,7 @@ L:RegisterTranslations("frFR", function() return {
 
 BigWigsRaidWarn = BigWigs:NewModule(L["RaidWarning"], "AceHook-2.1")
 BigWigsRaidWarn.defaultDB = {
-	whisper = true,
+	whisper = false,
 	broadcast = false,
 	useraidchannel = false,
 	showwhispers = true,
