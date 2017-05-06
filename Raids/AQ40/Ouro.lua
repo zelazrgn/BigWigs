@@ -336,6 +336,7 @@ function module:Submerge()
 	self:RemoveBar(L["possible_submerge_bar"])
 
     self.phase = "submerged"
+	self:KTM_Reset()
     
 	if self.db.profile.submerge then
 		self:Message(L["submergeannounce"], "Important")
