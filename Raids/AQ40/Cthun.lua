@@ -191,8 +191,8 @@ local timer = {
 	p1Tentacle = 45,      -- tentacle timers for phase 1
 	p1TentacleStart = 45, -- delay for first tentacles from engage onwards
 	p1GlareStart = 45,    -- delay for first dark glare from engage onwards
-	p1Glare = 85,         -- interval for dark glare
-	p1GlareCasting = 4,   -- time it takes from casting dark glare until the spell starts
+	p1Glare = 87,         -- interval for dark glare
+	p1GlareCasting = 3,   -- time it takes from casting dark glare until the spell starts
 	p1GlareDuration = 39, -- duration of dark glare
 	
 	p2Tentacle = 30,      -- tentacle timers for phase 2
