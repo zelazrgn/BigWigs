@@ -39,6 +39,10 @@ L:RegisterTranslations("enUS", function() return {
 	
     toxicvaporsyou_trigger = "You are afflicted by Toxic Vapors\.",
 	toxicvaporsother_trigger = "(.+) is afflicted by Toxic Vapors\.",
+	
+	toxicvaporsyou_trigger2 = "You suffer (%d+) (.+) from Lord Kri's Toxic Vapors.",
+	toxicvaporsother_trigger2 = "(.+) suffers (%d+) (.+) from Lord Kri's Toxic Vapors.",
+	
 	toxicvapors_message = "Move away from the Poison Cloud!",
 	enrage_bar = "Enrage",
 	warn5minutes = "Enrage in 5 minutes!",
@@ -310,14 +314,17 @@ end
 
 function module:Spells(msg)
 	local _,_,toxicvaporsother,_ = string.find(msg, L["toxicvaporsother_trigger"])
+	local _,_,toxicvaporsother2,_ = string.find(msg, L["toxicvaporsother_trigger2"])
 	if string.find(msg, L["panic_trigger"]) or string.find(msg, L["panicresist_trigger"]) or string.find(msg, L["panicimmune_trigger"]) then
 		self:Sync(syncName.panic)
 	elseif string.find(msg, L["toxicvolleyhit_trigger"]) or string.find(msg, L["toxicvolleyafflicted_trigger"]) or string.find(msg, L["toxicvolleyresist_trigger"]) or string.find(msg, L["toxicvolleyimmune_trigger"]) then
 		self:Sync(syncName.volley)
-	elseif msg == L["toxicvaporsyou_trigger"] and self.db.profile.announce then		
+	elseif ( msg == L["toxicvaporsyou_trigger"] or string.find(msg, L["toxicvaporsyou_trigger2"]) ) and self.db.profile.announce then		
 		self:Message(L["toxicvapors_message"], "Attention", "Alarm")
 	elseif toxicvaporsother and self.db.profile.announce then		
-		self:TriggerEvent("BigWigs_SendTell", toxicvaporsother, L["toxicvapors_message"]) -- can cause whisper bug on nefarian
+		self:TriggerEvent("BigWigs_SendTell", toxicvaporsother, L["toxicvapors_message"])
+	elseif toxicvaporsother2 and self.db.profile.announce then		
+		self:TriggerEvent("BigWigs_SendTell", toxicvaporsother2, L["toxicvapors_message"])
 	end
 end
 
