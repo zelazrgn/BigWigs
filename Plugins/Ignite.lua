@@ -105,7 +105,7 @@ L:RegisterTranslations("deDE", function() return {
 -----------------------------------------------------------------------
 
 BigWigsIgnite = BigWigs:NewModule("Ignite")
-BigWigsIgnite.revision = 20004
+BigWigsIgnite.revision = 20005
 BigWigsIgnite.external = true
 BigWigsIgnite.defaultDB = {
     posx = nil,
@@ -149,15 +149,9 @@ BigWigsIgnite.consoleOptions = {
             desc = L["Show the ignite frame."],
             order = 100,
             get = function() 
-                if BigWigsIgnite.db.profile.isVisible then
-                    --BigWigs:DebugMessage("test true")
-                else
-                    --BigWigs:DebugMessage("test false")
-                end
                 return BigWigsIgnite.db.profile.isVisible 
             end,
             set = function(v) 
-                --BigWigs:DebugMessage("hallo")
                 BigWigsIgnite.db.profile.isVisible = v
                 if v then
                     BigWigsIgnite:Show()
@@ -179,9 +173,7 @@ BigWigsIgnite.consoleOptions = {
             desc = L["Show Warnings from other players even if the frame is hidden."],
             order = 102,
             get = function() return BigWigsIgnite.db.profile.showWarnings end,
-            set = function(v) 
-                BigWigsIgnite.db.profile.showWarnings = not BigWigsIgnite.db.profile.showWarnings
-            end,
+            set = function(v) BigWigsIgnite.db.profile.showWarnings = v end,
         },
         stop = {
             type = "execute",
@@ -199,9 +191,7 @@ BigWigsIgnite.consoleOptions = {
             desc = L["Always show in raid after ignite tick"],
             order = 104,
             get = function() return BigWigsIgnite.db.profile.alwaysShow end,
-            set = function(v) 
-                BigWigsIgnite.db.profile.alwaysShow = not BigWigsIgnite.db.profile.alwaysShow
-            end,
+            set = function(v) BigWigsIgnite.db.profile.alwaysShow = v end,
         }
 		--[[spacer = {
 			type = "header",
@@ -377,7 +367,9 @@ function BigWigsIgnite:PlayerDamageEvents(msg)
         if BigWigsIgnite.db.profile.alwaysShow then
 			local _, class = UnitClass("player")
 			if class == "MAGE" then
-				BigWigsIgnite:Show()
+				if not BigWigsIgnite.db.profile.isVisible then
+					self:Show()
+				end
 			end
 		end
         self:Update()
