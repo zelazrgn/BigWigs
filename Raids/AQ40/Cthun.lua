@@ -232,9 +232,15 @@ local syncName = {
     giantEyeSpawn = "GiantEyeSpawn"..module.revision,
 	giantEyeEyeBeam = "GiantEyeEyeBeam"..module.revision,
 	cthunEyeBeam = "CThunEyeBeam"..module.revision,
+	fleshtentacledead = "CThunFleshTentacleDead"..module.revision,
+	fleshtentacle10 = "CThunFleshTentacle10"..module.revision,
+	fleshtentacle20 = "CThunFleshTentacle20"..module.revision,
+	fleshtentacle30 = "CThunFleshTentacle30"..module.revision,
+	fleshtentacle40 = "CThunFleshTentacle40"..module.revision,
 }
 
 local gianteye = "Giant Eye Tentacle"
+local fleshtentacle = "Flesh Tentacle"
 
 local health = 100
 
@@ -265,6 +271,7 @@ function module:OnEnable()
 	self:RegisterEvent("CHAT_MSG_SPELL_PET_DAMAGE", "PlayerDamageEvents") 				-- alternative weaken trigger for nefarian
 	self:RegisterEvent("CHAT_MSG_SPELL_PARTY_DAMAGE", "PlayerDamageEvents") 			-- alternative weaken trigger for nefarian
 	self:RegisterEvent("CHAT_MSG_SPELL_FRIENDLYPLAYER_DAMAGE", "PlayerDamageEvents")	-- alternative weaken trigger for nefarian
+	self:RegisterEvent("UNIT_HEALTH")
      
     
     self:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_CREATURE_DAMAGE", "CheckEyeBeam")
@@ -279,6 +286,10 @@ function module:OnEnable()
 	self:ThrottleSync(3, syncName.giantEyeDown)
 	self:ThrottleSync(600, syncName.weakenOver)
 	self:ThrottleSync(30, syncName.giantClawSpawn)
+	self:ThrottleSync(60, syncName.fleshtentacle10)
+	self:ThrottleSync(60, syncName.fleshtentacle20)
+	self:ThrottleSync(60, syncName.fleshtentacle30)
+	self:ThrottleSync(60, syncName.fleshtentacle40)
 end
 
 -- called after module is enabled and after each wipe
@@ -286,6 +297,7 @@ function module:OnSetup()
 	self:RegisterEvent("CHAT_MSG_COMBAT_HOSTILE_DEATH")
     
 	self.started = nil
+	fleshtentacledead = nil
 	eyeTarget = nil
 	cthunstarted = nil
 	firstGlare = nil
@@ -320,6 +332,8 @@ function module:CHAT_MSG_COMBAT_HOSTILE_DEATH(msg)
 		self:Sync(syncName.p2Start)
 	elseif (msg == string.format(UNITDIESOTHER, gianteye)) then
 		self:Sync(syncName.giantEyeDown)
+	elseif (msg == string.format(UNITDIESOTHER, fleshtentacle)) and not fleshtentacledead then
+		self:Sync(syncName.fleshtentacledead)
 	end
 end
 
@@ -387,6 +401,21 @@ function module:CheckDigestiveAcid(msg)
     end
 end
 
+function module:UNIT_HEALTH(arg1)
+	if UnitName(arg1) == fleshtentacle then
+		local health = UnitHealth(arg1)
+		local maxhealth = UnitHealthMax(arg1)
+		if health/maxhealth*100 < 11 and fleshtentacledead then
+			self:Sync(syncName.fleshtentacle10)
+		elseif health/maxhealth*100 < 21 and fleshtentacledead then
+			self:Sync(syncName.fleshtentacle20)
+		elseif health/maxhealth*100 < 31 and fleshtentacledead then
+			self:Sync(syncName.fleshtentacle30)
+		elseif health/maxhealth*100 < 41 and fleshtentacledead then
+			self:Sync(syncName.fleshtentacle40)
+		end
+	end
+end
 
 ------------------------------
 --      Synchronization	    --
@@ -409,6 +438,17 @@ function module:BigWigs_RecvSync(sync, rest, nick)
         self:GCTentacleRape()
     elseif sync == syncName.giantEyeSpawn then
         self:GTentacleRape()
+	elseif sync == syncName.fleshtentacledead then
+		fleshtentacledead = true
+		self:Message("First Flesh Tentacle dead", "Important" )
+	elseif sync == syncName.fleshtentacle10 then
+		self:Message("Second Flesh Tentacle 10%", "Important" )
+	elseif sync == syncName.fleshtentacle20 then
+		self:Message("Second Flesh Tentacle 20%", "Important" )
+	elseif sync == syncName.fleshtentacle30 then
+		self:Message("Second Flesh Tentacle 30%", "Important" )
+	elseif sync == syncName.fleshtentacle40 then
+		self:Message("Second Flesh Tentacle 40%", "Important" )
     end
 end
 
@@ -502,6 +542,7 @@ end
 
 function module:CThunWeakened()
     isWeakened = true
+	fleshtentacledead = nil
 	self:ThrottleSync(0.1, syncName.weakenOver)
     
 	if self.db.profile.weakened then
