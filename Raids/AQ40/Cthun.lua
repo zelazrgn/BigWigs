@@ -187,7 +187,7 @@ module.proximitySilent = false
 
 -- locals
 local timer = {
-	p1RandomEyeBeams = 9, -- how long does eye of c'thun target the same player at the beginning
+	p1RandomEyeBeams = 6, -- how long does eye of c'thun target the same player at the beginning
 	p1Tentacle = 45,      -- tentacle timers for phase 1
 	p1TentacleStart = 45, -- delay for first tentacles from engage onwards
 	p1GlareStart = 45,    -- delay for first dark glare from engage onwards
