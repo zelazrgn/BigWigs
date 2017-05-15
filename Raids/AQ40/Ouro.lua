@@ -178,10 +178,14 @@ function module:OnSetup()
 	berserkannounced = nil
 	self.started = nil
     self.phase = nil
+	submergeTime = 0
+	lastSandBlast = 0
+	lastSweep = 0
 end
 
 -- called after boss is engaged
 function module:OnEngage() 
+	self:KTM_SetTarget(self:ToString())
 	self.phase = "emerged"
 	self:ScheduleRepeatingEvent("bwourosubmergecheck", self.SubmergeCheck, 0.5, self)
 	
@@ -276,6 +280,7 @@ end
 ------------------------------
 
 function module:Sweep()
+	lastSweep = GetTime()
 	if self.db.profile.sweep then
 		self:RemoveBar(L["sweepbartext"]) -- remove timer bar
         self:Bar(L["sweepannounce"], timer.sweep, icon.sweep) -- show cast bar
@@ -286,6 +291,7 @@ function module:Sweep()
 end
 
 function module:Sandblast()
+	lastSandBlast = GetTime()
 	if self.db.profile.sandblast then
 		self:RemoveBar(L["sandblastbartext"]) -- remove timer bar
         self:Bar(L["sandblastannounce"], timer.sandblast, icon.sandblast) -- show cast bar
@@ -315,17 +321,18 @@ function module:Emerge()
 
         if self.db.profile.sweep then
             self:DelayedMessage(timer.sweepInterval - 5, L["sweepwarn"], "Important", nil, nil, true)
-            self:Bar(L["sweepbartext"], timer.sweepInterval, icon.sweep)
+            self:Bar(L["sweepbartext"], timer.sweepInterval-(submergeTime-lastSweep), icon.sweep)
         end	
 
         if self.db.profile.sandblast then
             self:DelayedMessage(timer.sandblastInterval - 5, L["sandblastwarn"], "Important", nil, nil, true)
-            self:Bar(L["sandblastbartext"], timer.sandblastInterval, icon.sandblast)
+            self:Bar(L["sandblastbartext"], timer.sandblastInterval-(submergeTime-lastSandBlast), icon.sandblast)
         end
     end
 end
 
 function module:Submerge()
+	submergeTime = GetTime()
 	self:CancelDelayedMessage(L["sweepwarn"])
 	self:CancelDelayedMessage(L["sandblastwarn"])
 	self:CancelDelayedMessage(L["emergewarn"])

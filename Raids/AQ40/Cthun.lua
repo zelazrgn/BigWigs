@@ -773,6 +773,8 @@ function module:GCTentacleRape()
     self:CancelScheduledEvent("bwcthungctentacles") -- ok
     self:ScheduleEvent("bwcthungctentacles", self.GCTentacleRape, timer.p2GiantClaw, self )
     if phase2started then
+		self:KTM_Reset()
+		self:KTM_SetTarget("Giant Claw Tentacle")
         if self.db.profile.giant then
             self:Bar(L["barGiantC"], timer.p2GiantClaw, icon.giantClaw)
         end
