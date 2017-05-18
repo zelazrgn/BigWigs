@@ -28,6 +28,10 @@ L:RegisterTranslations("enUS", function() return {
 	trigger7 = "Fandral! Your time has come! Go and hide in the Emerald Dream and pray we never find you!",
 	trigger8 = "Impudent fool! I will kill you myself!",
 	trigger10 = "I lied...",
+	
+	shield_trigger ="gains Shield of Rajaxx",
+	shield = "Shield of Rajaxx",
+	shield_cd = "Shield of Rajaxx CD",
     
     trigger2_2 = "Kill ",
             
@@ -79,15 +83,18 @@ L:RegisterTranslations("deDE", function() return {
 -- module variables
 module.revision = 20006 -- To be overridden by the module!
 module.enabletrigger = {module.translatedName, andorov} -- string or table {boss, add1, add2}
-module.toggleoptions = {"wave", "bosskill"}
+module.toggleoptions = {--[["wave",]] "bosskill"}
 
 
 -- locals
 local timer = {
     wave = 180,
+	yeggethShield = 6,
+	--yeggethShieldCD = 15,
 }
 local icon = {
     wave = "Spell_Holy_PrayerOfHealing",
+	yeggethShield = "Spell_Holy_SealOfProtection",
 }
 local syncName = {}
 
@@ -100,7 +107,8 @@ module:RegisterYellEngage(L["trigger1"])
 
 -- called after module is enabled
 function module:OnEnable()	
-	self:RegisterEvent("CHAT_MSG_MONSTER_YELL")
+	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_CREATURE_BUFFS")
+	--self:RegisterEvent("CHAT_MSG_MONSTER_YELL")
 	
 	--self.warnsets = {}
 	--for i=0,8 do 
@@ -132,7 +140,7 @@ function module:CheckForWipe()
     -- ignore wipe check
 end
 
-function module:CHAT_MSG_MONSTER_YELL(msg)
+--[[function module:CHAT_MSG_MONSTER_YELL(msg)
     --if string.find(msg, L["trigger1"]) then
         
     
@@ -156,4 +164,13 @@ function module:CHAT_MSG_MONSTER_YELL(msg)
         self:RemoveBar(L["warn2"])
         self:Bar(L["warn3"], timer.wave - 5, icon.wave) -- kill yell around 5s later
     end]]
+end]]
+
+function module:CHAT_MSG_SPELL_PERIODIC_CREATURE_BUFFS(msg)
+	if string.find(msg, L["shield_trigger"])then
+		--self:CancelDelayedBar(L["shield_cd"]) 
+		--self:RemoveBar(L["shield_cd"]) 
+		self:Bar(L["shield"], timer.yeggethShield, icon.yeggethShield)
+		--self:DelayedBar(timer.yeggethShield, L["shield_cd"], timer.yeggethShieldCD-timer.yeggethShield, icon.yeggethShield)
+	end
 end
