@@ -49,11 +49,11 @@ L:RegisterTranslations("enUS", function() return {
     ["your"] = true,
 	["Your"] = true,
 
-	fire_test = "^([%w]+)([%s's]*) ([%w%s:]+) crits ([%w%s:]+) for ([%d]+) ([%w]+) damage.",
-	ignite_stack_test = "^([%w%s:]+) is afflicted by Ignite.[%s%(]*([%d]*)",
-	ignite_damage_test = "^([%w%s:]+) suffers ([%d]+) Fire damage from ([%w]+)([%s's]*) Ignite.",
+	fire_test = "^([%w]+)([%s's]*) (.+) crits (.+) for ([%d]+) ([%w]+) damage.",
+	ignite_stack_test = "^(.+) is afflicted by Ignite.[%s%(]*([%d]*)",
+	ignite_damage_test = "^(.+) suffers ([%d]+) Fire damage from ([%w]+)([%s's]*) Ignite.",
 	ignite_resist = "([%d]+) resisted",
-	ignite_fade_test = "^Ignite fades from ([%w%s:]+).",
+	ignite_fade_test = "^Ignite fades from (.+).",
 	
 	["Fireball"] = true,
 	["Scorch"] = true,
@@ -87,10 +87,10 @@ L:RegisterTranslations("deDE", function() return {
     ["your"] = "euer", -- check this
 	["Your"] = "Euer",
 	
-	fire_test = "^([%w]+)([%s's]*) ([%w%s:]+) trifft ([%w%s:]+) kritisch für ([%d]+) ([%w]+)schaden.", -- Saandro's Feuerball trifft Wächter des Anubisath kritisch für 2779 Feuerschaden.
-	ignite_stack_test = "^([%w%s:]+) ist von Entzünden [%s%(]*([%d]*) betroffen.",
-	ignite_damage_test = "^([%w%s:]+) erleidet ([%d]+) Feuerschaden von ([%w]+)([%s's]*) (durch Entzünden).",
-	ignite_fade_test = "^Entzünden schwindet von ([%w%s:]+).",
+	fire_test = "^([%w]+)([%s's]*) (.+) trifft (.+) kritisch für ([%d]+) ([%w]+)schaden.", -- Saandro's Feuerball trifft Wächter des Anubisath kritisch für 2779 Feuerschaden.
+	ignite_stack_test = "^(.+) ist von Entzünden [%s%(]*([%d]*) betroffen.",
+	ignite_damage_test = "^(.+) erleidet ([%d]+) Feuerschaden von ([%w]+)([%s's]*) (durch Entzünden).",
+	ignite_fade_test = "^Entzünden schwindet von (.+).",
 	
 	["Fireball"] = "Feuerball",
 	["Scorch"] = "Versengen",
