@@ -82,6 +82,7 @@ Plugins\Proximity.lua
 #Plugins\DousedRunes.lua
 #Plugins\Enrage.lua
 Plugins\Ignite.lua
+Plugins\WorldBuffTimers.lua
 
 Raids\ZG\Arlokk.lua
 Raids\ZG\Jeklik.lua
