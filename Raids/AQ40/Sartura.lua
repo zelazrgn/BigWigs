@@ -122,7 +122,7 @@ local timer = {
 	berserk = 600,
 	firstWhirlwind = 8,
 	whirlwind = 15,
-	nextWhirlwind = 8,
+	nextWhirlwind = 5,
 }
 local icon = {
 	berserk = "Spell_Shadow_UnholyFrenzy",
