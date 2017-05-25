@@ -5,7 +5,7 @@
 
 local module, L = BigWigs:ModuleDeclaration("Ragnaros", "Molten Core")
 
-module.revision = 20007 -- To be overridden by the module!
+module.revision = 20008 -- To be overridden by the module!
 module.enabletrigger = module.translatedName -- string or table {boss, add1, add2}
 module.toggleoptions = {"start", "aoeknock", "submerge", "emerge", "adds", "bosskill"}
 
@@ -56,6 +56,7 @@ local phase = nil
 L:RegisterTranslations("enUS", function() return {
 	knockback_trigger = "^TASTE",
 	submerge_trigger = "^COME FORTH,",
+	submerge_trigger2 = "^YOU CANNOT DEFEAT THE LIVING FLAME,",
 	engage_trigger = "^NOW FOR YOU",
 	engage_soon_trigger1 = "Imprudent whelps!",
     engage_soon_trigger2 = "TOO SOON! YOU HAVE AWAKENED ME TOO SOON",
@@ -63,7 +64,7 @@ L:RegisterTranslations("enUS", function() return {
     hammer_trigger = "^BY FIRE BE PURGED!",
 
 	knockback_message = "Knockback!",
-	knockback_soon_message = "5 sec to knockback!",
+	knockback_soon_message = "Knockback soon!",
 	submerge_message = "Ragnaros submerged. Incoming Sons of Flame!",
 	emerge_soon_message = "15 sec until Ragnaros emerges!",
 	emerge_message = "Ragnaros emerged, 3 minutes until submerge!",
@@ -112,7 +113,7 @@ L:RegisterTranslations("deDE", function() return {
     hammer_trigger = "^DAS FEUER WIRD EUCH!",
 
 	knockback_message = "Rücksto\195\159!",
-	knockback_soon_message = "5 Sekunden bis Rücksto\195\159!",
+	knockback_soon_message = "3 Sekunden bis Rücksto\195\159!",
 	submerge_message = "Ragnaros ist untergetaucht! Söhne der Flamme kommen!",
 	emerge_soon_message = "15 Sekunden bis Ragnaros auftaucht",
 	emerge_message = "Ragnaros ist aufgetaucht, Untertauchen in 3 Minuten!",
@@ -152,6 +153,9 @@ L:RegisterTranslations("deDE", function() return {
             
     ["Combat"] = "Kampf beginnt",
 } end)
+
+local lastKnockback = nil
+local lastSubmerge = nil
 
 ------------------------------
 --      Initialization      --
@@ -203,7 +207,7 @@ end
 function module:CHAT_MSG_MONSTER_YELL(msg)
 	if string.find(msg, L["knockback_trigger"]) and self.db.profile.aoeknock then
 		self:Sync(syncName.knockback)
-	elseif string.find(msg, L["submerge_trigger"]) then
+	elseif string.find(msg, L["submerge_trigger"]) or string.find(msg, L["submerge_trigger2"]) then
 		self:Sync(syncName.submerge)
 	elseif string.find(msg, L["engage_trigger"]) then
 		self:SendEngageSync()
@@ -251,8 +255,12 @@ end
 
 function module:Submerge()
     phase = "submerged"
+	lastSubmerge = GetTime()
 	self:CancelScheduledEvent("bwragnarosaekbwarn")
 	self:RemoveBar(L["knockback_bar"])
+	self:CancelDelayedMessage(L["knockback_soon_message"])
+	self:CancelDelayedWarningSign(icon.knockbackWarn)
+	self:RemoveWarningSign(icon.knockbackWarn, true)
 	
 	if self.db.profile.submerge then
 		self:Message(L["submerge_message"], "Important")
@@ -281,7 +289,22 @@ function module:Emerge()
 		self:Message(L["emerge_message"], "Attention")
 	end
 	
-	self:Knockback()
+	if lastSubmerge then
+		local knocktimer = timer.knockback-(lastSubmerge-lastKnockback)
+		if knocktimer > 0 then
+			self:Bar(L["knockback_bar"], knocktimer, icon.knockback)
+		end
+		if knocktimer > 3 then
+			self:DelayedMessage(knocktimer - 3, L["knockback_soon_message"], "Urgent", true, "Alarm", nil, nil, true)
+			self:DelayedWarningSign(knocktimer - 3, icon.knockbackWarn, 8)
+		else
+			self:Message(L["knockback_soon_message"], "Urgent", true, "Alarm", nil, nil, true)
+			self:WarningSign(icon.knockbackWarn, 8)
+		end
+		firstKnockback = false
+	else
+		self:Knockback()
+	end
 	
 	if self.db.profile.submerge then
 		self:Bar(L["submerge_bar"], timer.submerge, icon.submerge)
@@ -291,7 +314,7 @@ function module:Emerge()
 		self:DelayedMessage(timer.submerge - 10, L["submerge_10sec_message"], "Attention", nil, nil, true)
 		self:DelayedMessage(timer.submerge - 5, L["submerge_5sec_message"], "Attention", nil, nil, true)
 		
-		self:DelayedSync(timer.submerge, syncName.submerge)
+		--self:DelayedSync(timer.submerge, syncName.submerge)
 	end
     --self:TriggerEvent("BigWigs_StopCounterBar", self, "Sons dead")
 end
@@ -305,10 +328,11 @@ function module:Knockback()
 			self:Message(L["knockback_message"], "Important")
 		end
 		firstKnockback = false
-		self:RemoveWarningSign(icon.knockbackWarn)
+		self:RemoveWarningSign(icon.knockbackWarn, true)
 		self:Bar(L["knockback_bar"], timer.knockback, icon.knockback)
-		self:DelayedMessage(timer.knockback - 5, L["knockback_soon_message"], "Urgent", true, "Alarm", nil, nil, true)
+		self:DelayedMessage(timer.knockback - 3, L["knockback_soon_message"], "Urgent", true, "Alarm", nil, nil, true)
 		self:DelayedWarningSign(timer.knockback - 3, icon.knockbackWarn, 8)
+		lastKnockback = GetTime()
 	end
 end
 
