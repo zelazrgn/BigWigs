@@ -5,7 +5,7 @@
 
 local module, L = BigWigs:ModuleDeclaration("Onyxia", "Onyxia's Lair")
 
-module.revision = 20003 -- To be overridden by the module!
+module.revision = 20004 -- To be overridden by the module!
 module.enabletrigger = module.translatedName -- string or table {boss, add1, add2}
 module.toggleoptions = {"flamebreath", "deepbreath", "wingbuffet", "fireball", "phase", "onyfear", "bosskill"}
 
@@ -110,7 +110,7 @@ L:RegisterTranslations("enUS", function() return {
 	deepbreath_cast = "Deep Breath",
 	flamebreath_cast = "Flame Breath",
 	wingbuffet_cast = "Wing Buffet",
-	fireball_cast = "Fireball",
+	fireball_cast = "Fireball on %s",
 } end )
 
 L:RegisterTranslations("deDE", function() return {
@@ -160,9 +160,10 @@ L:RegisterTranslations("deDE", function() return {
 	deepbreath_cast = "Tiefer Atem",
 	flamebreath_cast = "Flammenatem",
 	wingbuffet_cast = "Fl\195\188gelsto\195\159",
-	fireball_cast = "Feuerball",
+	fireball_cast = "Feuerball on %s",
 } end )
 
+local fireballTarget = nil
 
 ------------------------------
 --      Initialization      --
@@ -191,6 +192,7 @@ function module:OnSetup()
 	transitioned = false
 	self.started = false
     phase = 0
+	eyeTarget = nil
 end
 
 -- called after boss is engaged
@@ -309,10 +311,26 @@ function module:FlameBreath()
 	end
 end
 
-function module:Fireball()
+function module:DelayedFireballCheck()
+	local name = "Unknown"
+    self:CheckTarget()
+    if fireballTarget then
+        name = fireballTarget
+        local function setMark()
+            self:Icon(name)
+        end
+		self:ScheduleEvent("OnyxiaDelayedFireballMark", setMark, 1, self)
+        if name == UnitName("player") then
+            self:WarningSign(icon.fireball, 3 - 0.1)
+        end
+    end
 	if self.db.profile.fireball then
-		self:Bar(L["fireball_cast"], 3, icon.fireball, true, "red")
+		self:Bar(string.format(L["fireball_cast"], name), 3 - 0.1, icon.fireball, true, "red")
 	end
+end
+
+function module:Fireball()
+	self:ScheduleEvent("OnyxiaDelayedFireballCheck", self.DelayedFireballCheck, 0.1, self)
 end
 
 function module:Fear()
@@ -323,5 +341,29 @@ function module:Fear()
 		self:Bar(L["fear_cast"], timer.fearCast, icon.fear, true, "white") -- add cast bar
 		self:DelayedBar(timer.fearCast, L["fear_next"], timer.fear, icon.fear) -- delayed timer bar
         self:WarningSign(icon.fear, 5)
+	end
+end
+
+-----------------------
+-- Utility Functions --
+-----------------------
+
+function module:CheckTarget()
+	local i
+	local newtarget = nil
+	local enemy = self:ToString()
+	
+	if UnitName("playertarget") == enemy then
+		newtarget = UnitName("playertargettarget")
+	else
+		for i = 1, GetNumRaidMembers(), 1 do
+			if UnitName("Raid"..i.."target") == enemy then
+				newtarget = UnitName("Raid"..i.."targettarget")
+				break
+			end
+		end
+	end
+	if newtarget then
+		fireballTarget = newtarget
 	end
 end
