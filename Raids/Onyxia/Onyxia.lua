@@ -39,26 +39,6 @@ local syncName = {
 local transitioned = false
 local phase = 0
 
---[[
-10:54 p2
-11:26 deepbreath 32
-11:46 deepbreath 20
-12:07 deepbreath 21
-
-NW-SO
-09:52 p2
-10:24 db 32
-10:48 db 24
-11:12 db 24
-
-West-Ost
-16:39 p2
-17:11 db 32
-17:32 db 21
-
-fear 12s after p3
-]]
-
 ----------------------------
 --      Localization      --
 ----------------------------
@@ -164,6 +144,7 @@ L:RegisterTranslations("deDE", function() return {
 } end )
 
 local fireballTarget = nil
+local iconNumber = 8
 
 ------------------------------
 --      Initialization      --
@@ -192,7 +173,8 @@ function module:OnSetup()
 	transitioned = false
 	self.started = false
     phase = 0
-	eyeTarget = nil
+	fireballTarget = nil
+	iconNumber = 8
 end
 
 -- called after boss is engaged
@@ -316,12 +298,13 @@ function module:DelayedFireballCheck()
     self:CheckTarget()
     if fireballTarget then
         name = fireballTarget
-        local function setMark()
-            self:Icon(name)
-        end
-		self:ScheduleEvent("OnyxiaDelayedFireballMark", setMark, 1, self)
+        self:Icon(name, iconNumber)
+		iconNumber = iconNumber - 1
+		if iconNumber < 7 then
+			iconNumber = 8
+		end
         if name == UnitName("player") then
-            self:WarningSign(icon.fireball, 3 - 0.1)
+            self:WarningSign(icon.fireball, 3)
         end
     end
 	if self.db.profile.fireball then
