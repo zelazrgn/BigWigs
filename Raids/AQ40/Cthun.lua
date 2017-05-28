@@ -75,6 +75,11 @@ L:RegisterTranslations("enUS", function() return {
     acid_desc = "Shows a warning sign when you have 5 stacks of digestive acid",
     digestiveAcidTrigger = "You are afflicted by Digestive Acid [%s%(]*([%d]*).",        
     msgDigestiveAcid = "5 Acid Stacks",
+	
+	["Second TentacleHP"] = "Second Tentacle %d%%",
+	["First Tentacle dead"] = "First Tentacle dead",
+	["First Tentacle"] = "First Tentacle",
+	["Second Tentacle"] = "Second Tentacle",
 
 	--[[GNPPtrigger	= "Nature Protection",
 	GSPPtrigger	= "Shadow Protection",
@@ -208,6 +213,7 @@ local timer = {
 	
 	reschedule = 50,      -- delay from the moment of weakening for timers to restart
 	target = 1,           -- delay for target change checking on Eye of C'Thun and Giant Eye Tentacle
+	CheckTentacleHP = 0.5, -- delay for updating flesh tentacle hp
 	weakened = 45,        -- duration of a weaken
 	
 	lastEyeTentaclesSpawn = 0,
@@ -233,19 +239,14 @@ local syncName = {
 	giantEyeEyeBeam = "GiantEyeEyeBeam"..module.revision,
 	cthunEyeBeam = "CThunEyeBeam"..module.revision,
 	fleshtentacledead = "CThunFleshTentacleDead"..module.revision,
-	fleshtentacle10 = "CThunFleshTentacle10"..module.revision,
-	fleshtentacle20 = "CThunFleshTentacle20"..module.revision,
-	fleshtentacle30 = "CThunFleshTentacle30"..module.revision,
-	fleshtentacle40 = "CThunFleshTentacle40"..module.revision,
 }
 
 local gianteye = "Giant Eye Tentacle"
 local fleshtentacle = "Flesh Tentacle"
 
-local health = 100
-
 local cthunstarted = nil
 local phase2started = nil
+local fleshtentacledead = false
 local firstGlare = nil
 local firstWarning = nil
 --local target = nil
@@ -271,7 +272,6 @@ function module:OnEnable()
 	self:RegisterEvent("CHAT_MSG_SPELL_PET_DAMAGE", "PlayerDamageEvents") 				-- alternative weaken trigger for nefarian
 	self:RegisterEvent("CHAT_MSG_SPELL_PARTY_DAMAGE", "PlayerDamageEvents") 			-- alternative weaken trigger for nefarian
 	self:RegisterEvent("CHAT_MSG_SPELL_FRIENDLYPLAYER_DAMAGE", "PlayerDamageEvents")	-- alternative weaken trigger for nefarian
-	self:RegisterEvent("UNIT_HEALTH")
      
     
     self:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_CREATURE_DAMAGE", "CheckEyeBeam")
@@ -286,10 +286,7 @@ function module:OnEnable()
 	self:ThrottleSync(3, syncName.giantEyeDown)
 	self:ThrottleSync(600, syncName.weakenOver)
 	self:ThrottleSync(30, syncName.giantClawSpawn)
-	self:ThrottleSync(60, syncName.fleshtentacle10)
-	self:ThrottleSync(60, syncName.fleshtentacle20)
-	self:ThrottleSync(60, syncName.fleshtentacle30)
-	self:ThrottleSync(60, syncName.fleshtentacle40)
+	self:ThrottleSync(30, syncName.fleshtentacledead)
 end
 
 -- called after module is enabled and after each wipe
@@ -297,7 +294,9 @@ function module:OnSetup()
 	self:RegisterEvent("CHAT_MSG_COMBAT_HOSTILE_DEATH")
     
 	self.started = nil
-	fleshtentacledead = nil
+	self.tentacleHP = 100
+	self.warning = 100
+	fleshtentacledead = false
 	eyeTarget = nil
 	cthunstarted = nil
 	firstGlare = nil
@@ -401,22 +400,6 @@ function module:CheckDigestiveAcid(msg)
     end
 end
 
-function module:UNIT_HEALTH(arg1)
-	if UnitName(arg1) == fleshtentacle then
-		local health = UnitHealth(arg1)
-		local maxhealth = UnitHealthMax(arg1)
-		if health/maxhealth*100 < 11 and fleshtentacledead then
-			self:Sync(syncName.fleshtentacle10)
-		elseif health/maxhealth*100 < 21 and fleshtentacledead then
-			self:Sync(syncName.fleshtentacle20)
-		elseif health/maxhealth*100 < 31 and fleshtentacledead then
-			self:Sync(syncName.fleshtentacle30)
-		elseif health/maxhealth*100 < 41 and fleshtentacledead then
-			self:Sync(syncName.fleshtentacle40)
-		end
-	end
-end
-
 ------------------------------
 --      Synchronization	    --
 ------------------------------
@@ -440,15 +423,11 @@ function module:BigWigs_RecvSync(sync, rest, nick)
         self:GTentacleRape()
 	elseif sync == syncName.fleshtentacledead then
 		fleshtentacledead = true
-		self:Message("First Flesh Tentacle dead", "Important" )
-	elseif sync == syncName.fleshtentacle10 then
-		self:Message("Second Flesh Tentacle 10%", "Important" )
-	elseif sync == syncName.fleshtentacle20 then
-		self:Message("Second Flesh Tentacle 20%", "Important" )
-	elseif sync == syncName.fleshtentacle30 then
-		self:Message("Second Flesh Tentacle 30%", "Important" )
-	elseif sync == syncName.fleshtentacle40 then
-		self:Message("Second Flesh Tentacle 40%", "Important" )
+		self.tentacleHP = 100
+		self:Message(L["First Tentacle dead"], "Important" )
+		self:TriggerEvent("BigWigs_StopHPBar", self, L["First Tentacle"])
+		self:TriggerEvent("BigWigs_StartHPBar", self, L["Second Tentacle"], 100)
+		self:TriggerEvent("BigWigs_SetHPBar", self, L["Second Tentacle"], 0)
     end
 end
 
@@ -488,7 +467,11 @@ function module:CThunP2Start()
 		phase2started = true
         doCheckForWipe = false -- disable wipe check since we get out of combat, enable it later again
 		tentacletime = timer.p2Tentacle
-
+		
+		self:TriggerEvent("BigWigs_StartHPBar", self, L["First Tentacle"], 100)
+		self:TriggerEvent("BigWigs_SetHPBar", self, L["First Tentacle"], 0)
+		self:ScheduleRepeatingEvent("bwcthunCheckTentacleHP", self.CheckTentacleHP, timer.CheckTentacleHP, self )
+		
 		self:Message(L["phase2starting"], "Bosskill")
 
         -- cancel dark glare
@@ -542,7 +525,10 @@ end
 
 function module:CThunWeakened()
     isWeakened = true
-	fleshtentacledead = nil
+	fleshtentacledead = false
+	self.tentacleHP = 100
+	self.warning = 100
+	self:TriggerEvent("BigWigs_StopHPBar", self, L["Second Tentacle"])
 	self:ThrottleSync(0.1, syncName.weakenOver)
     
 	if self.db.profile.weakened then
@@ -585,7 +571,8 @@ end
 function module:CThunWeakenedOver()
     isWeakened = nil
 	self:ThrottleSync(600, syncName.weakenOver)
-	
+	self:TriggerEvent("BigWigs_StartHPBar", self, L["First Tentacle"], 100)
+	self:TriggerEvent("BigWigs_SetHPBar", self, L["First Tentacle"], 0)
     self:CancelScheduledEvent("bwcthunweakenedover") -- ok
     
     if self.db.profile.weakened then
@@ -651,6 +638,41 @@ end
 -----------------------
 -- Utility Functions --
 -----------------------
+function module:CheckTentacleHP()
+	local health
+	if UnitName("playertarget") == fleshtentacle then
+		health = UnitHealth("playertarget")
+	else
+		for i = 1, GetNumRaidMembers(), 1 do
+			if UnitName("Raid"..i.."target") == fleshtentacle then
+				health = UnitHealth("Raid"..i.."target")
+				break;
+			end
+		end
+	end
+
+	if health and health ~= self.tentacleHP and health < self.tentacleHP then
+		self.tentacleHP = health
+		if fleshtentacledead then
+			self:TriggerEvent("BigWigs_SetHPBar", self, L["Second Tentacle"], 100-self.tentacleHP)
+			if self.tentacleHP < 10 and self.warning > 10 then
+				self.warning = 10
+				self:Message(string.format(L["Second TentacleHP"], self.warning), "Important" )
+			elseif self.tentacleHP < 20 and self.warning > 20 then
+				self.warning = 20
+				self:Message(string.format(L["Second TentacleHP"], self.warning), "Important" )
+			elseif self.tentacleHP < 30 and self.warning > 30 then
+				self.warning = 30
+				self:Message(string.format(L["Second TentacleHP"], self.warning), "Important" )
+			elseif self.tentacleHP < 40 and self.warning > 40 then
+				self.warning = 40
+				self:Message(string.format(L["Second TentacleHP"], self.warning), "Important" )
+			end
+		else
+			self:TriggerEvent("BigWigs_SetHPBar", self, L["First Tentacle"], 100-self.tentacleHP)
+		end
+	end
+end
 
 function module:CheckTarget()
 	local i
