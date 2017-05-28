@@ -7,8 +7,7 @@
 ## Notes-zhTW: 團隊首領戰訊息提示插件，帶有計時條。
 ## Author: Tekkub Stoutwrithe, Ammo, Shyva, Rabbit, LYQ, Dorann, Hosq & Others
 ## Version: 2.0.0
-## X-Website: https://github.com/xorann/BigWigs/releases
-## X-Email: xorann@gmail.com
+## X-Website: https://github.com/Hosq/BigWigs
 ## X-Category: Raid
 ## X-RelSite-WoWI: 5086
 ## X-RelSite-Curse: 4356
@@ -83,6 +82,7 @@ Plugins\Proximity.lua
 #Plugins\Enrage.lua
 Plugins\Ignite.lua
 Plugins\WorldBuffTimers.lua
+Plugins\ScorchTimer.lua
 
 Raids\ZG\Arlokk.lua
 Raids\ZG\Jeklik.lua
