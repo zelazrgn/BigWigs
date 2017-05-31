@@ -132,7 +132,7 @@ local timer = {
 	sweepInterval = 15,
 	sandblast = 2,
 	firstSandblast = 30,
-	sandblastInterval = 10,
+	sandblastInterval = 12,
 	nextEmerge = 27,
 }
 local icon = {
