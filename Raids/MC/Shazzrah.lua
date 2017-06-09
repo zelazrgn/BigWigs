@@ -176,7 +176,7 @@ function module:OnEngage()
     self:DelayedSync(timer.firstBlink, syncName.blink)
     
     if self.db.profile.curse then
-        --self:Bar(L["curse_bar"], timer.firstCurse, icon.curse) -- seems to be completly random
+        self:Bar(L["curse_bar"], timer.firstCurse, icon.curse) -- seems to be completly random
     end
     if self.db.profile.deaden then
         self:Bar(L["deaden_bar"], timer.firstDeaden, icon.deaden)
@@ -236,7 +236,7 @@ end
 
 function module:Curse()
     self:Message(L["curse_warn"], "Attention", "Alarm")
-    --self:Bar(L["curse_bar"], timer.curse, icon.curse) -- seems to be completly random
+    self:Bar(L["curse_bar"], timer.curse, icon.curse) -- seems to be completly random
 end
 
 function module:Blink()

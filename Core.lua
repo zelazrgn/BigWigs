@@ -596,7 +596,7 @@ function BigWigs.modulePrototype:WarningSign(icon, duration, force)
 	self:TriggerEvent("BigWigs_ShowWarningSign", "Interface\\Icons\\" .. icon, duration, force)
 end
 function BigWigs.modulePrototype:RemoveWarningSign(icon, forceHide)
-	self:TriggerEvent("BigWigs_HideWarningSign", icon, forceHide)
+	self:TriggerEvent("BigWigs_HideWarningSign", "Interface\\Icons\\" .. icon, forceHide)
 end
 function BigWigs.modulePrototype:DelayedWarningSign(delay, icon, duration, id)
 	if not id then id = "_" end

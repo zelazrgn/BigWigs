@@ -61,7 +61,7 @@ L:RegisterTranslations("deDE", function() return {
 ---------------------------------
 
 -- module variables
-module.revision = 20005 -- To be overridden by the module!
+module.revision = 20006 -- To be overridden by the module!
 module.enabletrigger = module.translatedName -- string or table {boss, add1, add2}
 module.toggleoptions = {"adds", "paralyze", "bosskill"}
 
@@ -75,8 +75,8 @@ local icon = {
 	unparalyze = "Spell_Shadow_CurseOfTounges"
 }
 local syncName = {
-	paralyze = "MoamParalyze",
-	unparalyze = "MoamUnparalyze",
+	paralyze = "MoamParalyze"..module.revision,
+	unparalyze = "MoamUnparalyze"..module.revision,
 }
 
 local firstunparalyze = nil
@@ -122,8 +122,6 @@ function module:Emote(msg)
     self:DebugMessage("moam raid boss emote: " .. msg)
     if string.find(msg, L["addstrigger"]) then -- alternative trigger: Moam gains Energize.
 		self:Sync(syncName.paralyze)
-	elseif string.find(msg, L["returntrigger2"]) then
-        self:Sync(syncName.unparalyze)
 	end
 end
 

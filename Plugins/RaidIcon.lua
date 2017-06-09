@@ -208,8 +208,6 @@ BigWigsRaidIcon.consoleOptions = {
 function BigWigsRaidIcon:OnEnable()
 	self:RegisterEvent("BigWigs_SetRaidIcon")
 	self:RegisterEvent("BigWigs_RemoveRaidIcon")
-	self.lastTarget = nil
-	self.lastMark = nil
 end
 
 function BigWigsRaidIcon:BigWigs_SetRaidIcon(player, iconnumber)
@@ -220,19 +218,8 @@ function BigWigsRaidIcon:BigWigs_SetRaidIcon(player, iconnumber)
 	end
 	icon = self.icontonumber[icon]
 	
-	local lastTarget
-	local lastMark
 	for i=1,GetNumRaidMembers() do
-		if UnitName("raid"..i) == self.lastTarget then
-			SetRaidTargetIcon("raid"..i, self.lastMark)
-			self.lastTarget = nil
-			self.lastMark = nil
-		end
 		if UnitName("raid"..i) == player then
-			if GetRaidTargetIndex("raid"..i) then
-				lastTarget = player
-				lastMark = GetRaidTargetIndex("raid"..i)
-			end
 			if not iconnumber then
 				SetRaidTargetIcon("raid"..i, icon)
 				lastplayer = player
@@ -242,10 +229,7 @@ function BigWigsRaidIcon:BigWigs_SetRaidIcon(player, iconnumber)
 			end
 		end
 	end
-	if lastTarget and lastMark then
-		self.lastTarget = lastTarget
-		self.lastMark = lastMark
-	end
+
 end
 
 function BigWigsRaidIcon:BigWigs_RemoveRaidIcon()
