@@ -272,6 +272,9 @@ function BigWigsScorchTimer:PlayerDamageEvents(msg)
 end
 
 function BigWigsScorchTimer:DelayedBar()
+	if not self.impScorch then
+		self.impScorch = self:CheckTalents()
+	end
 	if self.impScorch then
 		self:Sync(syncName.scorch.." "..self.lastVictim)
 	end

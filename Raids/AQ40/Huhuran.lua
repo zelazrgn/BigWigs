@@ -28,10 +28,11 @@ L:RegisterTranslations("enUS", function() return {
 	frenzygain_trigger = "Princess Huhuran gains Frenzy.",
     frenzyend_trigger = "Frenzy fades from Princess Huhuran.",
     frenzy_bar = "Frenzy",
-    frenzy_Nextbar = "Next Frenzy",
+    frenzy_Nextbar = "Possible Frenzy",
 	frenzy_message = "Frenzy - Tranq Shot!",
             
-	berserktrigger = "Princess Huhuran goes into a berserk rage!",
+	berserktrigger = "goes into a berserker rage!",
+	frenzytrigger = "goes into a killing frenzy!",
 	berserkwarn = "Berserk! Berserk! Berserk!",
 	berserksoonwarn = "Berserk Soon!",
 	stingtrigger = "afflicted by Wyvern Sting",
@@ -97,7 +98,8 @@ local timer = {
 	berserk = 300,
 	firstSting = 18,
 	sting = 15,
-    frenzy = 10,
+	frenzyInterval = 25,
+    frenzy = 8,
 }
 local icon = {
 	berserk = "INV_Shield_01",
@@ -112,7 +114,7 @@ local syncName = {
 }
 
 local berserkannounced = false
---local lastFrenzy = 0
+local lastFrenzy = 0
 local _, playerClass = UnitClass("player")
 
 ------------------------------
@@ -150,6 +152,9 @@ function module:OnEngage()
 	if self.db.profile.wyvern then 
 		self:Bar(L["bartext"], timer.firstSting, icon.sting)
 		self:DelayedMessage(timer.firstSting - 3, L["stingdelaywarn"], "Urgent", nil, nil, true)
+	end
+	if self.db.profile.frenzy then
+		self:Bar(L["frenzy_Nextbar"], timer.frenzyInterval, icon.frenzy, true, "white") 
 	end
 end
 
@@ -217,7 +222,7 @@ function module:BigWigs_RecvSync(sync, rest, nick)
 			self:Bar(L["bartext"], timer.sting, icon.sting)
 			self:DelayedMessage(timer.sting - 3, L["stingdelaywarn"], "Urgent", nil, nil, true)
 		end
-    elseif sync == syncName.frenzyGain then
+    elseif sync == syncName.frenzy then
         self:FrenzyGain()
     elseif sync == syncName.frenzyOver then
         self:FrenzyFade()
@@ -232,10 +237,10 @@ function module:FrenzyGain()
     if self.db.profile.frenzy then
 		self:Message(L["frenzy_message"], "Important", nil, true, "Alert")
 		self:Bar(L["frenzy_bar"], timer.frenzy, icon.frenzy, true, "red")
-        if playerClass == "HUNTER" or true then
+        if playerClass == "HUNTER" then
             self:WarningSign(icon.tranquil, timer.frenzy, true)
         end
-        --lastFrenzy = GetTime()
+        lastFrenzy = GetTime()
     end
 end
 
@@ -243,9 +248,9 @@ function module:FrenzyFade()
     if self.db.profile.frenzy then
         self:RemoveBar(L["frenzy_bar"])
         self:RemoveWarningSign(icon.tranquil, true)
-        --[[if lastFrenzy ~= 0 then
-            local NextTime = (lastFrenzy + timer.frenzy) - GetTime()
+        if lastFrenzy ~= 0 then
+            local NextTime = (lastFrenzy + timer.frenzyInterval) - GetTime()
             self:Bar(L["frenzy_Nextbar"], NextTime, icon.frenzy, true, "white")
-        end]]
+        end
     end
 end
