@@ -49,6 +49,8 @@ L:RegisterTranslations("enUS", function() return {
 
 	phase2starting	= "The Eye is dead! Body incoming!",
 	
+	playersInStomach = "Players in Stomach",
+	
 	giant_cmd = "giant",
 	giant_name = "Giant Eye Alert",
 	giant_desc = "Warn for Giant Eyes",
@@ -92,6 +94,11 @@ L:RegisterTranslations("enUS", function() return {
     proximity_cmd = "proximity",
     proximity_name = "Proximity Warning",
     proximity_desc = "Show Proximity Warning Frame",
+	
+    stomach_cmd = "stomach",
+    stomach_name = "Players in Stomach",
+    stomach_desc = "Show players in stomach instead of too close players",
+	
 } end )
 
 L:RegisterTranslations("deDE", function() return {
@@ -183,7 +190,7 @@ local eyeofcthun = AceLibrary("Babble-Boss-2.2")["Eye of C'Thun"]
 local cthun = AceLibrary("Babble-Boss-2.2")["C'Thun"]
 module.enabletrigger = {eyeofcthun, cthun} -- string or table {boss, add1, add2}
 --module.wipemobs = { L["add_name"] } -- adds which will be considered in CheckForEngage
-module.toggleoptions = {"rape", -1, "tentacle", "glare", "group", -1, "giant", "acid", "weakened", "proximity", "bosskill"}
+module.toggleoptions = {"rape", -1, "tentacle", "glare", "group", -1, "giant", "acid", "weakened", -1, "proximity", "stomach", "bosskill"}
 
 -- Proximity Plugin
 module.proximityCheck = function(unit) return CheckInteractDistance(unit, 2) end
@@ -307,6 +314,7 @@ function module:OnSetup()
 	tentacletime = timer.p1Tentacle
     
     self:RemoveProximity() 
+	self:TriggerEvent("BigWigs_StopDebuffTrack")
 end
 
 -- called after boss is engaged
@@ -317,6 +325,7 @@ end
 -- called after boss is disengaged (wipe(retreat) or victory)
 function module:OnDisengage()
 	self:RemoveProximity()
+	self:TriggerEvent("BigWigs_StopDebuffTrack")
 end
 
 
@@ -520,7 +529,9 @@ function module:CThunP2Start()
         
         timer.lastEyeTentaclesSpawn = GetTime() + 10
 	end
-
+	if self.db.profile.stomach then
+		self:TriggerEvent("BigWigs_StartDebuffTrack", self:ToString(), "Interface\\Icons\\Ability_Creature_Disease_02", L["playersInStomach"])
+	end
 end
 
 function module:CThunWeakened()

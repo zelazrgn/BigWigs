@@ -25,6 +25,8 @@ local activeModule = nil -- The module we're currently tracking proximity for.
 local anchor = nil
 local lastplayed = 0 -- When we last played an alarm sound for proximity.
 local tooClose = {} -- List of players who are too close.
+local hasDebuff = {} -- List of players who have the debuff.
+local debuffTexture = nil
 
 local OnOptionToggled = nil -- Function invoked when the proximity option is toggled on a module.
 
@@ -82,6 +84,8 @@ L:RegisterTranslations("enUS", function() return {
 	["Disabled"] = true,
 	["Disable the proximity display for all modules that use it."] = true,
 	["The proximity display has been disabled for %s, please use the boss modules options to enable it again."] = true,
+	
+	["Has Debuff"] = true,
 
 	proximity = "Proximity display",
 	proximity_desc = "Show the proximity window when appropriate for this encounter, listing players who are standing too close to you.",
@@ -209,6 +213,8 @@ function BigWigsProximity:OnEnable()
 	self:RegisterEvent("Ace2_AddonDisabled")
 	self:RegisterEvent("BigWigs_ShowProximity")
 	self:RegisterEvent("BigWigs_HideProximity")
+	self:RegisterEvent("BigWigs_StartDebuffTrack")
+	self:RegisterEvent("BigWigs_StopDebuffTrack")
 end
 
 function BigWigsProximity:OnDisable()
@@ -237,6 +243,17 @@ end
 
 function BigWigsProximity:Ace2_AddonDisabled()
     self:BigWigs_HideProximity()
+end
+
+function BigWigsProximity:BigWigs_StartDebuffTrack(moduleName, debuff, title)
+    if moduleName and debuff and BigWigs:HasModule(moduleName) then
+        local module = BigWigs:GetModule(moduleName)
+        self:StartDebuffTrack(module, debuff, title)
+    end
+end
+
+function BigWigsProximity:BigWigs_StopDebuffTrack()
+    self:StopDebuffTrack()
 end
 
 -----------------------------------------------------------------------
@@ -325,8 +342,10 @@ function BigWigsProximity:UpdateProximity()
 	end
 
 	if tablelength(tooClose) == 0 then
+		anchor:SetBackdropBorderColor(0.0,1.0,0.0) --- green
 		anchor.text:SetText(L["|cff777777Nobody|r"])
 	else
+		anchor:SetBackdropBorderColor(1.0,0.0,0.0) --- red
         local test = table.concat(tooClose, "\n");
 		anchor.text:SetText(table.concat(tooClose, "\n"))
 		--for k in pairs(tooClose) do tooClose[k] = nil end
@@ -365,7 +384,7 @@ function BigWigsProximity:SetupFrames()
         --edgeFile = "", edgeSize = 32,
 		insets = {left = 1, right = 1, top = 20, bottom = 1},
 	})
-
+	frame:SetBackdropBorderColor(1.0,1.0,1.0)
 	frame:SetBackdropColor(24/255, 24/255, 24/255)
 	frame:ClearAllPoints()
 	frame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
@@ -446,3 +465,76 @@ function BigWigsProximity:SavePosition()
 	self.db.profile.posy = anchor:GetTop() * s
 end
 
+function BigWigsProximity:StopDebuffTrack()
+    debuffActive = false
+	debuffTexture = nil
+	if anchor then anchor:Hide() end
+	self:CancelScheduledEvent("bwdebuffupdate")
+end
+
+function BigWigsProximity:StartDebuffTrack(module, debuff, title)
+    if self.db.profile.disabled then return end
+    if module and not module.db.profile.proximity then return end
+    
+    if module then
+        activeModule = module
+    end
+	
+	if not title then title = L["Has Debuff"] end
+	
+    active = false
+	debuffActive = true
+	debuffTexture = debuff
+	self:CancelScheduledEvent("bwproximityupdate")
+	
+	self:SetupFrames()
+
+	for k in pairs(hasDebuff) do hasDebuff[k] = nil end
+	anchor.text:SetText(L["|cff777777Nobody|r"])
+
+	anchor.cheader:SetText(title)
+	anchor:SetBackdropBorderColor(1.0,1.0,1.0)
+	anchor:Show()
+
+
+
+	if not self:IsEventScheduled("bwdebuffupdate") then
+		self:ScheduleRepeatingEvent("bwdebuffupdate", self.UpdateDebuff, .1, self)
+	end
+end
+
+function BigWigsProximity:UpdateDebuff()
+    --mod.proximityCheck = function( unit ) return CheckInteractDistance( unit, 3 ) end
+    
+	if not debuffActive then return end
+
+    for k in pairs(hasDebuff) do hasDebuff[k] = nil end
+    hasDebuff = {}
+    
+	local num = GetNumRaidMembers()
+    
+	for i = 1, num do
+		local name = GetRaidRosterInfo(i)
+        local unit = "raid"..i
+		if UnitExists(unit) and not UnitIsDeadOrGhost(unit) and not UnitIsUnit(unit, "player") then
+			for a=1,16 do
+				local t,c = UnitDebuff(unit,a);
+				if(t == nil) then break; end;
+				if(t == debuffTexture)
+				then
+					table.insert(hasDebuff, tostring(coloredNames[unit]))
+					break;
+				end
+			end
+		end
+		if tablelength(hasDebuff) > 4 then break end
+	end
+
+	if tablelength(hasDebuff) == 0 then
+		anchor.text:SetText(L["|cff777777Nobody|r"])
+	else
+        local test = table.concat(hasDebuff, "\n");
+		anchor.text:SetText(table.concat(hasDebuff, "\n"))
+		local t = time()
+	end
+end
