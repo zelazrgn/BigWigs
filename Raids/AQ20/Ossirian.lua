@@ -213,9 +213,9 @@ end
 ------------------------------
 
 function module:Cyclone()
-  self:CancelScheduledEvent("bw_ossirian_cyclone_repeating")
+  self:CancelScheduledEvent("bw_ossirian_cyclone")
   self:Bar(L["Cyclone"], timer.cyclone, icon.cyclone)
-  self:ScheduleRepeatingEvent("bw_ossirian_cyclone_repeating", self.Cyclone, timer.cyclone, self)
+  self:ScheduleEvent("bw_ossirian_cyclone", self.Cyclone, timer.cyclone, self)
 end
 
 function module:Weakness(weakness, delay)
