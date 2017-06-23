@@ -202,7 +202,7 @@ function module:BigWigs_RecvSync(sync, rest, nick)
 	elseif sync == syncName.supreme then
 		self:Supreme()
 	elseif sync == syncName.cyclone then
-		self:Bar(L["Cyclone"], timer.cyclone, icon.cyclone)
+		self:Cyclone()
 	elseif sync == syncName.warstomp then
 		self:Bar(L["WarStomp"], timer.warstomp, icon.warstomp)
 	end
@@ -211,6 +211,12 @@ end
 ------------------------------
 --      Sync Handlers	    --
 ------------------------------
+
+function module:Cyclone()
+  self:CancelScheduledEvent("bw_ossirian_cyclone_repeating")
+  self:Bar(L["Cyclone"], timer.cyclone, icon.cyclone)
+  self:ScheduleRepeatingEvent("bw_ossirian_cyclone_repeating", self.Cyclone, timer.cyclone, self)
+end
 
 function module:Weakness(weakness, delay)
 	if not weakness then
