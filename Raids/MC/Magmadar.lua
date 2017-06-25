@@ -56,11 +56,11 @@ L:RegisterTranslations("enUS", function() return {
 
 	-- AceConsole strings
 	cmd = "Magmadar",
-	
+
 	panic_cmd = "panic",
 	panic_name = "Warn for Panic",
 	panic_desc = "Warn when Magmadar casts Panic",
-	
+
 	frenzy_cmd = "frenzy",
 	frenzy_name = "Frenzy alert",
 	frenzy_desc = "Warn when Magmadar goes into a frenzy",
@@ -82,7 +82,7 @@ L:RegisterTranslations("deDE", function() return {
 	--panic_cmd = "panic",
 	panic_name = "Alarm für Panik",
 	panic_desc = "Warnung, wenn Magmadar AoE Furcht wirkt.",
-	
+
 	--frenzy_cmd = "frenzy",
 	frenzy_name = "Alarm für Raserei",
 	frenzy_desc = "Warnung, wenn Magmadar in Raserei gerät.",
@@ -155,10 +155,10 @@ function module:BigWigs_RecvSync(sync, rest, nick)
 	elseif sync == syncName.frenzy then
 		self:Frenzy()
 	elseif sync == syncName.frenzyOver then
-        self:FrenzyOver()
-    elseif sync == "MagmadarLavaBomb" then
-        --self:Bar("Lava Bomb", 11, "Spell_Fire_SelfDestruct")
-        --self:Sync(11, "MagmadarLavaBomb")
+		self:FrenzyOver()
+	elseif sync == "MagmadarLavaBomb" then
+	--self:Bar("Lava Bomb", 11, "Spell_Fire_SelfDestruct")
+	--self:Sync(11, "MagmadarLavaBomb")
 	end
 end
 
@@ -172,10 +172,10 @@ function module:Panic(delay)
 			delay = 0
 			self:Message(L["feartime"], "Important")
 		end
-	
-		self:DelayedMessage(timer.panic - 5 + delay, L["fearsoon"], "Urgent", nil, nil, true)		
+
+		self:DelayedMessage(timer.panic - 5 + delay, L["fearsoon"], "Urgent", nil, nil, true)
 		self:Bar(L["fearbar"], timer.panic + delay, icon.panic)
-		
+
 		if playerClass == "WARRIOR" then
 			self:DelayedSound(timer.panic - 10 + delay, "Ten")
 			self:DelayedSound(timer.panic - 3 + delay, "Three")
@@ -196,5 +196,5 @@ function module:Frenzy()
 end
 function module:FrenzyOver()
 	self:RemoveBar(L["frenzy_bar"])
-    self:RemoveWarningSign(icon.tranquil, true)
+	self:RemoveWarningSign(icon.tranquil, true)
 end
