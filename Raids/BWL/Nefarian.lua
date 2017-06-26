@@ -36,8 +36,6 @@ L:RegisterTranslations("enUS", function() return {
 	triggerpaladin	= "Paladins",
 	triggermage		= "Mages too%?",
 
-	landing_soon_warning = "Nefarian landing in 30 seconds!",
-	landing_very_soon = "Nefarian landing in 10 seconds!",
 	landing_warning = "Nefarian is landing!",
 	zerg_warning = "Zerg incoming!",
 	fear_warning = "Fear in 2 sec!",
@@ -128,8 +126,6 @@ L:RegisterTranslations("deDE", function() return {
 	triggerpaladin	= "Paladine",
 	triggermage		= "Magier",
 
-	landing_soon_warning = "Nefarian landet in 30 Sekunden!",
-	landing_very_soon = "Nefarian landet in 10 Sekunden!",
 	landing_warning = "Nefarian landet!",
 	zerg_warning = "Zerg kommt!",
 	fear_warning = "Furcht in 2s!",
@@ -289,12 +285,7 @@ end
 
 -- called after boss is engaged
 function module:OnEngage()
-	self:Message(L["landing_soon_warning"], "Important", true, "Long")
 	self:Bar(L["Mob_Spawn"], timer.mobspawn, icon.mobspawn)
-
-	--self:Bar(L["land"], 159, "INV_Misc_Head_Dragon_Black")
-	--self:DelayedMessage(105, L["landing_soon_warning"], "Important", true, "Alarm")
-	--self:DelayedMessage(125, L["landing_very_soon"], "Important", true, "Long")
 
 	self:TriggerEvent("BigWigs_StartCounterBar", self, L["Drakonids dead"], nefCounterMax, "Interface\\Icons\\inv_egg_01")
 	self:TriggerEvent("BigWigs_SetCounterBar", self, L["Drakonids dead"], (nefCounterMax - 0.1))
