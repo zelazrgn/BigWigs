@@ -65,8 +65,6 @@ L:RegisterTranslations("enUS", function() return {
 	weakened_name = "Weakened Alert",
 	weakened_desc = "Warn for Weakened State",
 	weakenedtrigger = "is weakened!",
-	vulnerability_direct_test = "^[%w]+[%s's]* ([%w%s:]+) ([%w]+) C'Thun for ([%d]+) ([%w]+) damage%.[%s%(]*([%d]*)",
-	vulnerability_dots_test = "^C'Thun suffers ([%d]+) ([%w]+) damage from [%w]+[%s's]* ([%w%s:]+)%.[%s%(]*([%d]*)",
 	weakened	= "C'Thun is weakened for 45 sec",
 	invulnerable2	= "Party ends in 5 seconds",
 	invulnerable1	= "Party over - C'Thun invulnerable",
@@ -154,8 +152,6 @@ L:RegisterTranslations("deDE", function() return {
 	weakened_name = "Schwäche Alarm", --"Weakened Alert",
 	weakened_desc = "Warnung für Schwäche Phase", -- "Warn for Weakened State",
 	weakenedtrigger = "ist geschwächt", -- "is weakened!",
-	vulnerability_direct_test = "^[%w]+[%ss]* ([%w%s:]+) ([%w]+) C'Thun für ([%d]+) ([%w]+) damage%.[%s%(]*([%d]*)",
-	vulnerability_dots_test = "^C'Thun suffers ([%d]+) ([%w]+) damage from [%w]+[%s's]* ([%w%s:]+)%.[%s%(]*([%d]*)",
 	weakened	= "C'Thun ist für 45 sec geschwächt", --"C'Thun is weakened for 45 sec",
 	invulnerable2	= "Party endet in 5 sec", --"Party ends in 5 seconds",
 	invulnerable1	= "Party vorbei - C'Thun unverwundbar", -- "Party over - C'Thun invulnerable",
@@ -274,12 +270,6 @@ function module:OnEnable()
 
 	self:RegisterEvent("CHAT_MSG_MONSTER_EMOTE", "Emote")		-- weakened triggering, does not work on nefarian
 	self:RegisterEvent("CHAT_MSG_RAID_BOSS_EMOTE", "Emote")		-- weakened triggering, does not work on nefarian
-	self:RegisterEvent("CHAT_MSG_COMBAT_SELF_HITS", "PlayerDamageEvents")				-- alternative weaken trigger for nefarian
-	self:RegisterEvent("CHAT_MSG_SPELL_SELF_DAMAGE", "PlayerDamageEvents") 				-- alternative weaken trigger for nefarian
-	self:RegisterEvent("CHAT_MSG_SPELL_PET_DAMAGE", "PlayerDamageEvents") 				-- alternative weaken trigger for nefarian
-	self:RegisterEvent("CHAT_MSG_SPELL_PARTY_DAMAGE", "PlayerDamageEvents") 			-- alternative weaken trigger for nefarian
-	self:RegisterEvent("CHAT_MSG_SPELL_FRIENDLYPLAYER_DAMAGE", "PlayerDamageEvents")	-- alternative weaken trigger for nefarian
-
 
 	self:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_CREATURE_DAMAGE", "CheckEyeBeam")
 	self:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_PARTY_DAMAGE", "CheckTentacleSpawn")
@@ -356,22 +346,6 @@ end
 function module:Emote( msg )
 	if string.find(msg, L["weakenedtrigger"]) then
 		self:Sync(syncName.weaken)
-	end
-end
--- alternative weaken trigger for nefarian
-function module:PlayerDamageEvents(msg)
-	if not string.find(msg, "Eye of C'Thun") then
-		local _, _, userspell, stype, dmg, school, partial = string.find(msg, L["vulnerability_direct_test"])
-		if stype and dmg and school then
-			if not isWeakened and tonumber(dmg) > 100 then
-				-- trigger weakened
-				self:Sync(syncName.weaken)
-			elseif isWeakened and tonumber(dmg) == 1 then
-				-- trigger weakened over
-				self:DebugMessage("C'Thun weakened over trigger")
-				self:Sync(syncName.weakenOver)
-			end
-		end
 	end
 end
 
