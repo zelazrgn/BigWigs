@@ -40,8 +40,6 @@ L:RegisterTranslations("enUS", function() return {
 	barGlare	= "Next Dark Glare!",
 	barGlareEnds = "Dark Glare ends",
 	barGlareCasting = "Casting Dark Glare",
-	glarewarning	= "DARK GLARE ON YOU!",
-	groupwarning	= "Dark Glare on group %s (%s)",
 
 	group_cmd = "group",
 	group_name = "Dark Glare Group Warning",
@@ -129,8 +127,6 @@ L:RegisterTranslations("deDE", function() return {
 	barGlare	= "Nächstes Dunkles Starren!", -- "Next Dark Glare!",
 	barGlareEnds = "Dunkles Starren endet", -- Dark Glare ends",
 	barGlareCasting = "Zaubert Dunkles Starren", -- "Casting Dark Glare",
-	glarewarning	= "DUNKLES STARREN AUF DIR!", --"DARK GLARE ON YOU!",
-	groupwarning	= "Dunkles Starren auf Gruppe %s (%s)", -- "Dark Glare on group %s (%s)",
 
 	--group_cmd = "group",
 	group_name = "Dunkles Starren Gruppenwarnung", -- "Dark Glare Group Warning",
@@ -438,7 +434,6 @@ function module:CThunStart()
 		firstWarning = true
 
 		self:ScheduleEvent("bwcthuntentaclesstart", self.TentacleRape, timer.p1TentacleStart, self)
-		self:ScheduleEvent("bwcthungroupwarningstart", self.GroupWarning, timer.p1GlareStart - 1, self)
 		self:ScheduleRepeatingEvent("bwcthuntarget", self.CheckTarget, timer.target, self)
 
 		self:Proximity()
@@ -476,9 +471,7 @@ function module:CThunP2Start()
 		self:CancelScheduledEvent("bwcthuntentaclesstart") -- ok
 
 		-- cancel dark glare group warning
-		self:CancelScheduledEvent("bwcthungroupwarning") -- ok
 		self:CancelScheduledEvent("bwcthuntarget") -- ok
-		self:CancelScheduledEvent("bwcthungroupwarningstart") -- ok
 
 		self:RemoveBar(L["barStartRandomBeams"] )
 
@@ -701,62 +694,6 @@ function module:DarkGlare()
 			self:DelayedMessage(timer.p1GlareCasting + timer.p1GlareDuration - 5, L["msgGlareEnds"], "Urgent", false, nil, true)
 			self:DelayedBar(timer.p1GlareCasting + timer.p1GlareDuration, L["barGlare"], timer.p1Glare - timer.p1GlareCasting - timer.p1GlareDuration, icon.darkGlare)
 		end
-	end
-end
-
-function module:GroupWarning()
-	self:CheckTarget()
-	if eyeTarget then
-		BigWigs:DebugMessage("GroupWarning; target: " .. eyeTarget)
-		local i, name, group, glareTarget, glareGroup, playerGroup
-		local playerName = GetUnitName("player")
-		for i = 1, GetNumRaidMembers(), 1 do
-			name, _, group, _, _, _, _, _ = GetRaidRosterInfo(i)
-			if name == eyeTarget then
-				glareTarget = name
-				glareGroup = group
-			end
-			if name == playerName then
-				playerGroup = group
-			end
-		end
-		if self.db.profile.group then
-			self:Message(string.format( L["groupwarning"], glareGroup, eyeTarget), "Important")
-
-			-- dark glare near you?
-			if (playerGroup == glareGroup or playerGroup == glareGroup - 1 or playerGroup == glareGroup + 1 or playerGroup == glareGroup - 7 or playerGroup == glareGroup + 7) then
-				self:Sound("RunAway")
-			else
-				self:Sound("Beware")
-			end
-
-			-- announce glare group
-			local number = "Eight"
-			if glareGroup == 1 then
-				number = "One"
-			elseif glareGroup == 2 then
-				number = "Two"
-			elseif glareGroup == 3 then
-				number = "Three"
-			elseif glareGroup == 4 then
-				number = "Four"
-			elseif glareGroup == 5 then
-				number = "Five"
-			elseif glareGroup == 6 then
-				number = "Six"
-			elseif glareGroup == 7 then
-				number = "Seven"
-			end
-			self:DelayedSound(1, number)
-
-		end
-	else
-		self:Sound("Beware")
-	end
-	if firstWarning then
-		self:CancelScheduledEvent("bwcthungroupwarning") -- ok
-		self:ScheduleRepeatingEvent("bwcthungroupwarning", self.GroupWarning, timer.p1Glare, self )
-		firstWarning = nil
 	end
 end
 
