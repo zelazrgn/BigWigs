@@ -184,7 +184,7 @@ end
 function module:OnEngage()
 	self:KTM_SetTarget(self:ToString())
 	self.phase = "emerged"
-	self:ScheduleRepeatingEvent("bwourosubmergecheck", self.SubmergeCheck, 0.5, self)
+	self:ScheduleEvent("bwourosubmergecheck", self.DoSubmergeCheck, 5, self)
 
 	if self.db.profile.emerge then
 		self:Message(L["engage_message"], "Attention")
@@ -304,7 +304,7 @@ function module:Emerge()
 		self.phase = "emerged"
 		self:DebugMessage("emerged module")
 		self:CancelScheduledEvent("bwourosubmergecheck")
-		self:ScheduleEvent("bwourosubmergecheck", self.DoSubmergeCheck, 10, self)
+		self:ScheduleEvent("bwourosubmergecheck", self.DoSubmergeCheck, 5, self)
 		--self:ScheduleRepeatingEvent("bwourosubmergecheck", self.SubmergeCheck, 1, self)
 		self:CancelScheduledEvent("bwsubmergewarn")
 		self:RemoveBar(L["submergebartext"])
