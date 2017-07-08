@@ -40,8 +40,6 @@ L:RegisterTranslations("enUS", function() return {
 	barGlare	= "Next Dark Glare!",
 	barGlareEnds = "Dark Glare ends",
 	barGlareCasting = "Casting Dark Glare",
-	glarewarning	= "DARK GLARE ON YOU!",
-	groupwarning	= "Dark Glare on group %s (%s)",
 
 	group_cmd = "group",
 	group_name = "Dark Glare Group Warning",
@@ -65,8 +63,6 @@ L:RegisterTranslations("enUS", function() return {
 	weakened_name = "Weakened Alert",
 	weakened_desc = "Warn for Weakened State",
 	weakenedtrigger = "is weakened!",
-	vulnerability_direct_test = "^[%w]+[%s's]* ([%w%s:]+) ([%w]+) C'Thun for ([%d]+) ([%w]+) damage%.[%s%(]*([%d]*)",
-	vulnerability_dots_test = "^C'Thun suffers ([%d]+) ([%w]+) damage from [%w]+[%s's]* ([%w%s:]+)%.[%s%(]*([%d]*)",
 	weakened	= "C'Thun is weakened for 45 sec",
 	invulnerable2	= "Party ends in 5 seconds",
 	invulnerable1	= "Party over - C'Thun invulnerable",
@@ -131,8 +127,6 @@ L:RegisterTranslations("deDE", function() return {
 	barGlare	= "Nächstes Dunkles Starren!", -- "Next Dark Glare!",
 	barGlareEnds = "Dunkles Starren endet", -- Dark Glare ends",
 	barGlareCasting = "Zaubert Dunkles Starren", -- "Casting Dark Glare",
-	glarewarning	= "DUNKLES STARREN AUF DIR!", --"DARK GLARE ON YOU!",
-	groupwarning	= "Dunkles Starren auf Gruppe %s (%s)", -- "Dark Glare on group %s (%s)",
 
 	--group_cmd = "group",
 	group_name = "Dunkles Starren Gruppenwarnung", -- "Dark Glare Group Warning",
@@ -154,8 +148,6 @@ L:RegisterTranslations("deDE", function() return {
 	weakened_name = "Schwäche Alarm", --"Weakened Alert",
 	weakened_desc = "Warnung für Schwäche Phase", -- "Warn for Weakened State",
 	weakenedtrigger = "ist geschwächt", -- "is weakened!",
-	vulnerability_direct_test = "^[%w]+[%ss]* ([%w%s:]+) ([%w]+) C'Thun für ([%d]+) ([%w]+) damage%.[%s%(]*([%d]*)",
-	vulnerability_dots_test = "^C'Thun suffers ([%d]+) ([%w]+) damage from [%w]+[%s's]* ([%w%s:]+)%.[%s%(]*([%d]*)",
 	weakened	= "C'Thun ist für 45 sec geschwächt", --"C'Thun is weakened for 45 sec",
 	invulnerable2	= "Party endet in 5 sec", --"Party ends in 5 seconds",
 	invulnerable1	= "Party vorbei - C'Thun unverwundbar", -- "Party over - C'Thun invulnerable",
@@ -274,12 +266,6 @@ function module:OnEnable()
 
 	self:RegisterEvent("CHAT_MSG_MONSTER_EMOTE", "Emote")		-- weakened triggering, does not work on nefarian
 	self:RegisterEvent("CHAT_MSG_RAID_BOSS_EMOTE", "Emote")		-- weakened triggering, does not work on nefarian
-	self:RegisterEvent("CHAT_MSG_COMBAT_SELF_HITS", "PlayerDamageEvents")				-- alternative weaken trigger for nefarian
-	self:RegisterEvent("CHAT_MSG_SPELL_SELF_DAMAGE", "PlayerDamageEvents") 				-- alternative weaken trigger for nefarian
-	self:RegisterEvent("CHAT_MSG_SPELL_PET_DAMAGE", "PlayerDamageEvents") 				-- alternative weaken trigger for nefarian
-	self:RegisterEvent("CHAT_MSG_SPELL_PARTY_DAMAGE", "PlayerDamageEvents") 			-- alternative weaken trigger for nefarian
-	self:RegisterEvent("CHAT_MSG_SPELL_FRIENDLYPLAYER_DAMAGE", "PlayerDamageEvents")	-- alternative weaken trigger for nefarian
-
 
 	self:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_CREATURE_DAMAGE", "CheckEyeBeam")
 	self:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_PARTY_DAMAGE", "CheckTentacleSpawn")
@@ -356,22 +342,6 @@ end
 function module:Emote( msg )
 	if string.find(msg, L["weakenedtrigger"]) then
 		self:Sync(syncName.weaken)
-	end
-end
--- alternative weaken trigger for nefarian
-function module:PlayerDamageEvents(msg)
-	if not string.find(msg, "Eye of C'Thun") then
-		local _, _, userspell, stype, dmg, school, partial = string.find(msg, L["vulnerability_direct_test"])
-		if stype and dmg and school then
-			if not isWeakened and tonumber(dmg) > 100 then
-				-- trigger weakened
-				self:Sync(syncName.weaken)
-			elseif isWeakened and tonumber(dmg) == 1 then
-				-- trigger weakened over
-				self:DebugMessage("C'Thun weakened over trigger")
-				self:Sync(syncName.weakenOver)
-			end
-		end
 	end
 end
 
@@ -464,7 +434,6 @@ function module:CThunStart()
 		firstWarning = true
 
 		self:ScheduleEvent("bwcthuntentaclesstart", self.TentacleRape, timer.p1TentacleStart, self)
-		self:ScheduleEvent("bwcthungroupwarningstart", self.GroupWarning, timer.p1GlareStart - 1, self)
 		self:ScheduleRepeatingEvent("bwcthuntarget", self.CheckTarget, timer.target, self)
 
 		self:Proximity()
@@ -502,9 +471,7 @@ function module:CThunP2Start()
 		self:CancelScheduledEvent("bwcthuntentaclesstart") -- ok
 
 		-- cancel dark glare group warning
-		self:CancelScheduledEvent("bwcthungroupwarning") -- ok
 		self:CancelScheduledEvent("bwcthuntarget") -- ok
-		self:CancelScheduledEvent("bwcthungroupwarningstart") -- ok
 
 		self:RemoveBar(L["barStartRandomBeams"] )
 
@@ -727,62 +694,6 @@ function module:DarkGlare()
 			self:DelayedMessage(timer.p1GlareCasting + timer.p1GlareDuration - 5, L["msgGlareEnds"], "Urgent", false, nil, true)
 			self:DelayedBar(timer.p1GlareCasting + timer.p1GlareDuration, L["barGlare"], timer.p1Glare - timer.p1GlareCasting - timer.p1GlareDuration, icon.darkGlare)
 		end
-	end
-end
-
-function module:GroupWarning()
-	self:CheckTarget()
-	if eyeTarget then
-		BigWigs:DebugMessage("GroupWarning; target: " .. eyeTarget)
-		local i, name, group, glareTarget, glareGroup, playerGroup
-		local playerName = GetUnitName("player")
-		for i = 1, GetNumRaidMembers(), 1 do
-			name, _, group, _, _, _, _, _ = GetRaidRosterInfo(i)
-			if name == eyeTarget then
-				glareTarget = name
-				glareGroup = group
-			end
-			if name == playerName then
-				playerGroup = group
-			end
-		end
-		if self.db.profile.group then
-			self:Message(string.format( L["groupwarning"], glareGroup, eyeTarget), "Important")
-
-			-- dark glare near you?
-			if (playerGroup == glareGroup or playerGroup == glareGroup - 1 or playerGroup == glareGroup + 1 or playerGroup == glareGroup - 7 or playerGroup == glareGroup + 7) then
-				self:Sound("RunAway")
-			else
-				self:Sound("Beware")
-			end
-
-			-- announce glare group
-			local number = "Eight"
-			if glareGroup == 1 then
-				number = "One"
-			elseif glareGroup == 2 then
-				number = "Two"
-			elseif glareGroup == 3 then
-				number = "Three"
-			elseif glareGroup == 4 then
-				number = "Four"
-			elseif glareGroup == 5 then
-				number = "Five"
-			elseif glareGroup == 6 then
-				number = "Six"
-			elseif glareGroup == 7 then
-				number = "Seven"
-			end
-			self:DelayedSound(1, number)
-
-		end
-	else
-		self:Sound("Beware")
-	end
-	if firstWarning then
-		self:CancelScheduledEvent("bwcthungroupwarning") -- ok
-		self:ScheduleRepeatingEvent("bwcthungroupwarning", self.GroupWarning, timer.p1Glare, self )
-		firstWarning = nil
 	end
 end
 
