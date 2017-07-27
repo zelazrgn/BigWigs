@@ -112,6 +112,7 @@ Raids\AQ40\Defenders.lua
 Raids\AQ40\Twins.lua
 Raids\AQ40\Cthun.lua
 Raids\AQ40\Viscidus.lua
+Raids\AQ40\Warder.lua
 
 Raids\BWL\Chromaggus.lua
 Raids\BWL\Ebonroc.lua
