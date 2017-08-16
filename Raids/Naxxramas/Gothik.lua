@@ -94,7 +94,7 @@ local icon = {
 local syncName = {
 	--teleport = "TwinsTeleport"..module.revision,
 	--berserk = "TestbossBerserk"..module.revision
-}
+	}
 
 local wave = 0
 local numTrainees = 0
@@ -109,14 +109,14 @@ module:RegisterYellEngage(L["starttrigger1"])
 module:RegisterYellEngage(L["starttrigger2"])
 
 -- called after module is enabled
-function module:OnEnable()	
+function module:OnEnable()
 	self:RegisterEvent("CHAT_MSG_MONSTER_YELL")
 end
 
 -- called after module is enabled and after each wipe
 function module:OnSetup()
 	self:RegisterEvent("CHAT_MSG_COMBAT_HOSTILE_DEATH")
-	
+
 	self.started = nil
 	wave = 0
 	numTrainees = 0
@@ -154,8 +154,8 @@ end
 
 function module:CHAT_MSG_MONSTER_YELL( msg )
 	if msg == L["inroomtrigger"] then
-		if self.db.profile.room then 
-			self:Message(L["inroomwarn"], "Important") 
+		if self.db.profile.room then
+			self:Message(L["inroomwarn"], "Important")
 		end
 		self:StopRoom()
 	elseif string.find(msg, L["disabletrigger"]) then
@@ -165,7 +165,7 @@ end
 
 function module:CHAT_MSG_COMBAT_HOSTILE_DEATH( msg )
 	BigWigs:CheckForBossDeath(msg, self)
-	
+
 	if self.db.profile.adddeath and msg == string.format(UNITDIESOTHER, L["rider_name"]) then
 		self:Message(L["riderdiewarn"], "Important")
 	elseif self.db.profile.adddeath and msg == string.format(UNITDIESOTHER, L["deathknight_name"]) then
@@ -180,7 +180,7 @@ function module:StopRoom()
 	self:CancelDelayedMessage(L["warn_inroom_60"])
 	self:CancelDelayedMessage(L["warn_inroom_30"])
 	self:CancelDelayedMessage(L["warn_inroom_10"])
-	
+
 	--if numTrainees and numDeathknights and numRiders then
 	--	self:RemoveBar(string.format(L["trabar"], numTrainees - 1)) -- disabled for custom cancel
 	--	self:RemoveBar(string.format(L["dkbar"], numDeathknights - 1)) -- too
@@ -192,7 +192,7 @@ function module:StopRoom()
 	--self:CancelScheduledEvent("bwgothiktrarepop")
 	--self:CancelScheduledEvent("bwgothikdkrepop")
 	--self:CancelScheduledEvent("bwgothikriderrepop")
-	
+
 	wave = 0
 	numTrainees = 0
 	numDeathknights = 0
@@ -206,8 +206,8 @@ end
 
 function module:WaveWarn(message, L, color)
 	wave = wave + 1
-	if self.db.profile.add then 
-		self:Message(string.format(L["wave"], wave) .. message, color) 
+	if self.db.profile.add then
+		self:Message(string.format(L["wave"], wave) .. message, color)
 	end
 end
 
@@ -217,13 +217,13 @@ function module:Trainee()
 	if numTrainees == 1 then
 		traineeTime = timer.firstTrainee
 	end
-	
+
 	if self.db.profile.add then
 		self:Bar(string.format(L["trabar"], numTrainees), traineeTime, icon.trainee)
 	end
 	self:ScheduleEvent("bwgothiktrawarn", self.WaveWarn, traineeTime - 3, self, L["trawarn"], L, "Attention")
 	self:ScheduleRepeatingEvent("bwgothiktrarepop", self.Trainee, traineeTime, self)
-	
+
 
 	if numTrainees >= 12 then  -- cancels bar after wave 11
 		self:RemoveBar(string.format(L["trabar"], numTrainees - 1))
@@ -231,7 +231,7 @@ function module:Trainee()
 		self:CancelScheduledEvent("bwgothiktrarepop")
 		numTrainees = 0
 	end
-	
+
 end
 
 function module:DeathKnight()
@@ -240,13 +240,13 @@ function module:DeathKnight()
 	if numDeathknights == 1 then
 		deathknightTime = timer.firstDeathknight
 	end
-	
+
 	if self.db.profile.add then
 		self:Bar(string.format(L["dkbar"], numDeathknights), deathknightTime, icon.deathknight)
 	end
 	self:ScheduleEvent("bwgothikdkwarn", self.WaveWarn, deathknightTime - 3, self, L["dkwarn"], L, "Urgent")
 	self:ScheduleRepeatingEvent("bwgothikdkrepop", self.DeathKnight, deathknightTime, self)
-	
+
 
 	if numDeathknights >= 8 then  -- cancels bar after wave 7
 		self:RemoveBar(string.format(L["dkbar"], numDeathknights - 1))
@@ -262,15 +262,15 @@ function module:Rider()
 	if numRiders == 1 then
 		riderTime = timer.firstRider
 	end
-	
+
 	if self.db.profile.add then
 		self:Bar(string.format(L["riderbar"], numRiders), riderTime, icon.rider)
 	end
 	self:ScheduleEvent("bwgothikriderwarn", self.WaveWarn, riderTime - 3, self, L["riderwarn"], L, "Important")
 	self:ScheduleRepeatingEvent("bwgothikriderrepop", self.Rider, riderTime, self)
-	
+
 	if numRiders >= 5 then  -- cancels bar after wave 4
-		self:RemoveBar(string.format(L["riderbar"], numRiders - 1)) 
+		self:RemoveBar(string.format(L["riderbar"], numRiders - 1))
 		self:CancelScheduledEvent("bwgothikriderwarn")
 		self:CancelScheduledEvent("bwgothikriderrepop")
 		numRiders = 0

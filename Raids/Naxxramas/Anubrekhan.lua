@@ -24,10 +24,10 @@ L:RegisterTranslations("enUS", function() return {
 	starttrigger1 = "Just a little taste...",
 	starttrigger2 = "Yes, run! It makes the blood pump faster!",
 	starttrigger3 = "There is no way out.",
-	
+
 	etrigger = "gains Enrage.",
 	enragewarn = "Crypt Guard Enrage - Stun + Traps!",
-	
+
 	gaintrigger = "Anub'Rekhan gains Locust Swarm.",
 	gainendwarn = "Locust Swarm ended!",
 	gainnextwarn = "Next Locust Swarm in ~90 sec",
@@ -37,13 +37,13 @@ L:RegisterTranslations("enUS", function() return {
 
 	casttrigger = "Anub'Rekhan begins to cast Locust Swarm.",
 	castwarn = "Incoming Locust Swarm!",
-            
-    impale_cmd = "impale",
-    impale_name = "Impale Alert",
-    impale_desc = "Warns for Impale",
-    impaletrigger = "Anub'Rekhan begins to cast Impale", -- todo
-    impalebar = "Next Impale",
-    impalesay = "Impale on me",
+
+	impale_cmd = "impale",
+	impale_name = "Impale Alert",
+	impale_desc = "Warns for Impale",
+	impaletrigger = "Anub'Rekhan begins to cast Impale", -- todo
+	impalebar = "Next Impale",
+	impalesay = "Impale on me",
 
 } end )
 
@@ -62,19 +62,19 @@ module.toggleoptions = {"locust", "impale", "enrage", "bosskill"}
 -- locals
 local timer = {
 	firstLocustSwarm = {80,120},
-    locustSwarmInterval = {90,110},
-    locustSwarmDuration = 20,
-    locustSwarmCastTime = 3,
-    impale = {12,18},
+	locustSwarmInterval = {90,110},
+	locustSwarmDuration = 20,
+	locustSwarmCastTime = 3,
+	impale = {12,18},
 }
 local icon = {
 	locust = "Spell_Nature_InsectSwarm",
-    impale = "ability_backstab",
+	impale = "ability_backstab",
 }
 local syncName = {
 	locustCast = "AnubLocustInc"..module.revision,
 	locustGain = "AnubLocustSwarm"..module.revision,
-    impale = "AnubImpale"..module.revision,
+	impale = "AnubImpale"..module.revision,
 }
 
 ------------------------------
@@ -130,9 +130,9 @@ function module:CheckForLocustCast(msg)
 end
 
 function module:CheckForImpale(msg)
-    if string.find(msg, L["impaletrigger"]) then
+	if string.find(msg, L["impaletrigger"]) then
 		name = "Test" -- todo
-        self:Sync(syncName.impale .. " " .. name)
+		self:Sync(syncName.impale .. " " .. name)
 	end
 end
 
@@ -142,12 +142,12 @@ end
 ------------------------------
 
 function module:BigWigs_RecvSync(sync, rest, nick)
-    if sync == syncName.locustCast then
+	if sync == syncName.locustCast then
 		self:LocustCast()
 	elseif sync == syncName.locustGain then
 		self:LocustGain()
-    elseif sync == syncName.impale and rest then
-        self:Impale(rest)
+	elseif sync == syncName.impale and rest then
+		self:Impale(rest)
 	end
 end
 
@@ -158,13 +158,13 @@ end
 -- called when anub'rekhan casts locust swarm
 function module:LocustCast()
 	self:RemoveBar(L["impalebar"])
-    
-    --self:ScheduleEvent("bwanublocustinc", self.TriggerEvent, timer.locustSwarmCastTime, self, "BigWigs_SendSync", syncName.locustGain)
+
+	--self:ScheduleEvent("bwanublocustinc", self.TriggerEvent, timer.locustSwarmCastTime, self, "BigWigs_SendSync", syncName.locustGain)
 	if self.db.profile.locust then
-        -- remove old bar
-        self:RemoveBar(L["gainincbar"])
-        
-        -- add cast bar
+		-- remove old bar
+		self:RemoveBar(L["gainincbar"])
+
+		-- add cast bar
 		self:Message(L["castwarn"], "Orange", nil, "Beware")
 		self:WarningSign(icon.locust, timer.locustSwarmCastTime)
 		self:Bar(L["castwarn"], timer.locustSwarmCastTime, icon.locust )
@@ -173,7 +173,7 @@ end
 
 -- called when casting locust swarm is over and anub'rekhan gained the buff/aura
 function module:LocustGain()
-	--self:CancelScheduledEvent("bwanublocustinc")    
+	--self:CancelScheduledEvent("bwanublocustinc")
 	if self.db.profile.locust then
 		--self:WarningSign(icon.locust, 5)
 		--self:DelayedMessage(timer.locustSwarmDuration, L["gainendwarn"], "Important")
@@ -185,17 +185,17 @@ function module:LocustGain()
 end
 
 function module:Impale(name)
-    if self.db.profile.impale then
-        self:IntervalBar(L["impalebar"], timer.impale[1], timer.impale[2], icon.impale) 
-        
-        -- set raid icon on impale target
-        self:Icon(name)
-        
-        -- say warning for impale target
-        if name == UnitName("player") then
-            self:Say(L["impalesay"])
-        end
-    end
+	if self.db.profile.impale then
+		self:IntervalBar(L["impalebar"], timer.impale[1], timer.impale[2], icon.impale)
+
+		-- set raid icon on impale target
+		self:Icon(name)
+
+		-- say warning for impale target
+		if name == UnitName("player") then
+			self:Say(L["impalesay"])
+		end
+	end
 end
 
 
@@ -204,11 +204,11 @@ end
 ----------------------------------
 
 function module:Test(long)
-    -- /run local m=BigWigs:GetModule("Anub'Rekhan");m:Test()
-    
+	-- /run local m=BigWigs:GetModule("Anub'Rekhan");m:Test()
+
 	local function testLocustSwarmCast()
 		module:CheckForLocustCast(L["casttrigger"])
-    end
+	end
 	local function testLocustSwarmGain()
 		module:CHAT_MSG_SPELL_PERIODIC_CREATURE_BUFFS(L["gaintrigger"])
 	end
@@ -220,26 +220,26 @@ function module:Test(long)
 		BigWigs:TriggerEvent("BigWigs_RebootModule", self:ToString())
 		BigWigs:DisableModule(module:ToString())
 	end
-	
+
 	if long then
 		local testTimer = 0
 		-- long test
 		self:SendEngageSync()
-		
+
 		-- first locust swarm cast
 		testTimer = testTimer + timer.firstLocustSwarm
 		self:ScheduleEvent(self:ToString() .. "testLocustSwarmCast1", testLocustSwarmCast, testTimer, self)
 		BigWigs:Print("testLocustSwarmCast in " .. testTimer)
-		
+
 		-- first locust swarm gain
 		testTimer = testTimer + timer.locustSwarmCastTime
 		self:ScheduleEvent(self:ToString() .. "testLocustSwarmGain1", testLocustSwarmGain, testTimer, self)
 		BigWigs:Print("testLocustSwarmGain in " .. testTimer)
-		
+
 		-- enrage
 		self:ScheduleEvent(self:ToString() .. "testEnrage1", testEnrage, 90, self)
 		BigWigs:Print("testEnrage in " .. 90)
-		
+
 		-- second locust swarm cast
 		testTimer = testTimer + timer.locustSwarmInterval
 		self:ScheduleEvent(self:ToString() .. "testLocustSwarmCast2", testLocustSwarmCast, testTimer, self)
@@ -249,7 +249,7 @@ function module:Test(long)
 		testTimer = testTimer + timer.locustSwarmCastTime
 		self:ScheduleEvent(self:ToString() .. "testLocustSwarmGain2", testLocustSwarmGain, testTimer, self)
 		BigWigs:Print("testLocustSwarmGain in " .. testTimer)
-		
+
 		-- wipe
 		testTimer = testTimer + 10
 		self:ScheduleEvent(self:ToString() .. "testDisable", testDisable, testTimer, self)
@@ -258,21 +258,21 @@ function module:Test(long)
 		-- short test
 		local testTimer = 0
 		self:SendEngageSync()
-		
+
 		-- first locust swarm cast
 		testTimer = testTimer + 5
 		self:ScheduleEvent(self:ToString() .. "testLocustSwarmCast1", testLocustSwarmCast, testTimer, self)
 		BigWigs:Print("testLocustSwarmCast in " .. testTimer)
-		
+
 		-- first locust swarm gain
 		testTimer = testTimer + timer.locustSwarmCastTime
 		self:ScheduleEvent(self:ToString() .. "testLocustSwarmGain1", testLocustSwarmGain, testTimer, self)
 		BigWigs:Print("testLocustSwarmGain in " .. testTimer)
-		
+
 		-- enrage
 		self:ScheduleEvent(self:ToString() .. "testEnrage1", testEnrage, 10, self)
 		BigWigs:Print("testEnrage in " .. 10)
-		
+
 		-- second locust swarm cast
 		testTimer = testTimer + 25
 		self:ScheduleEvent(self:ToString() .. "testLocustSwarmCast2", testLocustSwarmCast, testTimer, self)
@@ -282,7 +282,7 @@ function module:Test(long)
 		testTimer = testTimer + timer.locustSwarmCastTime
 		self:ScheduleEvent(self:ToString() .. "testLocustSwarmGain2", testLocustSwarmGain, testTimer, self)
 		BigWigs:Print("testLocustSwarmGain in " .. testTimer)
-		
+
 		-- wipe
 		testTimer = testTimer + 5
 		self:ScheduleEvent(self:ToString() .. "testDisable", testDisable, testTimer, self)

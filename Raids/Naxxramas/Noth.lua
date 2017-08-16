@@ -42,8 +42,8 @@ L:RegisterTranslations("enUS", function() return {
 	blinkwarn10 = "Blink in ~10 seconds!",
 	blinkbar = "Possible Blink",
 
-    teleportToBalconyTrigger = "Noth the Plaguebringer teleports to the balcony above!",
-    teleportToRoomTrigger = "Noth the Plaguebringer teleports back into the battle!",
+	teleportToBalconyTrigger = "Noth the Plaguebringer teleports to the balcony above!",
+	teleportToRoomTrigger = "Noth the Plaguebringer teleports back into the battle!",
 	teleportwarn = "Teleport! He's on the balcony!",
 	teleportwarn10 = "Teleport in 10 seconds!",
 	teleportwarn30 = "Teleport in 30 seconds!",
@@ -82,24 +82,24 @@ module.toggleoptions = {"blink", "teleport", "curse", "wave", "bosskill"}
 -- locals
 local timer = {
 	firstBlink = {30,40},
-    regularBlink = {30,40},
-    
+	regularBlink = {30,40},
+
 	blinkAfterTeleport = {2,10},
-	
+
 	firstRoom = 90,
 	secondRoom = 110,
 	thirdRoom = 180,
 	room = 0, -- will be changed during the encounter
-    
+
 	firstBalcony = 70,
 	secondBalcony = 95,
 	thirdBalcony = 120, -- ??
 	balcony = 0, -- will be changed during the encounter
-    
+
 	firstCurse = {8,12},
-    curseAfterTeleport = {2,10},
-    curse = {50,60},
-    
+	curseAfterTeleport = {2,10},
+	curse = {50,60},
+
 	wave1 = {5,7},
 	wave2 = {30,37},
 }
@@ -112,8 +112,8 @@ local icon = {
 local syncName = {
 	blink = "NothBlink"..module.revision,
 	curse = "NothCurse"..module.revision,
-    teleportToBalcony = "NothTeleportToBalcony"..module.revision,
-    teleportToRoom = "NothTeleportToRoom"..module.revision,
+	teleportToBalcony = "NothTeleportToBalcony"..module.revision,
+	teleportToRoom = "NothTeleportToRoom"..module.revision,
 }
 
 local berserkannounced = nil
@@ -133,9 +133,9 @@ function module:OnEnable()
 	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_SELF_DAMAGE", "CheckForCurse")
 	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_FRIENDLYPLAYER_DAMAGE", "CheckForCurse")
 	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_PARTY_DAMAGE", "CheckForCurse")
-    
-    self:RegisterEvent("CHAT_MSG_RAID_BOSS_EMOTE", "Teleport")
-	
+
+	self:RegisterEvent("CHAT_MSG_RAID_BOSS_EMOTE", "Teleport")
+
 	self:ThrottleSync(5, syncName.blink)
 	self:ThrottleSync(5, syncName.curse)
 end
@@ -159,9 +159,9 @@ function module:OnEngage()
 		--self:DelayedMessage(timer.firstBlink[1] - 10, L["blinkwarn10"], "Attention")
 		--self:DelayedMessage(timer.firstBlink[1] - 5, L["blinkwarn5"], "Attention")
 	end
-    if self.db.profile.curse then
-        self:IntervalBar(L["cursebar"], timer.firstCurse[1], timer.firstCurse[2], icon.curse)
-    end
+	if self.db.profile.curse then
+		self:IntervalBar(L["cursebar"], timer.firstCurse[1], timer.firstCurse[2], icon.curse)
+	end
 
 	self:ScheduleEvent("bwnothtobalcony", self.TeleportToBalcony, timer.room, self)
 end
@@ -187,11 +187,11 @@ function module:CheckForBlink(msg)
 end
 
 function module:Teleport(msg)
-    if msg == L["teleportToBalconyTrigger"] then
-        self:Sync(syncName.teleportToBalcony)
-    elseif msg == L["teleportToRoomTrigger"] then
-        self:Sync(syncName.teleportToRoom)
-    end
+	if msg == L["teleportToBalconyTrigger"] then
+		self:Sync(syncName.teleportToBalcony)
+	elseif msg == L["teleportToRoomTrigger"] then
+		self:Sync(syncName.teleportToRoom)
+	end
 end
 
 function module:TeleportToBalcony()
@@ -205,11 +205,11 @@ function module:TeleportToBalcony()
 	--self:CancelDelayedMessage(L["teleportwarn10"])
 	--self:CancelDelayedMessage(L["teleportwarn30"])
 	--self:CancelDelayedMessage(L["curse10secwarn"])
-	
+
 	self:RemoveBar(L["blinkbar"])
 	self:RemoveBar(L["cursebar"])
 
-	if self.db.profile.teleport then 
+	if self.db.profile.teleport then
 		self:Message(L["teleportwarn"], "Important")
 		self:Bar(L["backbar"], timer.balcony, icon.balcony)
 		--self:DelayedMessage(timer.balcony - 30, L["backwarn30"], "Urgent")
@@ -237,18 +237,18 @@ function module:TeleportToRoom()
 		self:IntervalBar(L["blinkbar"], timer.blinkAfterTeleport[1], timer.blinkAfterTeleport[2], icon.blink)
 		--self:DelayedMessage(timer.blinkAfterTeleport[1] - 10, L["blinkwarn10"], "Attention") -- praeda
 		--self:DelayedMessage(timer.blinkAfterTeleport[1] - 5, L["blinkwarn5"], "Attention") -- praeda
-		
+
 		self:Bar(L["teleportbar"], timer.room, icon.balcony)
 		--self:DelayedMessage(timer.room - 30, L["teleportwarn30"], "Urgent")
 		--self:DelayedMessage(timer.room - 10, L["teleportwarn10"], "Urgent")
 	end
-    if self.db.profile.curse then
+	if self.db.profile.curse then
 		self:IntervalBar(L["cursebar"], timer.curseAfterTeleport[1], timer.curseAfterTeleport[2], icon.curse)
-    end
-    
+	end
+
 	self:ScheduleEvent("bwnothtobalcony", self.TeleportToBalcony, timer.room, self)
-    
-    self:KTM_Reset()
+
+	self:KTM_Reset()
 end
 
 
@@ -257,15 +257,15 @@ end
 ------------------------------
 
 function module:BigWigs_RecvSync(sync, rest, nick)
-    if sync == syncName.curse then
+	if sync == syncName.curse then
 		self:Curse()
 	elseif sync == syncName.blink then
 		self:Blink()
 	elseif sync == syncName.teleportToBalcony then
-        self:TeleportToBalcony()
-    elseif sync == syncName.teleportToRoom then
-        self:TeleportToRoom()
-    end
+		self:TeleportToBalcony()
+	elseif sync == syncName.teleportToRoom then
+		self:TeleportToRoom()
+	end
 end
 
 ------------------------------
@@ -287,7 +287,7 @@ function module:Blink()
 		--self:DelayedMessage(timer.regularBlink - 5, L["blinkwarn5"], "Attention")
 		self:IntervalBar(L["blinkbar"], timer.regularBlink[1], timer.regularBlink[2], icon.blink)
 	end
-	
+
 	-- aggro reset?
-    self:KTM_Reset()
+	self:KTM_Reset()
 end

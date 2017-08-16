@@ -22,7 +22,7 @@ L:RegisterTranslations("enUS", function() return {
 	curse_cmd = "curse",
 	curse_name = "Remove Curse Alert",
 	curse_desc = "Warn when curses are removed from Loatheb",
-	
+
 	spore_cmd = "spore",
 	spore_name = "Spore Alert",
 	spore_desc = "Warn for Spores",
@@ -35,9 +35,9 @@ L:RegisterTranslations("enUS", function() return {
 	cursewarn = "Curses removed! RENEW CURSES",
 	cursebar = "Remove Curse",
 	--cursetrigger = "Loatheb's Chains of Ice is removed.",
-    cursetrigger  = "Loatheb's Curse (.+) is removed.",
+	cursetrigger  = "Loatheb's Curse (.+) is removed.",
 
-            
+
 	doomtimerbar = "Doom every 15sec",
 	doomtimerwarn = "Doom timerchange in %s seconds!",
 	doomtimerwarnnow = "Inevitable Doom now happens every 15sec!",
@@ -46,7 +46,7 @@ L:RegisterTranslations("enUS", function() return {
 	cursetimerwarn = "Curses removed, next in %s seconds!",
 
 	startwarn = "Loatheb engaged, 2 min to Inevitable Doom!",
-	
+
 	--sporewarn = "Spore spawned",
 	sporebar = "Next Spore",
 
@@ -74,19 +74,19 @@ local timer = {
 	doomShort = 15,
 	doom = 0, -- this variable will be changed during the encounter
 	spore = 13,
-	--firstCurse = 10,
-	--curse = 30,
+--firstCurse = 10,
+--curse = 30,
 }
 local icon = {
 	softEnrage = "Spell_Shadow_UnholyFrenzy",
 	doom = "Spell_Shadow_NightOfTheDead",
 	spore = "Ability_TheBlackArrow",
-	--curse = "Spell_Holy_RemoveCurse",
+--curse = "Spell_Holy_RemoveCurse",
 }
 local syncName = {
 	doom = "LoathebDoom"..module.revision,
 	spore = "LoathebSporeSpawn"..module.revision,
-	--curse = "LoathebRemoveCurse"..module.revision,
+--curse = "LoathebRemoveCurse"..module.revision,
 }
 
 local numSpore = 0 -- how many spores have been spawned
@@ -106,7 +106,7 @@ function module:OnEnable()
 	--self:RegisterEvent("CHAT_MSG_SPELL_BREAK_AURA", "CurseEvent")
 
 	-- 2: Doom and SporeSpawn versioned up because of the sync including the
-	-- doom/spore count now, so we don't hold back the counter.	
+	-- doom/spore count now, so we don't hold back the counter.
 	self:ThrottleSync(10, syncName.doom)
 	self:ThrottleSync(5, syncName.spore)
 	--self:ThrottleSync(5, syncName.curse)
@@ -128,7 +128,7 @@ function module:OnEngage()
 		self:DelayedMessage(timer.softEnrage - 10, string.format(L["doomtimerwarn"], 10), "Urgent")
 		self:DelayedMessage(timer.softEnrage - 5, string.format(L["doomtimerwarn"], 5), "Important")
 		self:DelayedMessage(timer.softEnrage, L["doomtimerwarnnow"], "Important")
-		
+
 		-- soft enrage after 5min: Doom every 15s instead of every 30s
 		--self:ScheduleEvent("bwloathebdoomtimerreduce", function() module.doomTime = 15 end, 300)
 		self:ScheduleEvent("bwloathebdoomtimerreduce", self.SoftEnrage, timer.softEnrage)
@@ -138,7 +138,7 @@ function module:OnEngage()
 		timer.doom = timer.doomLong -- reduce doom timer from 120s to 30s
 	end
 	--self:Bar(L["cursebar"], timer.firstCurse, icon.curse)
-		
+
 	self:Spore()
 	self:ScheduleRepeatingEvent("bwloathebspore", self.Spore, timer.spore, self)
 end
@@ -159,9 +159,9 @@ function module:Event( msg )
 end
 --[[
 function module:CurseEvent( msg )
-	if string.find(msg, L["cursetrigger"]) then
-		self:Sync(syncName.curse)
-	end
+if string.find(msg, L["cursetrigger"]) then
+self:Sync(syncName.curse)
+end
 end
 ]]
 
@@ -172,8 +172,8 @@ end
 function module:BigWigs_RecvSync(sync, rest, nick)
 	if sync == syncName.doom and rest then
 		self:Doom(rest)
-	--elseif sync == syncName.curse then
-	--	self:Curse()
+		--elseif sync == syncName.curse then
+		--	self:Curse()
 	end
 end
 
@@ -200,13 +200,13 @@ end
 
 --[[
 function module:Curse()
-	if self.db.profile.curse then
-		if timeCurseWarning + 5 < GetTime() then
-			timeCurseWarning = GetTime()
-			self:Message(L["cursewarn"], "Important")
-			self:Bar(L["cursebar"], timer.curse, icon.curse)
-		end
-	end
+if self.db.profile.curse then
+if timeCurseWarning + 5 < GetTime() then
+timeCurseWarning = GetTime()
+self:Message(L["cursewarn"], "Important")
+self:Bar(L["cursebar"], timer.curse, icon.curse)
+end
+end
 end
 ]]
 
