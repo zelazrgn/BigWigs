@@ -56,6 +56,9 @@ L:RegisterTranslations("enUS", function() return {
 -- after 5 minutes doom comes every 15seconds
 local consumableslist = {L["shadowpot"],L["noconsumable"],L["bandage"],L["wrtorhs"],L["shadowpotandbandage"],L["noconsumable"],L["bandage"],L["noconsumable"],L["wrtorhs"]}
 
+local syncName = {
+}
+
 ----------------------------------
 --      Module Declaration      --
 ----------------------------------
@@ -103,8 +106,7 @@ end
 
 function BigWigsLoathebTactical:OnEnable()
 
-	self.sporespawn = 1
-	self.consumableseq = 1
+	self.consumableseq = 0
 
 	self:RegisterEvent("PLAYER_REGEN_ENABLED", "CheckForWipe")
 	self:RegisterEvent("CHAT_MSG_COMBAT_HOSTILE_DEATH")
@@ -112,6 +114,9 @@ function BigWigsLoathebTactical:OnEnable()
 	self:RegisterEvent("BigWigs_RecvSync")
 
 	DEFAULT_CHAT_FRAME:AddMessage(L["resetmsg"])
+	
+	local m = BigWigs:GetModule("Loatheb") 
+	syncName.doom = "LoathebDoom"..m.revision
 end
 
 ------------------------------
@@ -119,11 +124,12 @@ end
 ------------------------------
 
 function BigWigsLoathebTactical:BigWigs_RecvSync( sync, rest, nick )
-	if sync == "LoathebDoom2" and rest then
+	if sync == syncName.doom and rest then
 		rest = tonumber(rest)
 		if not rest then return end
 		if rest == (self.consumableseq + 1) then
 			self:ScheduleEvent("bwloathebconsumable "..tostring(self.consumableseq), self.ConsumableWarning, 11, self)
+			self.consumableseq = self.consumableseq + 1
 		end
 	end
 end
@@ -178,7 +184,6 @@ function BigWigsLoathebTactical:ConsumableWarning()
 				PlaySoundFile(L["soundshadowpotandbandage"])
 			end
 		end
-		self.consumableseq = self.consumableseq + 1
 	end
 end
 
