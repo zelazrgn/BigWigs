@@ -51,7 +51,7 @@ local icon = {
 	enrage = "Spell_Shadow_UnholyFrenzy",
 }
 local syncName = {
-	enrage = "PatchwerkEnrage",
+	enrage = "PatchwerkEnrage"..module.revision,
 }
 
 local berserkannounced = nil
@@ -124,7 +124,7 @@ function module:Enrage()
 		self:Message(L["enragewarn"], "Important", nil, "Beware")
 
 		self:RemoveBar(L["enragebartext"])
-
+		
 		self:CancelDelayedMessage(L["warn5m"])
 		self:CancelDelayedMessage(L["warn3m"])
 		self:CancelDelayedMessage(L["warn90"])
