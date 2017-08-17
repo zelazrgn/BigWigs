@@ -126,7 +126,6 @@ L:RegisterTranslations("enUS", function() return {
 	phase2_frostblast_warning = "Possible Frost Blast in ~5sec!",
 	phase2_mc_warning = "Possible Mind Control in ~5sec!",
 	phase2_detonate_warning = "Detonate Mana in ~5sec!",
-	mcfrostblast_bar = "First Frost Blast and MC",
 
 	detonate_trigger = "^([^%s]+) ([^%s]+) afflicted by Detonate Mana",
 	detonate_bar = "Detonate Mana - %s",
@@ -448,7 +447,7 @@ function module:Phase2()
 	self:Bar(L["phase2_bar"], timer.phase2, icon.phase2)
 	self:DelayedBar(timer.phase2, L["mc_bar"], timer.firstMindcontrol, icon.mindcontrol)
 	self:DelayedBar(timer.phase2, L["detonate_possible_bar"], timer.firstDetonate, icon.detonate)
-	self:DelayedBar(timer.phase2, L["mcfrostblast_bar"], timer.firstFrostblast, icon.frostblast)
+	self:DelayedBar(timer.phase2, L["frostblast_bar"], timer.firstFrostblast, icon.frostblast)
 	self:DelayedMessage(timer.phase2, L["phase2_warning"], "Important")
 	self:DelayedMessage(timer.firstDetonate + timer.phase2 - 5, L["phase2_detonate_warning"], "Important")
 	self:DelayedMessage(timer.firstFrostblast  + timer.phase2 - 5, L["phase2_frostblast_warning"], "Important")
