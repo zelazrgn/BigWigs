@@ -128,14 +128,14 @@ function module:CheckForLocustCast(msg)
 		self:Sync(syncName.locustCast)
 	end
 end
-
+--[[
 function module:CheckForImpale(msg)
 	if string.find(msg, L["impaletrigger"]) then
 		name = "Test" -- todo
 		self:Sync(syncName.impale .. " " .. name)
 	end
 end
-
+]]
 
 ------------------------------
 --      Synchronization	    --
@@ -146,8 +146,8 @@ function module:BigWigs_RecvSync(sync, rest, nick)
 		self:LocustCast()
 	elseif sync == syncName.locustGain then
 		self:LocustGain()
-	elseif sync == syncName.impale and rest then
-		self:Impale(rest)
+	--elseif sync == syncName.impale and rest then
+	--	self:Impale(rest)
 	end
 end
 
@@ -169,6 +169,7 @@ function module:LocustCast()
 		self:WarningSign(icon.locust, timer.locustSwarmCastTime)
 		self:Bar(L["castwarn"], timer.locustSwarmCastTime, icon.locust )
 	end
+	self:DelayedSync(timer.locustSwarmCastTime, syncName.locustGain)
 end
 
 -- called when casting locust swarm is over and anub'rekhan gained the buff/aura
@@ -180,10 +181,10 @@ function module:LocustGain()
 		self:Bar(L["gainbar"], timer.locustSwarmDuration, icon.locust)
 		self:Message(L["gainnextwarn"], "Urgent")
 		--self:DelayedMessage(timer.locustSwarmInterval - 10, L["gainwarn10sec"], "Important")
-		self:DelayedIntervalBar(L["gainincbar"], timer.locustSwarmInterval[1]-timer.locustSwarmDuration, timer.locustSwarmInterval[2]-timer.locustSwarmDuration, icon.locust)
+		self:DelayedIntervalBar(timer.locustSwarmDuration, L["gainincbar"], timer.locustSwarmInterval[1]-timer.locustSwarmDuration, timer.locustSwarmInterval[2]-timer.locustSwarmDuration, icon.locust)
 	end
 end
-
+--[[
 function module:Impale(name)
 	if self.db.profile.impale then
 		self:IntervalBar(L["impalebar"], timer.impale[1], timer.impale[2], icon.impale)
@@ -197,7 +198,7 @@ function module:Impale(name)
 		end
 	end
 end
-
+]]
 
 ----------------------------------
 --      Module Test Function    --

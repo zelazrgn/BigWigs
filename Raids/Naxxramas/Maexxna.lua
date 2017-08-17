@@ -115,6 +115,7 @@ end
 
 -- called after boss is engaged
 function module:OnEngage()
+	self:KTM_SetTarget(self:ToString())
 	self:Webspray()
 end
 

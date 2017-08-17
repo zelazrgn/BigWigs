@@ -252,12 +252,12 @@ function module:RepeatedTargetScanner()
 
 	-- If we have a cached unit (which we will if we found someone with the boss
 	-- as target), then check if he still has the same target
-	if cachedUnitId and UnitExists(cachedUnitId) and UnitName(cachedUnitId) == boss then
+	if cachedUnitId and UnitExists(cachedUnitId) and UnitName(cachedUnitId) == self.translatedName then
 		found = true
 	end
 
 	-- Check the players target
-	if not found and UnitExists("target") and UnitName("target") == boss then
+	if not found and UnitExists("target") and UnitName("target") == self.translatedName then
 		cachedUnitId = "target"
 		found = true
 	end
@@ -266,7 +266,7 @@ function module:RepeatedTargetScanner()
 	if not found then
 		for i = 1, GetNumRaidMembers() do
 			local unit = string.format("raid%dtarget", i)
-			if UnitExists(unit) and UnitName(unit) == boss then
+			if UnitExists(unit) and UnitName(unit) == self.translatedName then
 				cachedUnitId = unit
 				found = true
 				break
