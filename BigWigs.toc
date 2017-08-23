@@ -78,6 +78,7 @@ Plugins\Proximity.lua
 Plugins\Ignite.lua
 Plugins\WorldBuffTimers.lua
 Plugins\ScorchTimer.lua
+Plugins\FRBuffMacro.lua
 
 Raids\ZG\Arlokk.lua
 Raids\ZG\Jeklik.lua
