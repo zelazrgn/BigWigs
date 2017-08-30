@@ -5,7 +5,7 @@
 
 local module, L = BigWigs:ModuleDeclaration("King Gordok", "Dire Maul")
 
-module.revision = 20001 
+module.revision = 20001
 module.enabletrigger = module.translatedName
 module.toggleoptions = {"stomp", "ms", "charge", "bosskill"}
 
@@ -14,21 +14,21 @@ module.toggleoptions = {"stomp", "ms", "charge", "bosskill"}
 ------------------------------
 
 local timer = {
-	firstWarStomp = 7, 
+	firstWarStomp = 7,
 	secondWarStomp = 27,
 	secondWarStompMax = 38,
-	warStomp = 20, 
+	warStomp = 20,
 	warStompMax = 30,
-	
-	firstMortalStrike = 15, 
+
+	firstMortalStrike = 15,
 	firstMortalStrikeMax = 25,
 	mortalStrike = 12,
 	mortalStrikeMax = 20,
-	
-	secondCharge = 34, 
+
+	secondCharge = 34,
 	secondChargeMax = 42,
-	charge = 25, 
-	chargeMax = 30, 
+	charge = 25,
+	chargeMax = 30,
 }
 
 local icon = {
@@ -50,25 +50,25 @@ L:RegisterTranslations("enUS", function() return {
 	ms_cmd = "ms",
 	ms_name = "Mortal Strike",
 	ms_desc = "Warn when someone gets Mortal Strike",
-	
+
 	stomp_cmd = "stomp",
 	stomp_name = "War Stomp",
 	stomp_desc = "Warn when someone gets War Stomp",
-	
+
 	charge_cmd = "charge",
 	charge_name = "Charge",
 	charge_desc = "Warn when someone gets Charge",
 
 	-- AceConsole strings
-	cmd = "Berserker",
-	     
+	cmd = "Gordok",
+
 } end )
 
 L:RegisterTranslations("deDE", function() return {
 	ms_cmd = "ms",
 	ms_name = "Mortal Strike",
 	ms_desc = "Warn when someone gets Mortal Strike",
-	
+
 	stomp_cmd = "stomp",
 	stomp_name = "War Stomp",
 	stomp_desc = "Warn when someone gets War Stomp",
@@ -76,10 +76,10 @@ L:RegisterTranslations("deDE", function() return {
 	charge_cmd = "charge",
 	charge_name = "Charge",
 	charge_desc = "Warn when someone gets Charge",
-	
+
 	-- AceConsole strings
-	cmd = "Berserker",
-	    
+	cmd = "Gordok",
+
 } end )
 
 ------------------------------
