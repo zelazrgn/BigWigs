@@ -52,11 +52,11 @@ L:RegisterTranslations("enUS", function() return {
 	cloud_trigger = "Grobbulus casts Poison Cloud.",
 	cloud_warn = "Poison Cloud next in ~15 seconds!",
 	cloud_bar = "Poison Cloud",
-	
+
 	slimespray_cmd = "slimespray",
 	slimespray_name = "Slime Spray",
 	slimespray_desc = "Show timer for Slime Spray",
-	
+
 	slimeSpray_bar = "Possible Slime Spray",
 	slimeSpray_trigger = "Slime Spray",
 
@@ -110,11 +110,11 @@ function module:OnEnable()
 	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_SELF_DAMAGE", "InjectEvent")
 	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_FRIENDLYPLAYER_DAMAGE", "InjectEvent")
 	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_PARTY_DAMAGE", "InjectEvent")
-	
+
 	self:RegisterEvent("CHAT_MSG_COMBAT_CREATURE_VS_SELF_HITS", "CheckSpray")
 	self:RegisterEvent("CHAT_MSG_COMBAT_CREATURE_VS_SELF_MISSES", "CheckSpray")
 	self:RegisterEvent("CHAT_MSG_COMBAT_CREATURE_VS_PARTY_HITS", "CheckSpray")
-	self:RegisterEvent("CHAT_MSG_COMBAT_CREATURE_VS_PARTY_MISSES", "CheckSpray")	
+	self:RegisterEvent("CHAT_MSG_COMBAT_CREATURE_VS_PARTY_MISSES", "CheckSpray")
 
 	self:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_CREATURE_BUFF")
 

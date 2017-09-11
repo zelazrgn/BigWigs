@@ -130,10 +130,10 @@ function module:CheckForLocustCast(msg)
 end
 --[[
 function module:CheckForImpale(msg)
-	if string.find(msg, L["impaletrigger"]) then
-		name = "Test" -- todo
-		self:Sync(syncName.impale .. " " .. name)
-	end
+if string.find(msg, L["impaletrigger"]) then
+name = "Test" -- todo
+self:Sync(syncName.impale .. " " .. name)
+end
 end
 ]]
 
@@ -146,8 +146,8 @@ function module:BigWigs_RecvSync(sync, rest, nick)
 		self:LocustCast()
 	elseif sync == syncName.locustGain then
 		self:LocustGain()
-	--elseif sync == syncName.impale and rest then
-	--	self:Impale(rest)
+		--elseif sync == syncName.impale and rest then
+		--	self:Impale(rest)
 	end
 end
 
@@ -186,17 +186,17 @@ function module:LocustGain()
 end
 --[[
 function module:Impale(name)
-	if self.db.profile.impale then
-		self:IntervalBar(L["impalebar"], timer.impale[1], timer.impale[2], icon.impale)
+if self.db.profile.impale then
+self:IntervalBar(L["impalebar"], timer.impale[1], timer.impale[2], icon.impale)
 
-		-- set raid icon on impale target
-		self:Icon(name)
+-- set raid icon on impale target
+self:Icon(name)
 
-		-- say warning for impale target
-		if name == UnitName("player") then
-			self:Say(L["impalesay"])
-		end
-	end
+-- say warning for impale target
+if name == UnitName("player") then
+self:Say(L["impalesay"])
+end
+end
 end
 ]]
 
