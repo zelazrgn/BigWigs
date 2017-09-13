@@ -57,7 +57,7 @@ L:RegisterTranslations("enUS", function() return {
 local consumableslist = {L["shadowpot"],L["noconsumable"],L["bandage"],L["wrtorhs"],L["shadowpotandbandage"],L["noconsumable"],L["bandage"],L["noconsumable"],L["wrtorhs"]}
 
 local syncName = {
-}
+	}
 
 ----------------------------------
 --      Module Declaration      --
@@ -114,8 +114,8 @@ function BigWigsLoathebTactical:OnEnable()
 	self:RegisterEvent("BigWigs_RecvSync")
 
 	DEFAULT_CHAT_FRAME:AddMessage(L["resetmsg"])
-	
-	local m = BigWigs:GetModule("Loatheb") 
+
+	local m = BigWigs:GetModule("Loatheb")
 	syncName.doom = "LoathebDoom"..m.revision
 end
 
