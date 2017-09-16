@@ -68,7 +68,7 @@ L:RegisterTranslations("enUS", function() return {
 ---------------------------------
 
 -- module variables
-module.revision = 20003 -- To be overridden by the module!
+module.revision = 20004 -- To be overridden by the module!
 module.enabletrigger = {thane, mograine, zeliek, blaumeux} -- string or table {boss, add1, add2}
 --module.wipemobs = { L["add_name"] } -- adds which will be considered in CheckForEngage
 module.toggleoptions = {"mark", "shieldwall", -1, "meteor", "void", "wrath", "bosskill"}
@@ -137,6 +137,7 @@ end
 
 -- called after boss is engaged
 function module:OnEngage()
+	self.marks = 0
 	if self.db.profile.mark then
 		self:Message(L["startwarn"], "Attention")
 		self:Bar(string.format( L["markbar"], self.marks + 1), timer.firstMark, icon.mark) -- 18,5 sec on feenix
@@ -166,7 +167,7 @@ function module:MarkEvent(msg)
 	if string.find(msg, L["marktrigger"]) then
 		local t = GetTime()
 		if not times["mark"] or (times["mark"] and (times["mark"] + 8) < t) then -- why 8?
-			self:Sync(syncName.mark .. " " .. tostring(self.marks + 1))
+			self:Sync(syncName.mark)
 			times["mark"] = t
 		end
 	end
@@ -224,8 +225,8 @@ end
 
 function module:BigWigs_RecvSync(sync, rest, nick)
 	--Print("sync= "..sync.." rest= "..rest.." nick= "..nick)
-	if sync == syncName.mark and rest then
-		self:Mark(rest)
+	if sync == syncName.mark then
+		self:Mark()
 	elseif sync == syncName.meteor then
 		self:Meteor()
 	elseif sync == syncName.wrath then
@@ -241,15 +242,12 @@ end
 --      Sync Handlers	    --
 ------------------------------
 
-function module:Mark(mark)
-	mark = tonumber(mark)
-	if mark and mark == (self.marks + 1) then
-		self.marks = self.marks + 1
-		if self.db.profile.mark then
-			self:Message(string.format(L["mark_warn"], self.marks), "Important")
-			self:Bar(string.format(L["markbar"], self.marks + 1), timer.mark, icon.mark)
-			self:DelayedMessage(timer.firstMark - 5, string.format( L["mark_warn_5"], self.marks + 1), "Urgent")
-		end
+function module:Mark()
+	self.marks = self.marks + 1
+	if self.db.profile.mark then
+		self:Message(string.format(L["mark_warn"], self.marks), "Important")
+		self:Bar(string.format(L["markbar"], self.marks + 1), timer.mark, icon.mark)
+		self:DelayedMessage(timer.firstMark - 5, string.format( L["mark_warn_5"], self.marks + 1), "Urgent")
 	end
 end
 
