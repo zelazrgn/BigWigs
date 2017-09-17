@@ -21,6 +21,8 @@ L:RegisterTranslations("enUS", function() return {
 	["Reduces the terrain distance to the minimum in Naxxramas to avoid screen freezes."] = true,
 	["Active"] = true,
 	["Activate the plugin."] = true,
+	["Default Value"] = true,
+	["Set the default farclip value."] = true,
 } end)
 
 --[[L:RegisterTranslations("deDE", function() return {
@@ -52,7 +54,21 @@ BigWigsFarclip.consoleOptions = {
 			get = function() return BigWigsFarclip.db.profile.active end,
 			set = function(v) BigWigsFarclip.db.profile.active = v end,
 		--passValue = "reverse",
-		}
+		},
+		default = {
+			type = "range",
+			name = L["Default Value"],
+			desc = L["Set the default farclip value."],
+			order = 2,
+			min = 177,
+			max = 777,
+			step = 60,
+			get = function() return BigWigsFarclip.db.profile.defaultFarclip end,
+			set = function(v) 
+				BigWigsFarclip.db.profile.defaultFarclip = v 
+				SetCVar("farclip", v)
+			end,
+		},
 	}
 }
 
@@ -69,7 +85,7 @@ function BigWigsFarclip:ZONE_CHANGED_NEW_AREA()
 	if self.db.profile.active then
 		self:DebugMessage(2)
 		if AceLibrary("Babble-Zone-2.2")["Naxxramas"] == GetRealZoneText() then
-			self.db.profile.defaultFarclip = GetCVar("farclip")
+			--self.db.profile.defaultFarclip = GetCVar("farclip")
 			SetCVar("farclip", minFarclip) -- http://wowwiki.wikia.com/wiki/CVar_farclip
 		else
 			self:DebugMessage(3)

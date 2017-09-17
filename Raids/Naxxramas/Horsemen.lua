@@ -57,7 +57,7 @@ L:RegisterTranslations("enUS", function() return {
 	wrathwarn = "Holy Wrath!",
 	wrathbar = "Holy Wrath",
 
-	startwarn = "The Four Horsemen Engaged! Mark in ~17 sec",
+	startwarn = "The Four Horsemen Engaged! Mark in 20 sec",
 
 	shieldwallbar = "%s - Shield Wall",
 	shieldwalltrigger = "(.*) gains Shield Wall.",
@@ -71,7 +71,7 @@ L:RegisterTranslations("enUS", function() return {
 ---------------------------------
 
 -- module variables
-module.revision = 20004 -- To be overridden by the module!
+module.revision = 20005 -- To be overridden by the module!
 module.enabletrigger = {thane, mograine, zeliek, blaumeux} -- string or table {boss, add1, add2}
 --module.wipemobs = { L["add_name"] } -- adds which will be considered in CheckForEngage
 module.toggleoptions = {"mark", "shieldwall", -1, "meteor", "void", "wrath", "bosskill"}
