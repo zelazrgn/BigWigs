@@ -76,8 +76,10 @@ local timer = {
 	webspray = 40,
 }
 local icon = {
-	charge = "Spell_Frost_FrostShock",
-	teleport = "Spell_Arcane_Blink",
+	spider = "INV_Misc_MonsterSpiderCarapace_01",
+	cocoon = "Spell_Nature_Web",
+	poison = "Ability_Creature_Poison_03",
+	webspray = "Ability_Ensnare",
 }
 local syncName = {
 	webspray = "MaexxnaWebspray"..module.revision,
@@ -117,7 +119,7 @@ end
 -- called after boss is engaged
 function module:OnEngage()
 	self:KTM_SetTarget(self:ToString())
-	self:IntervalBar(L["poisonbar"], timer.firstPoison, "Ability_Creature_Poison_03")
+	self:Bar(L["poisonbar"], timer.firstPoison, icon.poison)
 	self:Webspray()
 end
 
@@ -199,9 +201,9 @@ function module:Webspray()
 	--self:CancelDelayedMessage(L["webspraywarn5sec"])
 
 	self:Message(L["webspraywarn"], "Important")
-	self:Bar(L["cocoonbar"], timer.cocoon, "Spell_Nature_Web")
-	self:Bar(L["spiderbar"], timer.spider, "INV_Misc_MonsterSpiderCarapace_01")
-	self:Bar(L["webspraybar"], timer.webspray, "Ability_Ensnare")
+	self:Bar(L["cocoonbar"], timer.cocoon, icon.cocoon)
+	self:Bar(L["spiderbar"], timer.spider, icon.spider)
+	self:Bar(L["webspraybar"], timer.webspray, icon.webspray)
 
 	--self:DelayedMessage(timer.webspray - 30, L["webspraywarn30sec"], "Attention")
 	--self:DelayedMessage(timer.webspray - 20, L["webspraywarn20sec"], "Attention")
@@ -212,7 +214,7 @@ end
 function module:Poison()
 	if self.db.profile.poison then
 		self:Message(L["poisonwarn"], "Important")
-		self:IntervalBar(L["poisonbar"], timer.poison[1], timer.poison[2], "Ability_Creature_Poison_03")
+		self:IntervalBar(L["poisonbar"], timer.poison[1], timer.poison[2], icon.poison)
 	end
 end
 

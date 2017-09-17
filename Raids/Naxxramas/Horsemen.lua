@@ -40,7 +40,10 @@ L:RegisterTranslations("enUS", function() return {
 	markbar = "Mark %d",
 	mark_warn = "Mark %d!",
 	mark_warn_5 = "Mark %d in 5 sec",
-	marktrigger = "is afflicted by Mark of ",
+	marktrigger1 = "is afflicted by Mark of Zeliek",
+	marktrigger2 = "is afflicted by Mark of Korth'azz",
+	marktrigger3 = "is afflicted by Mark of Blaumeux",
+	marktrigger4 = "is afflicted by Mark of Mograine",
 
 	voidtrigger = "Lady Blaumeux casts Void Zone.",
 	voidwarn = "Void Zone Incoming",
@@ -164,32 +167,18 @@ end
 ------------------------------
 
 function module:MarkEvent(msg)
-	if string.find(msg, L["marktrigger"]) then
-		local t = GetTime()
-		if not times["mark"] or (times["mark"] and (times["mark"] + 8) < t) then -- why 8?
-			self:Sync(syncName.mark)
-			times["mark"] = t
-		end
+	if string.find(msg, L["marktrigger1"]) or string.find(msg, L["marktrigger2"]) or string.find(msg, L["marktrigger3"]) or string.find(msg, L["marktrigger4"]) then
+		self:Sync(syncName.mark)
 	end
 end
 
 function module:SkillEvent(msg)
-	local t = GetTime()
 	if string.find(msg, L["meteortrigger"]) then
-		if not times["meteor"] or (times["meteor"] and (times["meteor"] + 8) < t) then -- why 8?
-			self:Sync(syncName.meteor)
-			times["meteor"] = t
-		end
+		self:Sync(syncName.meteor)
 	elseif string.find(msg, L["wrathtrigger"]) then
-		if not times["wrath"] or (times["wrath"] and (times["wrath"] + 8) < t) then -- why 8?
-			self:Sync(syncName.wrath)
-			times["wrath"] = t
-		end
+		self:Sync(syncName.wrath)
 	elseif msg == L["voidtrigger"] then
-		if not times["void"] or (times["void"] and (times["void"] + 8) < t) then -- why 8?
-			self:Sync(syncName.void )
-			times["void"] = t
-		end
+		self:Sync(syncName.void)
 	end
 end
 
@@ -243,11 +232,12 @@ end
 ------------------------------
 
 function module:Mark()
+	self:RemoveBar(string.format(L["markbar"], self.marks))
 	self.marks = self.marks + 1
 	if self.db.profile.mark then
 		self:Message(string.format(L["mark_warn"], self.marks), "Important")
 		self:Bar(string.format(L["markbar"], self.marks + 1), timer.mark, icon.mark)
-		self:DelayedMessage(timer.firstMark - 5, string.format( L["mark_warn_5"], self.marks + 1), "Urgent")
+		self:DelayedMessage(timer.mark - 5, string.format( L["mark_warn_5"], self.marks + 1), "Urgent")
 	end
 end
 
