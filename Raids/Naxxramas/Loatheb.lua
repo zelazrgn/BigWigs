@@ -57,7 +57,7 @@ L:RegisterTranslations("enUS", function() return {
 	you = "You",
 	are = "are",
 	fungalBloom = "Fungal Bloom",
-	
+
 	--LoathebTactical
 	graphic_cmd = "graphic",
 	graphic_name = "Graphical Icons",
@@ -82,7 +82,7 @@ L:RegisterTranslations("enUS", function() return {
 	soundwrtorhs = "Interface\\Addons\\BigWigs\\Sounds\\healthstone.wav",
 	soundshadowpotandbandage = "Interface\\Addons\\BigWigs\\Sounds\\potionandbandage.wav",
 	soundgoforbuff = "Interface\\Addons\\BigWigs\\Sounds\\goforbuff.wav",
-	
+
 } end )
 
 local LoathebDebuff = CreateFrame( "GameTooltip", "LoathebDebuff", nil, "GameTooltipTemplate" );
@@ -146,9 +146,9 @@ function module:OnEnable()
 	self:ThrottleSync(10, syncName.doom)
 	self:ThrottleSync(5, syncName.spore)
 	--self:ThrottleSync(5, syncName.curse)
-	
+
 	self.consumableseq = 0
-	
+
 	self.frameIcon = CreateFrame("Frame",nil,UIParent)
 
 	self.frameIcon:SetFrameStrata("MEDIUM")
@@ -176,7 +176,7 @@ function module:OnEnable()
 	self.frameTexture2:SetAllPoints(self.frameIcon2)
 
 	self.frameIcon2:Hide()
-	
+
 end
 
 -- called after module is enabled and after each wipe
@@ -185,7 +185,7 @@ function module:OnSetup()
 	numSpore = 0 -- how many spores have been spawned
 	numDoom = 0 -- how many dooms have been casted
 	timer.doom = timer.firstDoom
-	
+
 	self.frameIcon:Hide()
 	self.frameIcon2:Hide()
 end
