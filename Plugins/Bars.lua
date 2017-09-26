@@ -531,9 +531,13 @@ function BigWigsBars:BigWigs_StartBar(module, text, time, icon, otherc, c1, c2, 
 	if type(BigWigsColors) == "table" then
 		local bg = BigWigsColors.db.profile.bgc
 		local bga = BigWigsColors.db.profile.bga
-		self:SetCandyBarBackgroundColor(id, bg, bga)
+		if bg and bga then
+			self:SetCandyBarBackgroundColor(id, bg, bga)
+		end
 		local txt = BigWigsColors.db.profile.txtc
-		self:SetCandyBarTextColor(id, txt)
+		if txt then
+			self:SetCandyBarTextColor(id, txt)
+		end
 	end
 
 	if type(self.db.profile.width) == "number" then
