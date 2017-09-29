@@ -79,6 +79,7 @@ Plugins\WorldBuffTimers.lua
 Plugins\ScorchTimer.lua
 Plugins\FRBuffMacro.lua
 Plugins\Farclip.lua
+Plugins\FrostBlast.lua
 
 Raids\ZG\Arlokk.lua
 Raids\ZG\Jeklik.lua
