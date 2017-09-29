@@ -30,10 +30,10 @@ L:RegisterTranslations("enUS", function() return {
 	debuff_cmd = "debuff",
 	debuff_name = "Spore Debuff",
 	debuff_desc = "Show icon when your spore debuff is running out",
-	
+
 	groups_cmd = "groups",
 	groups_name = "Spore groups",
-	groups_desc = "Disable to show groups numbers on spore timer (7 Group tactic)",
+	groups_desc = "Disable to show group numbers on spore timer (7 Group tactic)",
 
 	doombar = "Inevitable Doom %d",
 	doomwarn = "Inevitable Doom %d! %d sec to next!",
@@ -309,9 +309,9 @@ function module:Spore()
 		--self:Message(string.format(L["sporewarn"], numSpore), "Important")
 		if not self.db.profile.groups then
 			self:Bar(string.format(L["sporebar_group"], numSpore), timer.spore, icon.spore)
-				if numSpore == 7 then
-					numSpore = 0
-				end
+			if numSpore == 7 then
+				numSpore = 0
+			end
 		else
 			self:Bar(string.format(L["sporebar"], numSpore), timer.spore, icon.spore)
 		end
