@@ -514,7 +514,9 @@ function module:FrostBlast(name)
 			self:IntervalBar(L["frostblast_bar"], timer.frostblast[1], timer.frostblast[2], icon.frostblast)
 		end
 	end
-	BigWigsFrostBlast:AddFrostBlastTarget(name)
+	if name and name ~= "" then
+		BigWigsFrostBlast:AddFrostBlastTarget(name)
+	end
 end
 
 function module:Detonate(name)
