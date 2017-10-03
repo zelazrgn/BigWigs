@@ -133,9 +133,9 @@ local icon = {
 	start = "Spell_Holy_PrayerOfHealing",
 }
 local syncName = {
-	adrenaline = "VaelAdrenaline",
-	flamebreath = "VaelBreath",
-	tankburn = "VaelTankBurn",
+	adrenaline = "VaelAdrenaline"..module.revision,
+	flamebreath = "VaelBreath"..module.revision,
+	tankburn = "VaelTankBurn"..module.revision,
 }
 
 
@@ -277,6 +277,7 @@ function module:Tankburn(name)
 		self:DelayedMessage(timer.tankburn - 5, L["tankburnsoon"], "Urgent", nil, nil, true)
 		if name then
 			self:Bar(string.format(L["adrenaline_bar"], name), timer.adrenaline, icon.adrenaline, true, "Black")
+			self:Message(string.format(L["adrenaline_message"], name), "Urgent")
 		end
 	end
 end
