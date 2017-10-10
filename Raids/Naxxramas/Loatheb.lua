@@ -42,7 +42,6 @@ L:RegisterTranslations("enUS", function() return {
 
 	cursewarn = "Curses removed! RENEW CURSES",
 	cursebar = "Remove Curse",
-	--cursetrigger = "Loatheb's Chains of Ice is removed.",
 	cursetrigger  = "Loatheb's Curse (.+) is removed.",
 
 
@@ -102,7 +101,7 @@ LoathebDebuff:SetOwner(WorldFrame, "ANCHOR_NONE")
 module.revision = 20004 -- To be overridden by the module!
 module.enabletrigger = module.translatedName -- string or table {boss, add1, add2}
 --module.wipemobs = { L["add_name"] } -- adds which will be considered in CheckForEngage
-module.toggleoptions = {"doom", --[["curse",]] "spore", "groups", "debuff", -1, "consumable", "graphic", "sound", "bosskill"}
+module.toggleoptions = {"doom", "curse", "spore", "groups", "debuff", -1, "consumable", "graphic", "sound", "bosskill"}
 
 
 -- locals
@@ -113,8 +112,8 @@ local timer = {
 	doomShort = 15,
 	doom = 0, -- this variable will be changed during the encounter
 	spore = 13,
-	--firstCurse = 10,
-	--curse = 30,
+	firstCurse = 5,
+	curse = 30,
 	getNextSpore = 20,
 }
 local icon = {
@@ -122,17 +121,16 @@ local icon = {
 	doom = "Spell_Shadow_NightOfTheDead",
 	spore = "Ability_TheBlackArrow",
 	sieni = "Interface\\AddOns\\\BigWigs\\Textures\\sieni",
---curse = "Spell_Holy_RemoveCurse",
+	curse = "Spell_Holy_RemoveCurse",
 }
 local syncName = {
 	doom = "LoathebDoom"..module.revision,
 	spore = "LoathebSporeSpawn"..module.revision,
---curse = "LoathebRemoveCurse"..module.revision,
+	curse = "LoathebRemoveCurse"..module.revision,
 }
 local consumableslist = {L["shadowpot"],L["noconsumable"],L["bandage"],L["wrtorhs"],L["shadowpotandbandage"],L["noconsumable"],L["bandage"],L["noconsumable"],L["wrtorhs"]}
 local numSpore = 0 -- how many spores have been spawned
 local numDoom = 0 -- how many dooms have been casted
---local timeCurseWarning = 0
 
 
 ------------------------------
@@ -144,13 +142,13 @@ function module:OnEnable()
 	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_SELF_DAMAGE", "Event")
 	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_FRIENDLYPLAYER_DAMAGE", "Event")
 	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_PARTY_DAMAGE", "Event")
-	--self:RegisterEvent("CHAT_MSG_SPELL_BREAK_AURA", "CurseEvent")
+	self:RegisterEvent("CHAT_MSG_SPELL_BREAK_AURA", "CurseEvent")
 
 	-- 2: Doom and SporeSpawn versioned up because of the sync including the
 	-- doom/spore count now, so we don't hold back the counter.
 	self:ThrottleSync(10, syncName.doom)
 	self:ThrottleSync(5, syncName.spore)
-	--self:ThrottleSync(5, syncName.curse)
+	self:ThrottleSync(5, syncName.curse)
 
 	self.consumableseq = 0
 
@@ -213,7 +211,7 @@ function module:OnEngage()
 		self:DelayedMessage(timer.doom - 5, string.format(L["doomwarn5sec"], numDoom + 1), "Urgent")
 		timer.doom = timer.doomLong -- reduce doom timer from 120s to 30s
 	end
-	--self:Bar(L["cursebar"], timer.firstCurse, icon.curse)
+	self:Bar(L["cursebar"], timer.firstCurse, icon.curse)
 
 	self:Spore()
 	self:ScheduleRepeatingEvent("bwloathebspore", self.Spore, timer.spore, self)
@@ -236,13 +234,13 @@ function module:Event( msg )
 		self:Sync(syncName.doom .. " " .. tostring(numDoom + 1))
 	end
 end
---[[
+
 function module:CurseEvent( msg )
-if string.find(msg, L["cursetrigger"]) then
-self:Sync(syncName.curse)
+	if string.find(msg, L["cursetrigger"]) then
+		self:Sync(syncName.curse)
+	end
 end
-end
-]]
+
 
 ------------------------------
 --      Synchronization	    --
@@ -256,8 +254,8 @@ function module:BigWigs_RecvSync(sync, rest, nick)
 			self:ScheduleEvent("bwloathebconsumable "..tostring(self.consumableseq), self.ConsumableWarning, 11, self)
 			self.consumableseq = self.consumableseq + 1
 		end
-		--elseif sync == syncName.curse then
-		--	self:Curse()
+		elseif sync == syncName.curse then
+			self:Curse()
 	end
 end
 
@@ -282,17 +280,14 @@ function module:Doom(syncNumDoom)
 end
 
 
---[[
+
 function module:Curse()
-if self.db.profile.curse then
-if timeCurseWarning + 5 < GetTime() then
-timeCurseWarning = GetTime()
-self:Message(L["cursewarn"], "Important")
-self:Bar(L["cursebar"], timer.curse, icon.curse)
+	if self.db.profile.curse then
+		self:Message(L["cursewarn"], "Important")
+		self:Bar(L["cursebar"], timer.curse, icon.curse)
+	end
 end
-end
-end
-]]
+
 
 ------------------------------
 --      Utility	Functions   --
