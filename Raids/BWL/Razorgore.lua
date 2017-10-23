@@ -1,4 +1,3 @@
--- reset orb in p2
 
 ----------------------------------
 --      Module Declaration      --
@@ -48,9 +47,9 @@ L:RegisterTranslations("enUS", function() return {
 	conflagration_bar = "Conflagration",
 	warstomp_bar = "War Stomp",
 	orb_bar = "Orb control: %s",
-	destroyegg_yell1 = "You'll pay for forcing me to do this\.",
+	destroyegg_yell1 = "You'll pay for forcing me to do this!",
 	destroyegg_yell2 = "Fools! These eggs are more precious than you know!",
-	destroyegg_yell3 = "No - not another one! I'll have your heads for this atrocity!",
+	destroyegg_yell3 = "No! Not another one! I'll have your heads for this atrocity!",
 
 	mc_cmd = "mindcontrol",
 	mc_name = "Mind Control",
@@ -275,8 +274,8 @@ end
 function module:CHAT_MSG_MONSTER_YELL(msg)
 	if msg == L["phase2_trigger"] then
 		self:Sync(syncName.phase2)
-	elseif msg == L["destroyegg_yell1"] or msg == L["destroyegg_yell2"] or msg == L["destroyegg_yell3"] then
-		self:Sync(syncName.egg .. " " .. tostring(self.eggs + 1))
+		--elseif msg == L["destroyegg_yell1"] or msg == L["destroyegg_yell2"] or msg == L["destroyegg_yell3"] then
+		--	self:Sync(syncName.egg .. " " .. tostring(self.eggs + 1))
 	end
 end
 
@@ -287,7 +286,7 @@ function module:CHAT_MSG_SPELL_FRIENDLYPLAYER_BUFF(msg)
 end
 
 function module:CHAT_MSG_MONSTER_EMOTE(msg)
-	if string.find(msg, "Razorgore the Untamed casts Destroy Egg") then
+	if string.find(msg, "casts Destroy Egg") then
 		-- as of now, this does also fire on finished 'Destroy Egg' cast.
 		-- but only after a successful one and the range is shitty of this emote.
 		self:Sync(syncName.egg .. " " .. tostring(self.eggs + 1))
@@ -417,7 +416,7 @@ function module:BigWigs_RecvSync(sync, rest, nick)
 		if self.db.profile.eggs then
 			self:Bar(L["egg_bar"], timer.egg, icon.egg, true, "purple")
 		end
-		self:Sync(syncName.egg .. " " .. tostring(self.eggs + 1))
+		--self:Sync(syncName.egg .. " " .. tostring(self.eggs + 1))
 	elseif sync == syncName.orb then
 		if self.orbOverTime then
 			self.freetime = self.freetime + GetTime() - self.orbOverTime
@@ -467,7 +466,6 @@ function module:BigWigs_RecvSync(sync, rest, nick)
 		self:TriggerEvent("BigWigs_StopCounterBar", self, "Eggs destroyed")
 		self:Bar(L["conflagration_bar"], timer.firstConflagrate-self.freetime, "Spell_Fire_Incinerate", true, "red")
 		self:Bar(L["volley_bar"], timer.firstVolley-self.freetime, icon.volley, true, "blue")
-		DEFAULT_CHAT_FRAME:AddMessage("self.freetime: "..self.freetime );
 		self:Bar(L["warstomp_bar"], timer.firstWarStomp-self.freetime, "Ability_BullRush")
 
 		self:KTM_SetTarget(self.translatedName)
