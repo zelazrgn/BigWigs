@@ -403,6 +403,7 @@ function module:CThunStart()
 		doCheckForWipe = true
 
 		self:Message(L["startwarn"], "Attention", false, false)
+		self:Sound("Shakira")
 		self:Bar(L["barStartRandomBeams"], timer.p1RandomEyeBeams, icon.giantEye)
 
 		if self.db.profile.tentacle then
