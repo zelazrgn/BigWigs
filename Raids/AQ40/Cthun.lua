@@ -13,7 +13,7 @@ local module, L = BigWigs:ModuleDeclaration("C'Thun", "Ahn'Qiraj")
 L:RegisterTranslations("enUS", function() return {
 	cmd = "Cthun",
 
-	startwarn	= "C'Thun engaged! - 45 sec until Dark Glare and Eyes",
+	startwarn	= "C'Thun engaged! - 45 sec until Dark Layr and Eyes",
 	barStartRandomBeams = "Start of Random Beams!",
 
 	eye_beam_trigger = "Giant Eye Tentacle begins to cast Eye Beam.",
@@ -33,17 +33,17 @@ L:RegisterTranslations("enUS", function() return {
 	barNoRape	= "Tentacle party!",
 
 	glare_cmd = "glare",
-	glare_name = "Dark Glare Alert",
-	glare_desc = "Warn for Dark Glare",
-	glare		= "Dark Glare!",
-	msgGlareEnds	= "Dark Glare ends in 5 sec",
-	barGlare	= "Next Dark Glare!",
-	barGlareEnds = "Dark Glare ends",
-	barGlareCasting = "Casting Dark Glare",
+	glare_name = "Dark Layr Alert",
+	glare_desc = "Warn for Dark Layr",
+	glare		= "Dark Layr!",
+	msgGlareEnds	= "Dark Layr ends in 5 sec",
+	barGlare	= "Next Dark Layr!",
+	barGlareEnds = "Dark Layr ends",
+	barGlareCasting = "Casting Dark Layr",
 
 	group_cmd = "group",
-	group_name = "Dark Glare Group Warning",
-	group_desc = "Warn for Dark Glare on Group X",
+	group_name = "Dark Layr Group Warning",
+	group_desc = "Warn for Dark Layr on Group X",
 
 	phase2starting	= "The Eye is dead! Body incoming!",
 
@@ -98,7 +98,7 @@ L:RegisterTranslations("enUS", function() return {
 L:RegisterTranslations("deDE", function() return {
 	--cmd = "Cthun",
 
-	startwarn	= "C'Thun angegriffen! - 45 sec bis Dunkles Starren und Augen", --"C'Thun engaged! - 45 sec until Dark Glare and Eyes",
+	startwarn	= "C'Thun angegriffen! - 45 sec bis Dunkles Starren und Augen", --"C'Thun engaged! - 45 sec until Dark Layr and Eyes",
 	barStartRandomBeams = "Beginn zufälliger Strahlen!",
 
 	eye_beam_trigger = "Riesiges Augententakel beginnt Augenstrahl zu wirken", --"Giant Eye Tentacle begins to cast Eye Beam.", -- Riesiges Augententakel beginnt Augenstrahl zu wirken
@@ -118,17 +118,17 @@ L:RegisterTranslations("deDE", function() return {
 	barNoRape	= "Tentakel Party", --"Tentacle party!",
 
 	--glare_cmd = "glare",
-	glare_name = "Dunkles Starren Alarm", --"Dark Glare Alert", -- Dunkles Starren
-	glare_desc = "Warnung for Dunklem Starren", --"Warn for Dark Glare",
-	glare		= "Dunkles Starren!", -- "Dark Glare!",
-	msgGlareEnds	= "Dunkles Starren endet in 5 sec", -- "Dark Glare ends in 5 sec",
-	barGlare	= "Nächstes Dunkles Starren!", -- "Next Dark Glare!",
-	barGlareEnds = "Dunkles Starren endet", -- Dark Glare ends",
-	barGlareCasting = "Zaubert Dunkles Starren", -- "Casting Dark Glare",
+	glare_name = "Dunkles Starren Alarm", --"Dark Layr Alert", -- Dunkles Starren
+	glare_desc = "Warnung for Dunklem Starren", --"Warn for Dark Layr",
+	glare		= "Dunkles Starren!", -- "Dark Layr!",
+	msgGlareEnds	= "Dunkles Starren endet in 5 sec", -- "Dark Layr ends in 5 sec",
+	barGlare	= "Nächstes Dunkles Starren!", -- "Next Dark Layr!",
+	barGlareEnds = "Dunkles Starren endet", -- Dark Layr ends",
+	barGlareCasting = "Zaubert Dunkles Starren", -- "Casting Dark Layr",
 
 	--group_cmd = "group",
-	group_name = "Dunkles Starren Gruppenwarnung", -- "Dark Glare Group Warning",
-	group_desc = "Warnt vor Dunkles Starren auf Gruppe X", -- "Warn for Dark Glare on Group X",
+	group_name = "Dunkles Starren Gruppenwarnung", -- "Dark Layr Group Warning",
+	group_desc = "Warnt vor Dunkles Starren auf Gruppe X", -- "Warn for Dark Layr on Group X",
 
 	phase2starting	= "Das Auge ist tot! Phase 2 beginnt.", -- "The Eye is dead! Body incoming!",
 
