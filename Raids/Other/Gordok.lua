@@ -69,6 +69,29 @@ L:RegisterTranslations("enUS", function() return {
 
 } end )
 
+L:RegisterTranslations("esES", function() return {
+	--ms_cmd = "ms",
+	ms_name = "Golpe mortal",
+	ms_desc = "Avisa cuando alguien reciba Golpe mortal",
+
+	--stomp_cmd = "stomp",
+	stomp_name = "Pisotón de guerra",
+	stomp_desc = "Avisa cuando alguien reciba Pisotón de guerra",
+
+	--charge_cmd = "charge",
+	charge_name = "Embestir",
+	charge_desc = "Avisa para Embestir",
+
+	-- AceConsole strings
+	--cmd = "Gordok",
+
+	warStomp_bar = "Pisotón de guerra",
+	warStomp2_bar = "2º Pisotón de guerra",
+	ms_bar = "Golpe mortal",
+	charge_bar = "Embestir",
+
+} end )
+
 L:RegisterTranslations("deDE", function() return {
 	ms_cmd = "ms",
 	ms_name = "Mortal Strike",

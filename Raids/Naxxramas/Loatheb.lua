@@ -89,6 +89,80 @@ L:RegisterTranslations("enUS", function() return {
 
 } end )
 
+L:RegisterTranslations("esES", function() return {
+	--cmd = "Loatheb",
+
+	--doom_cmd = "doom",
+	doom_name = "Alerta de Condena inevitable",
+	doom_desc = "Avisa para Condena inevitable",
+
+	--curse_cmd = "curse",
+	curse_name = "Alerta de Deshacer maldición",
+	curse_desc = "Avisa cuando las maldiciones son quitadas de Loatheb",
+
+	--spore_cmd = "spore",
+	spore_name = "Alerta de Espora",
+	spore_desc = "Avisa para Esporas",
+
+	--debuff_cmd = "debuff",
+	debuff_name = "Debuff de Espora",
+	debuff_desc = "Muestra cuando casi desaparezca el debuff de espora",
+
+	--groups_cmd = "groups",
+	groups_name = "Grupos de Espora",
+	groups_desc = "Desactiva para mostrar el número del grupo con temporizadores para esporas (Táctica de 7 grupos)",
+
+
+	doombar = "Condena inevitable %d",
+	doomwarn = "¡Condena inevitable %d! %d segundos hasta la próxima!",
+	doomwarn5sec = "¡Condena inevitable %d en 5 segundos!",
+	doomtrigger = "sufre de Condena inevitable.",
+
+	cursewarn = "¡Maldiciones quitadas! RENOVA MALDICIÓNES!",
+	cursebar = "Deshacer maldición",
+	--cursetrigger = "Loatheb's Chains of Ice is removed.",
+	cursetrigger  = "Maldición de Loatheb (.+) is removed.",
+
+
+	doomtimerbar = "Condena cada 15 segundos",
+	doomtimerwarn = "¡Cambio del Temporizador de Condena en %s segundos!",
+	doomtimerwarnnow = "¡Condena inevitable pasa cada 15sec!",
+
+	cursetimerbar = "Temporizador de Deshacer maldición",
+	cursetimerwarn = "¡Maldiciones quitadas, la próxima en %s segundos!",
+
+	startwarn = "Entrando en combate con Loatheb, 2 minutos hasta Condena inevitable!",
+
+	--sporewarn = "Spore spawned",
+	sporebar = "Próxima Espora",
+
+	-- Loatheb Tactical
+
+	--graphic_cmd = "graphic",
+	graphic_name = "Iconos Gráficos",
+	graphic_desc = "Muestra los iconos gráficos cuando esté marcado",
+
+	--sound_cmd = "sound",
+	sound_name = "Efectos de Sonido",
+	sound_desc = "Reproduce efectos de sonido cuando esté marcado",
+
+	doomtrigger = "afligido por Fatalidad inevitable.",
+
+	--consumable_cmd = "consumable",
+	consumable_name = "No avisar la banda de usar consumibles (A)",
+	consumable_desc = "No avisa la banda de usar consumibles por Advertencia de la Banda cuando esté marcado. Requiere Asistente (A)",
+
+	shadowpot = "-- ¡ Toma Poción de Protección contra las Sombras ! --",
+	bandage = "-- ¡ Usa las vendajes ! --",
+	wrtorhs = "-- ¡ Piedra de Salud o Tubérculo de blancoria ! --",
+	shadowpotandbandage = "-- ¡ Toma Poción de Protección contra las Sombras y Venda ! --",
+	noconsumable = "-- ¡ No usa Consumibles por ahora ! --",
+
+
+	you = "Tu",
+	are = "estás",
+} end )
+
 local LoathebDebuff = CreateFrame( "GameTooltip", "LoathebDebuff", nil, "GameTooltipTemplate" );
 LoathebDebuff:Hide()
 LoathebDebuff:SetFrameStrata("TOOLTIP")

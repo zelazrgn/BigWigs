@@ -50,6 +50,7 @@ L:RegisterTranslations("enUS", function() return {
 	destroyegg_yell1 = "You'll pay for forcing me to do this!",
 	destroyegg_yell2 = "Fools! These eggs are more precious than you know!",
 	destroyegg_yell3 = "No! Not another one! I'll have your heads for this atrocity!",
+	["Eggs destroyed"] = true,
 
 	mc_cmd = "mindcontrol",
 	mc_name = "Mind Control",
@@ -86,6 +87,86 @@ L:RegisterTranslations("enUS", function() return {
 	icon_cmd = "icon",
 	icon_name = "Raid Icon on Mind Control",
 	icon_desc = "Place a raid icon on the mind controlled player for the duration of the debuff.\n\n(Requires assistant or higher)",
+} end)
+
+L:RegisterTranslations("esES", function() return {
+	--cmd = "Razorgore",
+
+	start_trigger = "Intruders have breached",
+	start_message = "Fase 1",
+	mobs_soon = "¡Primera oleada en 5 segundos!",
+	mobs_bar = "Primera oleada",
+	orbcontrolother_trigger = "(.+) sufre de Extenuación mental\.",
+	orbcontrolyou_trigger = "Sufres de Extenuación mental\.",
+	mindcontrolother_trigger = "(.+) sufre de Subyugar mente\.",
+	mindcontrolyou_trigger = "sufre de Subyugar mental\.",
+	mindcontrol_message = "¡%s está controlado por mente!",
+	mindcontrol_message_you = "¡Estás controlado por mente!",
+	mindcontrol_bar = "CM: %s",
+	mindcontrolyouend_trigger = "Subyugar mente acaba de disiparse\.",
+	mindcontrolotherend_trigger = "Subyugar mente desaparece de (.+)\.",
+	polymorphother_trigger = "(.+) sufre de Polimorfia superior\.",
+	polymorphyou_trigger = "Sufres de Polimorfia superior\.",
+	polymorph_message = "¡%s está en polimorfia! Disípala!",
+	polymorph_message_you = "¡Estás en polimorfia!",
+	polymorph_bar = "Polimorfia: %s",
+	polymorphyouend_trigger = "Polimorfia superior acaba de disiparse\.",
+	polymorphotherend_trigger = "Polimorfia superior desaparece de (.+)\.",
+	deathyou_trigger = "Has muerto\.",
+	deathother_trigger = "(.+) ha muerto\.",
+	egg_trigger = "Sangrevaja el Indomable comienza a lanzar Destruir huevo\.",
+	egg_message = "¡%d/30 huevos destruidos!",
+	egg_bar = "Destruir huevo",
+	-- there is no clear phase2 trigger
+	phase2_trigger = "I'm free! That device shall never torment me again!", --"You'll pay for forcing me to do this.",
+	phase2_message = "Fase 2",
+	volley_trigger = "Sangrevaja el Indomable comienza a lanzar Lluvia de bolas de Fuego\.",
+	volley_bar = "Lluvia de bolas de Fuego",
+	volley_message = "¡Ocúltate!",
+	conflagration_trigger = "sufre de Conflagración",
+	conflagration_bar = "Conflagración",
+	warstomp_bar = "Pisotón de guerra",
+	orb_bar = "Control del Orbe: %s",
+	destroyegg_yell1 = "You'll pay for forcing me to do this\.",
+	destroyegg_yell2 = "Fools! These eggs are more precious than you know!",
+	destroyegg_yell3 = "No - not another one! I'll have your heads for this atrocity!",
+	["Eggs destroyed"] = "Huevos destruidos",
+
+	--mc_cmd = "mindcontrol",
+	mc_name = "Control mental",
+	mc_desc = "Anuncia quién está controlado por mente y muestra una barra cliqueable para seleccionarlo fácilmente.",
+
+	--eggs_cmd = "eggs",
+	eggs_name = "Huevos",
+	eggs_desc = "Contador para los Huevos de dragón Negro destruidos.",
+
+	--phase_cmd = "phase",
+	phase_name = "Fase",
+	phase_desc = "Avisa para cambio de fase.",
+
+	--mobs_cmd = "mobs",
+	mobs_name = "Primera oleada",
+	mobs_desc = "Muestra cuando llegue la primera oleada.",
+
+	--orb_cmd = "orb",
+	orb_name = "Control del Orbe",
+	orb_desc = "Muestra quien está controlando el jefe y muestra una barra cliqueable para seleccionarlo fácilmente.",
+
+	--fireballvolley_cmd = "fireballvolley",
+	fireballvolley_name = "Lluvia de bolas de Fuego",
+	fireballvolley_desc = "Anuncia cuando el jefe lance Lluvia de bolas de Fuego.",
+
+	--conflagration_cmd = "conflagration",
+	conflagration_name = "Conflagración",
+	conflagration_desc = "Muestra una barra con la duración de Conflagración.",
+
+	--polymorph_cmd = "polymorph",
+	polymorph_name = "Polimorfia superior",
+	polymorph_desc = "Muestra quién está en polimorfia por Grethok el Controlador y muestra una barra cliqueable para seleccionarlo fácilmente.",
+
+	--icon_cmd = "icon",
+	icon_name = "Marcar para Control mental",
+	icon_desc = "Marca con un icono el jugador controlado por mente para la duración del debuff.\n\n(Require asistente o líder)",
 } end)
 
 L:RegisterTranslations("deDE", function() return {
@@ -258,8 +339,8 @@ function module:OnEngage()
 		self:Bar(L["mobs_bar"], timer.mobspawn, icon.mobspawn)
 		self:Message(timer.mobspawn - 5, L["mobs_soon"], "Important")
 	end
-	self:TriggerEvent("BigWigs_StartCounterBar", self, "Eggs destroyed", 30, "Interface\\Icons\\inv_egg_01")
-	self:TriggerEvent("BigWigs_SetCounterBar", self, "Eggs destroyed", (30 - 0.1))
+	self:TriggerEvent("BigWigs_StartCounterBar", self, L["Eggs destroyed"], 30, "Interface\\Icons\\inv_egg_01")
+	self:TriggerEvent("BigWigs_SetCounterBar", self, L["Eggs destroyed"], (30 - 0.1))
 end
 
 -- called after boss is disengaged (wipe(retreat) or victory)
@@ -406,7 +487,7 @@ function module:BigWigs_RecvSync(sync, rest, nick)
 			if self.db.profile.eggs then
 				self:Message(string.format(L["egg_message"], self.eggs), "Positive")
 			end
-			self:TriggerEvent("BigWigs_SetCounterBar", self, "Eggs destroyed", (30 - self.eggs))
+			self:TriggerEvent("BigWigs_SetCounterBar", self, L["Eggs destroyed"], (30 - self.eggs))
 		elseif rest == (self.eggs + 1) and rest == 30 and self.phase ~= 2 then
 			self:Sync(syncName.phase2)
 		end
@@ -463,7 +544,7 @@ function module:BigWigs_RecvSync(sync, rest, nick)
 		if self.db.profile.phase then
 			self:Message(L["phase2_message"], "Attention")
 		end
-		self:TriggerEvent("BigWigs_StopCounterBar", self, "Eggs destroyed")
+		self:TriggerEvent("BigWigs_StopCounterBar", self, L["Eggs destroyed"])
 		self:Bar(L["conflagration_bar"], timer.firstConflagrate-self.freetime, "Spell_Fire_Incinerate", true, "red")
 		self:Bar(L["volley_bar"], timer.firstVolley-self.freetime, icon.volley, true, "blue")
 		self:Bar(L["warstomp_bar"], timer.firstWarStomp-self.freetime, "Ability_BullRush")

@@ -65,7 +65,56 @@ L:RegisterTranslations("enUS", function() return {
 	shieldwall_warn_over = "%s - Shield Wall GONE!",
 } end )
 
+L:RegisterTranslations("esES", function() return {
+	--cmd = "Horsemen",
 
+	--mark_cmd = "mark",
+	mark_name = "Alerta de Marcas",
+	mark_desc = "Avisa para Marcas",
+
+	--shieldwall_cmd  = "shieldwall",
+	shieldwall_name = "Alerta de Muro de escudo",
+	shieldwall_desc = "Avisa para Muro de escudo",
+
+	--void_cmd = "void",
+	void_name = "Alerta de Zona de vacío",
+	void_desc = "Avisa cuando Lady Blaumeux lance Zona de vacío.",
+
+	--meteor_cmd = "meteor",
+	meteor_name = "Alerta de Meteoro",
+	meteor_desc = "Avisa cuando Thane lance Meteoro.",
+
+	--wrath_cmd = "wrath",
+	wrath_name = "Alerta de Cólera sagrada",
+	wrath_desc = "Avisa cuando Zeliek lance Cólera sagrada.",
+
+	markbar = "Marca de %d",
+	mark_warn = "¡Marca de %d!",
+	mark_warn_5 = "Marca de %d en 5 segundos",
+	marktrigger1 = "sufre de Marca de Zeliek",
+	marktrigger2 = "sufre de Marca de Korth'azz",
+	marktrigger3 = "sufre de Marca de Blaumeux",
+	marktrigger4 = "sufre de Marca de Mograine",
+
+	voidtrigger = "Lady Blaumeux lanza Zona de vacío.",
+	voidwarn = "Zona de vacío entrante",
+	voidbar = "Zona de vacío",
+
+	meteortrigger = "Meteoro de Thane Korth'azz golpea ",
+	meteorwarn = "¡Meteoro!",
+	meteorbar = "Meteoro",
+
+	wrathtrigger = "Cólera sagrada de Sir Zeliek impacta ",
+	wrathwarn = "¡Cólera sagrada!",
+	wrathbar = "Cólera sagrada",
+
+	startwarn = "Entrando en combate con Los Cuatro Caballoshombre! Marca en ~17 segundos",
+
+	shieldwallbar = "%s - Muro de escudo",
+	shieldwalltrigger = "(.*) gana Muro de escudo.",
+	shieldwall_warn = "%s - Muro de escudo por 20 segundos",
+	shieldwall_warn_over = "¡%s - Muro de escudo DESAPARECE!",
+} end )
 ---------------------------------
 --      	Variables 		   --
 ---------------------------------

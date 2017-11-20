@@ -63,7 +63,50 @@ L:RegisterTranslations("enUS", function() return {
 
 } end )
 
+L:RegisterTranslations("esES", function() return {
+	--cmd = "Grobbulus",
 
+	--enrage_cmd = "enrage",
+	enrage_name = "Alerta de Enfurecer",
+	enrage_desc = "Avisa para Enfurecer",
+
+	--youinjected_cmd = "youinjected",
+	youinjected_name = "Alerta Personal de Inyección",
+	youinjected_desc = "Avisa cuando estés inyectado",
+
+	--otherinjected_cmd = "otherinjected",
+	otherinjected_name = "Alerta de Inyección",
+	otherinjected_desc = "Avisa cuando otros jugadores están inyectados",
+
+	--icon_cmd = "icon",
+	icon_name = "Marcar para Inyección",
+	icon_desc = "Marca con un icono el jugador inyectado. (Require asistente o líder)",
+
+	--cloud_cmd = "cloud",
+	cloud_name = "Nube de veneno",
+	cloud_desc = "Avisa para Nube de veneno",
+
+	inject_trigger = "^([^%s]+) ([^%s]+) sufre de Inyección mutante",
+
+	you = "Tu",
+	are = "estás",
+
+	startwarn = "¡Entrando en combate con Grobbulus, 12 minutos hasta Enfurecer!",
+	enragebar = "Enfurecer",
+	enrage10min = "Enfurecer en 10 minutos",
+	enrage5min = "Enfurecer en 5 minutos",
+	enrage1min = "Enfurecer en 1 minuto",
+	enrage30sec = "Enfurecer en 30 segundos",
+	enrage10sec = "Enfurecer en 10 segundos",
+	bomb_message_you = "¡Estás inyectado!",
+	bomb_message_other = "¡%s está inyectado!",
+	bomb_bar = "%s inyectado",
+
+	cloud_trigger = "Grobbulus lanza Nube de veneno.",
+	cloud_warn = "¡Próximo Nube de veneno en ~15 segundos!",
+	cloud_bar = "Nube de veneno",
+
+} end )
 ---------------------------------
 --      	Variables 		   --
 ---------------------------------

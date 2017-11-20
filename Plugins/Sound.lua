@@ -52,6 +52,19 @@ L:RegisterTranslations("enUS", function() return {
 	["Use only the default sound."] = true,
 } end)
 
+L:RegisterTranslations("esES", function() return {
+	["Sounds"] = "Sonidos",
+	--["sounds"] = true,
+	["Options for sounds."] = "Opciones para sonidos",
+
+	--["toggle"] = "Alternar",
+	["Use sounds"] = "Usar sonidos",
+	["Toggle sounds on or off."] = "Alterna los sonidos activos o desactivos",
+	--["default"] = "defecto",
+	["Default only"] = "Solamente defecto",
+	["Use only the default sound."] = "Solamente usa el sonido por defecto",
+} end)
+
 L:RegisterTranslations("koKR", function() return {
 	["Sounds"] = "효과음",
 	["Options for sounds."] = "효과음 옵션.",

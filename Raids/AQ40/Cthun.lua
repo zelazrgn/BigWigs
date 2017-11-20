@@ -95,6 +95,91 @@ L:RegisterTranslations("enUS", function() return {
 
 } end )
 
+L:RegisterTranslations("esES", function() return {
+	--cmd = "Cthun",
+
+	startwarn	= "¡C'Thun enfurecido! - 45 segundos hasta Mirada oscura y Ojos",
+	barStartRandomBeams = "¡Comienza a lanzar Haz aleatorio!",
+
+	eye_beam_trigger = "Tentáculo ocular gigante comienza a lanzar Haz ocular.",
+	eye_beam_trigger_cthun = "Ojo de C'Thun comienza a lanzar Haz ocular.",
+	eyebeam		= "Haz ocular a %s",
+	Unknown = "Desconocido", -- Eye Beam on Unknown
+
+	--tentacle_cmd = "tentacle",
+	tentacle_name = "Alerta de Tentáculo",
+	tentacle_desc = "Avisa para Tentáculos",
+	--rape_cmd = "rape",
+	rape_name = "Broma",
+	rape_desc = "Bromas de C'Thun.",
+	tentacle	= "Tentáclulos en 5 segundos",
+	norape		= "¡Tentáculos en 5 segundos!",
+	barTentacle	= "¡Tentáculos!",
+	barNoRape	= "¡Montón de Tentáculos!",
+
+	--glare_cmd = "glare",
+	glare_name = "Alerta de Mirada oscura",
+	glare_desc = "Avisa para Mirada oscura",
+	glare		= "¡Mirada oscura!",
+	msgGlareEnds	= "Mirada oscura desaparecerá en 5 segundos",
+	barGlare	= "¡Próxima Mirada oscura!",
+	barGlareEnds = "Mirada oscura desaparece",
+	barGlareCasting = "Lanzando Mirada oscura",
+
+	--group_cmd = "group",
+	group_name = "Alerta de Mirada oscura al Grupo",
+	group_desc = "Avisa para Mirada oscura al Grupo X",
+
+	phase2starting	= "¡El Ojo está muerto! Cuerpo entrante!",
+
+	playersInStomach = "Jugadores en el estómago",
+
+	--giant_cmd = "giant",
+	giant_name = "Alerta de Tentáculo ocular gigante",
+	giant_desc = "Avisa para Tentáculos oculares gigantes",
+	barGiant	= "¡Tentáculo ocular gigante!",
+	barGiantC	= "¡Tentáculo garral gigante!",
+	GiantEye = "¡Tentáculo ocular gigante in 5 segundos!",
+	gedownwarn	= "¡Ha muerto Tentáculo ocular gigante!",
+
+	--weakened_cmd = "weakened",
+	weakened_name = "Alerta de Debilitado",
+	weakened_desc = "Avisa para Estado Debilitado",
+	weakenedtrigger = "está debilitado!",
+	weakened	= "C'Thun está debilitado por 45 segundos",
+	invulnerable2	= "Fiesta termina en 5 segundos",
+	invulnerable1	= "Fiesta termina - C'Thun invulnerable",
+	barWeakened	= "¡C'Thun está debilitado!",
+
+	--acid_cmd = "acid",
+	acid_name = "Alerta de Ácido digestivo",
+	acid_desc = "Avisa cuando tengas 5 montones de Ácido digestivo",
+	digestiveAcidTrigger = "sufres de Ácido digestivo [%s%(]*([%d]*).",
+	msgDigestiveAcid = "5 Montones de Ácido",
+
+	["Second TentacleHP"] = "Segundo Tentáculo %d%%",
+	["First Tentacle dead"] = "Primer Tentáculo ha muerto",
+	["First Tentacle"] = "Primer Tentáculo",
+	["Second Tentacle"] = "Segundo Tentáculo",
+
+	--[[GNPPtrigger	= "Nature Protection",
+	GSPPtrigger	= "Shadow Protection",
+	Sundertrigger	= "Sunder Armor",
+	CoEtrigger	= "Curse of the Elements",
+	CoStrigger	= "Curse of Shadow",
+	CoRtrigger	= "Curse of Recklessness",]]
+
+
+	--proximity_cmd = "proximity",
+	proximity_name = "Alerta de Proximidad",
+	proximity_desc = "Muestra marco de alerta de Proximidad",
+
+	--stomach_cmd = "stomach",
+	stomach_name = "Jugadores en Estómago",
+	stomach_desc = "Muestra jugadores en estómago en lugar de jugadores cercanos",
+
+} end )
+
 L:RegisterTranslations("deDE", function() return {
 	--cmd = "Cthun",
 

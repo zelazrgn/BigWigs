@@ -135,7 +135,130 @@ L:RegisterTranslations("enUS", function() return {
 	proximity_desc = "Show Proximity Warning Frame",
 } end )
 
+L:RegisterTranslations("esES", function() return {
+	--cmd = "Kelthuzad",
 
+	KELTHUZADCHAMBERLOCALIZEDLOLHAX = "Cámara de Kel'Thuzad",
+
+	--phase_cmd = "phase",
+	phase_name = "Alerta de Fase",
+	phase_desc = "Avisa para cambios de Fase.",
+
+	--mc_cmd = "mindcontrol",
+	mc_name = "Alerta de Control Mental",
+	mc_desc = "Avisa cuando haya jugadores que están controlados por mente.",
+
+	--fissure_cmd = "fissure",
+	fissure_name = "Alerta de Fisura de las Sombras",
+	fissure_desc = "Avisa para Fisura de las Sombras.",
+
+	--frostblast_cmd = "frostblast",
+	frostblast_name = "Alerta de Explosión de Escarcha",
+	frostblast_desc = "Avisa para Explosión de Escarcha.",
+
+	--frostbolt_cmd = "frostbolt",
+	frostbolt_name = "Alerta de Descarga de Escarcha",
+	frostbolt_desc = "Avisa para Descarga de Escarcha",
+
+	frostboltbar_cmd = "frostboltbar",
+	frostboltbar_name = "Barra de Descarga de Escarcha",
+	frostboltbar_desc = "Muestra una barra para lanzamiento de Descarga de Escharcha",
+
+	--detonate_cmd = "detonate",
+	detonate_name = "Alerta de Detonar maná",
+	detonate_desc = "Avisa para Detonar maná.",
+
+	--detonateicon_cmd = "detonateicon",
+	detonateicon_name = "Marcar para Detonar maná",
+	detonateicon_desc = "Marca con un icono jugadores con Detonar maná.",
+
+	--guardians_cmd = "guardians",
+	guardians_name = "Alerta de Guardianes",
+	guardians_desc = "Avisa para Guardianes de Corona de Hielo en fase 3.",
+
+	--fbvolley_cmd = "fbvolley",
+	fbvolley_name = "Lluvia de descarga de Escarcha Posible",
+	fbvolley_desc = "Temporizador para Lluvia de descarga de Escarcha posible.",
+
+	--addcount_cmd = "addcount",
+	addcount_name = "Fase 1 Contador de Adds",
+	addcount_desc = "Cuenta los adds matados en Fase 1",
+
+	mc_trigger1 = "Your soul, is bound to me now!",
+	mc_trigger2 = "There will be no escape!",
+	mc_warning = "Mind Control!",
+	mc_bar = "Possible Mind Control!",
+
+	start_trigger = "Minions, servants, soldiers of the cold dark, obey the call of Kel'Thuzad!",
+	start_trigger1 = "Minions, servants, soldiers of the cold dark! Obey the call of Kel'Thuzad!",
+	start_warning = "Kel'Thuzad encounter started! ~5min till he is active!",
+	start_bar = "Phase 1 Timer",
+	attack_trigger1 = "Kel'Thuzad ataca",
+	attack_trigger2 = "Kel'Thuzad falla",
+	attack_trigger3 = "Kel'Thuzad golpea",
+	attack_trigger4 = "Kel'Thuzad golpe críticio",
+	kick_trigger1 = "Kick hits Kel'Thuzad",
+	kick_trigger2 = "Kick crits Kel'Thuzad",
+	kick_trigger3 = "Kick was blocked by Kel'Thuzad",
+	pummel_trigger1 = "Pummel hits Kel'Thuzad",
+	pummel_trigger2 = "Pummel crits Kel'Thuzad",
+	pummel_trigger3 = "Pummel was blocked by Kel'Thuzad",
+	shieldbash_trigger1 = "Shield Bash hits Kel'Thuzad",
+	shieldbash_trigger2 = "Shield Bash crits Kel'Thuzad",
+	shieldbash_trigger3 = "Shield Bash was blocked by Kel'Thuzad",
+	earthshock_trigger1 = "Earth Shock hits Kel'Thuzad",
+	earthshock_trigger2 = "Earth Shock crits Kel'Thuzad",
+
+	phase1_warn = "Fase 1 termina en 20 segunfos!",
+
+	phase2_trigger1 = "Pray for mercy!",
+	phase2_trigger2 = "Scream your dying breath!",
+	phase2_trigger3 = "The end is upon you!",
+	phase2_warning = "¡Fase 2, Kel'Thuzad entrante!",
+	phase2_bar = "¡Kel'Thuzad Activo!",
+
+	phase3_soon_warning = "¡Fase 3 pronto!",
+	phase3_trigger = "Master, I require aid!",
+	phase3_warning = "¡Fase 3, Guardianes en ~15 segundos!",
+
+
+	guardians_bar = "¡Guardianes entrantes!",
+
+	fissure_trigger = "lanza Fisura de las Sombras.",
+	fissure_warning = "¡Fisura de las Sombras!",
+
+	frostbolt_trigger = "Kel'Thuzad comienza a lanzar Descarga de Escarcha.",
+	frostbolt_warning = "¡Descarga de Escarcha! Interrúmpela!",
+	frostbolt_bar = "Descarga de Escarcha",
+
+
+	frostbolt_volley = "Lluvia Posible",
+	frostbolt_volley_trigger = "sufre de Descarga de Escarcha",
+
+	add_dead_trigger = "(.*) muere",
+	add_bar = "%d/14 %s",
+
+	frostblast_bar = "Explosión de Escarcha Posible",
+	frostblast_trigger1 = "I will freeze the blood in your veins!",
+	frostblast_warning = "¡Explosión de Escarcha!",
+	frostblast_soon_message = "¡Explosión de Escarcha Posible en ~5 segundos!",
+
+	phase2_frostblast_warning = "¡Explosión de Escarcha Posible en ~5 segundos!",
+	phase2_mc_warning = "¡Control Mental Posible en ~5 segundos!",
+	phase2_detonate_warning = "¡Detonar maná en ~5 segundos!",
+
+	detonate_trigger = "^([^%s]+) ([^%s]+) sufre de Detonar maná",
+	detonate_bar = "Detonar maná - %s",
+	detonate_possible_bar = "Detonar maná",
+	detonate_warning = "¡%s tiene Detonar maná!",
+
+	you = "Tu",
+	are = "estás",
+
+	--proximity_cmd = "proximity",
+	proximity_name = "Alerta de Proximidad",
+	proximity_desc = "Muestra marco de alerta de proximidad",
+} end )
 ---------------------------------
 --      	Variables 		   --
 ---------------------------------

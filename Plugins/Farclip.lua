@@ -25,6 +25,16 @@ L:RegisterTranslations("enUS", function() return {
 	["Set the default farclip value."] = true,
 } end)
 
+L:RegisterTranslations("esES", function() return {
+	["Farclip"] = "Farclip",
+	["farclip"] = "farclip",
+	["Reduces the terrain distance to the minimum in Naxxramas to avoid screen freezes."] = "Reduce la distancia de terreno al mínimo en Naxxramas para evitar colgarse la pantalla.",
+	["Active"] = "Activo",
+	["Activate the plugin."] = "Activa el plugin",
+	["Default Value"] = "Valor Defecto",
+	["Set the default farclip value."] = "Define el valor farclip por defecto.",
+} end)
+
 --[[L:RegisterTranslations("deDE", function() return {
 
 } end)

@@ -56,6 +56,51 @@ L:RegisterTranslations("enUS", function() return {
 	are = "are",
 } end )
 
+L:RegisterTranslations("esES", function() return {
+	--cmd = "Maexxna",
+
+	--spray_cmd = "spray",
+	spray_name = "Alerta de Pulverizador de tela de araña",
+	spray_desc = "Avisa para Pulverizador de tela de araña",
+
+	--enrage_cmd = "enrage",
+	enrage_name = "Alerta de Enfurecer",
+	enrage_desc = "Avisa para Enfurecer",
+
+	--cocoon_cmd = "cocoon",
+	cocoon_name = "Alerta de Capullo",
+	cocoon_desc = "Avisa para jugadores en Capullo",
+
+	--poison_cmd = "Poison",
+	poison_name = "Alerta de Veneno necrótico",
+	poison_desc = "Avisa para Veneno necrótico",
+
+	cocoontrigger = "(.*) (.*) sufre de Trampa arácnida.",
+	webspraytrigger = "sufre de Pulverizador de tela de araña",
+	poisontrigger = "sufre de Veneno necrótico.",
+	etrigger1 = "gana Enfurecer",
+
+	cocoonwarn = "¡%s en Capullo!",
+	poisonwarn = "¡Veneno necrótico!",
+	enragetrigger = "%s becomes enraged.",
+
+	webspraywarn30sec = "Capullos al muro en 10 segundos",
+	webspraywarn20sec = "¡Capullos al muro! 15 segundos hasta aparezcan las arañas!",
+	webspraywarn10sec = "¡10 segundos hasta Pulverizador de tela de araña!",
+	webspraywarn5sec = "¡AOE - Aparecen las arañas - AOE! PULVERIZADOR DE TELA DE ARAÑA 5 SEGUNDOS!",
+	webspraywarn = "¡Pulverizador de tela de araña! 40 segundos hasta el próximo!",
+
+	enragewarn = "¡Enfurecer!",
+	enragesoonwarn = "¡Enfurecer pronto!",
+
+	webspraybar = "Pulverizador de tela de araña",
+	cocoonbar = "Capullos",
+	spiderbar = "Arañás",
+	poisonbar = "Veneno necrótico",
+
+	you = "Tu",
+	are = "estás",
+} end )
 ---------------------------------
 --      	Variables 		   --
 ---------------------------------

@@ -58,7 +58,48 @@ L:RegisterTranslations("enUS", function() return {
 	proximity_desc = "Show Proximity Warning Frame",
 } end )
 
+L:RegisterTranslations("esES", function() return {
+	--cmd = "Sapphiron",
 
+	--deepbreath_cmd = "deepbreath",
+	deepbreath_name = "Alerta de Aliento de Escarcha",
+	deepbreath_desc = "Avisa para Aliento de Escarcha.",
+
+	--lifedrain_cmd = "lifedrain",
+	lifedrain_name = "Drenaje de vida",
+	lifedrain_desc = "Avisa para Drenaje de vida.",
+
+	--berserk_cmd = "berserk",
+	berserk_name = "Rabia",
+	berserk_desc = "Avisa para Rabia.",
+
+	--icebolt_cmd = "icebolt",
+	icebolt_name = "Anunciar Bloqueo de hielo",
+	icebolt_desc = "Grita cuando tengas Bloqueo de hielo.",
+
+	berserk_bar = "Rabia",
+	berserk_warn_10min = "¡10 minutos hasta Rabia!",
+	berserk_warn_5min = "¡5 minutos hasta Rabia!",
+	berserk_warn_rest = "¡%s segundos hasta Rabia!",
+
+	engage_message = "¡Entrando en combate con Sapphiron! Rabia en 15 minutos!",
+
+	lifedrain_message = "¡Drenaje de vida! El próximo posiblemente en ~24 segundos!",
+	lifedrain_warn1 = "¡Drenaje de vida en 5 segundos!",
+	lifedrain_bar = "Drenaje de vida",
+
+	lifedrain_trigger = "sufre de Drenaje de vida",
+	lifedrain_trigger2 = "Ha Resistido Drenaje de vida",
+	icebolt_trigger = "Sufres de Descarga de hielo",
+
+	deepbreath_incoming_message = "¡Lanza Aliento de Escarcha en ~23 segundos!",
+	deepbreath_incoming_soon_message = "¡Lanza Aliento de Escarcha en ~5 segundos!",
+	deepbreath_incoming_bar = "Lanza Aliento de Escarcha",
+	deepbreath_trigger = "%s takes in a deep breath...",
+	deepbreath_warning = "¡Aliento de Escarcha entrante!",
+	deepbreath_bar = "¡Lanza Aliento de Escarcha!",
+	icebolt_yell = "¡Estoy en Bloqueo de hielo!",
+} end )
 ---------------------------------
 --      	Variables 		   --
 ---------------------------------

@@ -96,6 +96,87 @@ L:RegisterTranslations("enUS", function() return {
 
 } end )
 
+L:RegisterTranslations("esES", function() return {
+	--cmd = "Thaddius",
+
+	--enrage_cmd = "enrage",
+	enrage_name = "Alerta de Enfurecer",
+	enrage_desc = "Avisa para Enfurecer",
+
+	--phase_cmd = "phase",
+	phase_name = "Alerta de Fase",
+	phase_desc = "Avisa para cambios de Fase",
+
+	--polarity_cmd = "polarity",
+	polarity_name = "Alerta de Cambio de polaridad",
+	polarity_desc = "Avisa para Cambio de polaridad",
+
+	--power_cmd = "power",
+	power_name = "Alerta de Oleada de poder",
+	power_desc = "Avisa para Oleada de poder de Stalagg",
+
+	--adddeath_cmd = "adddeath",
+	adddeath_name = "Alerta del Muerte del Add",
+	adddeath_desc = "Avisa cuando muera un add.",
+
+	--charge_cmd = "charge",
+	charge_name = "Alerta de Carga",
+	charge_desc = "Avisa para Carga positiva/negativa por ti mismo.",
+
+	--throw_cmd = "throw",
+	throw_name = "Alerta de Lanzar",
+	throw_desc = "Avisa para cambios de la tarima de los tanques.",
+
+	enragetrigger = "%s goes into a berserker rage!",
+	starttrigger = "Stalagg crush you!",
+	starttrigger1 = "Feed you to master!",
+	trigger_phase2_1 = "EAT YOUR BONES",
+	trigger_phase2_2 = "BREAK YOU!",
+	trigger_phase2_3 = "KILL!",
+
+	adddeath = "No... more... Feugen...",
+	adddeath2 = "Master save me...",
+
+	teslaoverload = "overloads!",
+
+	pstrigger = "Now YOU feel pain!",
+	trigger_polarity_cast = "Thaddius comienza a lanzar Cambio de polaridad",
+	chargetrigger = "You are afflicted by (%w+) Charge.",
+	positivetype = "Spell_ChargePositive",
+	negativetype = "Spell_ChargeNegative",
+	stalaggtrigger = "Stalagg gains Power Surge.",
+
+	you = "Tu",
+	are = "estás",
+
+	enragewarn = "¡Enfurecer!",
+	startwarn = "Thaddius Fase 1",
+	startwarn2 = "¡Thaddius Fase 2, Enfurecer en 5 minutos!",
+	addsdownwarn = "¡Thaddius entrante en 14 segundos!",
+	pswarn1 = "¡Thaddius comienza a lanzar Cambio de polaridad! - COMPRUEBA CARGA!",
+	pswarn2 = "¡30 segundos hasta Cambio de polaridad!",
+	pswarn3 = "¡3 segundos hasta Cambio de polaridad!",
+	poswarn = "¡Cambias a la Carga positiva!",
+	negwarn = "¡Cambias a la Carga negativa!",
+	nochange = "¡Tu polaridad no cambió!",
+	polaritytickbar = "Tic de Polaridad",
+	enragebartext = "Enfurecer",
+	warn_enrage_3m = "Enfurecer en 3 minutos",
+	warn_enrage_90 = "Enfurecer en 90 segundos",
+	warn_enrage_60 = "Enfurecer en 60 segundos",
+	warn_enrage_30 = "Enfurecer en 30 segundos",
+	warn_enrage_10 = "Enfurecer en 10 segundos",
+	stalaggwarn = "Oleada de poder en Stalagg!",
+	powersurgebar = "Oleada de poder",
+
+	bar1text = "Cambio de polaridad",
+
+	throwbar = "Lanzar",
+	throwwarn = "¡Lanzar en ~5 segundos!",
+
+	phasebar = "Fase 2",
+} end )
+
 ---------------------------------
 --      	Variables 		   --
 ---------------------------------

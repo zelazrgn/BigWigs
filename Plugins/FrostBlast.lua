@@ -62,6 +62,32 @@ L:RegisterTranslations("enUS", function() return {
 	["Dead"] = true,
 } end)
 
+L:RegisterTranslations("esES", function() return {
+	["FrostBlast"] = "FrostBlast",
+	["Frost Blast"] = "Explosión de Escarcha",
+	["Options for the Frost Blast frame."] = "Opciones para el marco para Explosión de Escarcha.",
+	["Lock frame"] = "Bloquear el marco",
+	["Lock the frost blast frame."] = "Bloquea el marco de Explosión de Escarcha",
+
+	["Disabled"] = "Desactivado",
+	["Disable the frost blast display."] = "Desactivar la muestra de Explosión de Escarcha",
+
+	font = "Fonts\\FRIZQT__.TTF",
+
+	["Color Names"] = "Nombres de Colores",
+	["Class colored names."] = "Nombres de clases coloreadas",
+	["Color Bars"] = "Barras de Color",
+	["Class colored bars."] = "Barras de clases coloreadas",
+
+	["Test"] = "Probar",
+	["Perform a Frost Blast test."] = "Prueba de Explosión de Escarcha",
+
+	["Reset position"] = "Restablecer posición",
+	["Reset the anchor position, moving it to the center of your screen."] = "Restablece la posición de la ancla al centro de la pantalla.",
+
+	["Offline"] = "Desconectado",
+	["Dead"] = "Muerto",
+} end)
 -----------------------------------------------------------------------
 --      Module Declaration
 -----------------------------------------------------------------------
