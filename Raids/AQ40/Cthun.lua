@@ -600,6 +600,7 @@ end
 function module:CThunWeakenedOver()
 	isWeakened = nil
 	self:ThrottleSync(600, syncName.weakenOver)
+	self.tentacleHP = 100
 	self:TriggerEvent("BigWigs_StartHPBar", self, L["First Tentacle"], 100)
 	self:TriggerEvent("BigWigs_SetHPBar", self, L["First Tentacle"], 0)
 	self:CancelDelayedSync(syncName.weakenOver) -- ok
