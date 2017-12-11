@@ -57,6 +57,7 @@ L:RegisterTranslations("enUS", function() return {
 
 	["Next Heal"] = true,
 	["Fire Bombs"] = true,
+	["First Silence"] = true,
 
 	cmd = "Jeklik",
 
@@ -137,6 +138,7 @@ L:RegisterTranslations("esES", function() return {
 	
 	["Next Heal"] = "Próxima sanación",
 	["Fire Bombs"] = "Bombas de Fuego",
+	["First Silence"] = "Primer Silencio",
 	--cmd = "Jeklik",
 
 	--phase_cmd = "phase",
@@ -357,7 +359,7 @@ function module:OnEngage()
 	if self.db.profile.phase then
 		self:Message(L["phaseone_message"], "Attention")
 	end
-	self:Bar("First Silence", timer.firstSilence, icon.silence)
+	self:Bar(L["First Silence"], timer.firstSilence, icon.silence)
 
 	-- bats
 	if self.db.profile.swarm then
