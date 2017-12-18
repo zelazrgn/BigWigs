@@ -174,7 +174,7 @@ L:RegisterTranslations("deDE", function() return {
 ---------------------------------
 
 -- module variables
-module.revision = 20009 -- To be overridden by the module!
+module.revision = 20010 -- To be overridden by the module!
 module.enabletrigger = module.translatedName -- string or table {boss, add1, add2}
 --module.wipemobs = { L["add_name"] } -- adds which will be considered in CheckForEngage
 module.toggleoptions = {"sweep", "sandblast", -1, "emerge", "submerge", -1, "berserk", "bosskill"}
@@ -356,7 +356,9 @@ function module:Sandblast()
 end
 
 function module:DoSubmergeCheck()
-	self:ScheduleRepeatingEvent("bwourosubmergecheck", self.SubmergeCheck, 0.5, self)
+	if self:IsOuroVisible() then
+		self:ScheduleRepeatingEvent("bwourosubmergecheck", self.SubmergeCheck, 0.5, self)
+	end
 end
 function module:Emerge()
 	if self.phase ~= "berserk" then
