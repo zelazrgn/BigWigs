@@ -142,8 +142,8 @@ L:RegisterTranslations("esES", function() return {
 	pstrigger = "Now YOU feel pain!",
 	trigger_polarity_cast = "Thaddius comienza a lanzar Cambio de polaridad",
 	chargetrigger = "You are afflicted by (%w+) Charge.",
-	positivetype = "Spell_ChargePositive",
-	negativetype = "Spell_ChargeNegative",
+	positivetype = "Interface\\Icons\\Spell_ChargePositive",
+	negativetype = "Interface\\Icons\\Spell_ChargeNegative",
 	stalaggtrigger = "Stalagg gains Power Surge.",
 
 	you = "Tu",
