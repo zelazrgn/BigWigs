@@ -578,7 +578,7 @@ function module:CThunWeakened()
 		self:Message(L["weakened"], "Positive" )
 		self:Sound("Murloc")
 		self:Bar(L["barWeakened"], timer.weakened, icon.weaken)
-		self:Message(timer.weakened - 5, L["invulnerable2"], "Urgent")
+		self:DelayedMessage(timer.weakened - 5, L["invulnerable2"], "Urgent")
 	end
 
 	-- cancel tentacle timers
