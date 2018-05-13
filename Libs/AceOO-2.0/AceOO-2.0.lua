@@ -731,7 +731,9 @@ do
 			target[self] = true
 		end
 		if not autoEmbed and type(self.OnManualEmbed) == "function" then
-			self:OnManualEmbed(target)
+			if not target.modules then
+				self:OnManualEmbed(target)
+			end
 		end
 		setmetatable(target, mt)
 	end
