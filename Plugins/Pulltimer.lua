@@ -57,6 +57,28 @@ L:RegisterTranslations("enUS", function() return {
 	["Enable pulltimer."] = true,
 } end )
 
+L:RegisterTranslations("esES", function() return {
+	["Pull Timer"] = "Temporizador de Tirar",
+	
+	--["pulltimer"] = true,
+	["Options for Pull Timer"] = "Opciones para Temporizador de Tirar",
+	pullstart_message = "Tira en %d seg. (Enviado por %s)",
+	pullstop_message = "Tira abortado (Enviado por %s)",
+	pull1_message = "Tira en 1",
+	pull2_message = "Tira en 2",
+	pull3_message = "Tira en 3",
+	pull4_message = "Tira en 4",
+	pull5_message = "Tira en 5",
+	pull0_message = "¡Tira!",
+	
+	--["Pull"] = true,
+	--["pull"] = true,
+	["You have to be the raid leader or an assistant"] = "Tienes que ser líder o asistente para hacerlo",
+	
+	["Enable"] = "Activar",
+	["Enable pulltimer."] = "Activar Temporizador de Tirar",
+} end )
+
 -----------------------------------------------------------------------
 --      Module Declaration
 -----------------------------------------------------------------------
