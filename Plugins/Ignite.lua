@@ -102,7 +102,7 @@ L:RegisterTranslations("esES", function() return {
 	["Scorch"] = "Chamuscar",
 	["Fire Blast"] = "Explosión de Fuego",
 	["Blastwave"] = "Ola explosiva",
-	["Flamestrike"] = "Fogonazo",	
+	["Flamestrike"] = "Fogonazo",
 	["Pyroblast"] = "Piroexplosión",
 } end)
 

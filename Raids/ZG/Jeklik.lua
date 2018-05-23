@@ -135,7 +135,7 @@ L:RegisterTranslations("esES", function() return {
 	firewarnyou = "¡Retrocede del fuego!",
 	you = "tu",
 	HighPriestessJeklik = "Suma sacerdotisa Jeklik",
-	
+
 	["Next Heal"] = "Próxima sanación",
 	["Fire Bombs"] = "Bombas de Fuego",
 	["First Silence"] = "Primer Silencio",

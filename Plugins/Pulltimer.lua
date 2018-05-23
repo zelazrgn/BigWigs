@@ -37,7 +37,7 @@ local icon = {
 
 L:RegisterTranslations("enUS", function() return {
 	["Pull Timer"] = true,
-	
+
 	["pulltimer"] = true,
 	["Options for Pull Timer"] = true,
 	pullstart_message = "Pull in %d sec. (Sent by %s)",
@@ -48,18 +48,18 @@ L:RegisterTranslations("enUS", function() return {
 	pull4_message = "Pull in 4",
 	pull5_message = "Pull in 5",
 	pull0_message = "Pull!",
-	
+
 	["Pull"] = true,
 	["pull"] = true,
 	["You have to be the raid leader or an assistant"] = true,
-	
+
 	["Enable"] = true,
 	["Enable pulltimer."] = true,
 } end )
 
 L:RegisterTranslations("esES", function() return {
 	["Pull Timer"] = "Temporizador de Tirar",
-	
+
 	--["pulltimer"] = true,
 	["Options for Pull Timer"] = "Opciones para Temporizador de Tirar",
 	pullstart_message = "Tira en %d seg. (Enviado por %s)",
@@ -70,11 +70,11 @@ L:RegisterTranslations("esES", function() return {
 	pull4_message = "Tira en 4",
 	pull5_message = "Tira en 5",
 	pull0_message = "¡Tira!",
-	
+
 	--["Pull"] = true,
 	--["pull"] = true,
 	["You have to be the raid leader or an assistant"] = "Tienes que ser líder o asistente para hacerlo",
-	
+
 	["Enable"] = "Activar",
 	["Enable pulltimer."] = "Activar Temporizador de Tirar",
 } end )
@@ -119,19 +119,19 @@ local function BWPT(seconds)
 end
 
 function BigWigsPulltimer:OnRegister()
-	--[[self:RegisterChatCommand({ L["slashpull_cmd"] }, {
-		type = "group",
-		args = {
-			pull = {
-				type = "text", name = L["slashpull2_cmd"],
-				desc = L["slashpull2_desc"],
-				set = function(v) self:BigWigs_PullCommand(v) end,
-				get = false,
-				usage = L["<duration>"],
-			},
-		},
-	})]]
-	
+--[[self:RegisterChatCommand({ L["slashpull_cmd"] }, {
+type = "group",
+args = {
+pull = {
+type = "text", name = L["slashpull2_cmd"],
+desc = L["slashpull2_desc"],
+set = function(v) self:BigWigs_PullCommand(v) end,
+get = false,
+usage = L["<duration>"],
+},
+},
+})]]
+
 end
 
 function BigWigsPulltimer:OnEnable()
@@ -139,8 +139,8 @@ function BigWigsPulltimer:OnEnable()
 	self:RegisterEvent("BigWigs_PullCommand")
 	self:RegisterEvent("BigWigs_RecvSync")
 	self:ThrottleSync(0.5, syncName.pulltimer)
-	
-	
+
+
 	if SlashCmdList then
 		SlashCmdList["BWPT_SHORTHAND"] = BWPT
 		setglobal("SLASH_BWPT_SHORTHAND1", "/"..L["pull"])
@@ -164,7 +164,7 @@ function BigWigsPulltimer:BigWigs_RecvSync(sync, rest, nick)
 	end
 	if sync == syncName.stoppulltimer then
 		self:BigWigs_StopPulltimer()
-		
+
 		self:Message(string.format(L["pullstop_message"], nick), "Attention", false)
 		PlaySound("igQuestFailed")
 	end
@@ -182,26 +182,26 @@ function BigWigsPulltimer:BigWigs_PullCommand(msg)
 			self:Sync(syncName.stoppulltimer)
 			return
 		end
-		
+
 		if  timer.pulltimer == 0 then
-			-- stop pull timer if it is already running 
+			-- stop pull timer if it is already running
 			local registered, time, elapsed, running = self:BarStatus(L["Pull"])
 			if running then
 				self:Sync(syncName.stoppulltimer)
 				return
-			-- otherwise start a 6s pull timer
+				-- otherwise start a 6s pull timer
 			else
 				timer.pulltimer = 6
 			end
 		elseif ((timer.pulltimer > 63) or (timer.pulltimer < 1))  then
 			return
 		end
-		
+
 		self:Sync("BWCustomBar "..timer.pulltimer.." ".."bwPullTimer")	--[[This triggers a pull timer for older versions of bigwigs.
-																			Modified CustomBar.lua RecvSync to ignore sync calls with "bwPullTimer" string in them.
-																		--]]
+		Modified CustomBar.lua RecvSync to ignore sync calls with "bwPullTimer" string in them.
+		--]]
 		self:Sync(syncName.pulltimer.." "..timer.pulltimer)
-	else 
+	else
 		self:Print(L["You have to be the raid leader or an assistant"])
 	end
 end
@@ -224,16 +224,16 @@ end
 function BigWigsPulltimer:BigWigs_Pulltimer(duration, requester)
 	--cancel events from an ongoing pull timer in case a new one is initiated
 	self:BigWigs_StopPulltimer()
-	
+
 	if tonumber(duration) then
 		timer.pulltimer = tonumber(duration)
 	else
 		return
 	end
-	
+
 	self:Message(string.format(L["pullstart_message"], timer.pulltimer, requester), "Attention", false, "RaidAlert")
 	self:Bar(L["Pull"], timer.pulltimer, icon.pulltimer)
-	
+
 	--self:DelayedSound(timer.pulltimer, "Warning")
 	self:DelayedMessage(timer.pulltimer, L["pull0_message"], "Important", false, "Warning")
 	self:DelayedSound(timer.pulltimer - 1, "One")

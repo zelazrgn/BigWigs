@@ -57,7 +57,7 @@ L:RegisterTranslations("esES", function() return {
 	ms_bar = "Golpe mortal: %s",
 	bw_bar = "Ola explosiva",
 	knock_bar = "Empujar",
-	
+
 	["First Mortal Strike"] = "Primer Golpe mortal",
 
 	you = "Tu",

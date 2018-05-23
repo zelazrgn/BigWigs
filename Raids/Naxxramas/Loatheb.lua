@@ -328,8 +328,8 @@ function module:BigWigs_RecvSync(sync, rest, nick)
 			self:ScheduleEvent("bwloathebconsumable "..tostring(self.consumableseq), self.ConsumableWarning, 11, self)
 			self.consumableseq = self.consumableseq + 1
 		end
-		elseif sync == syncName.curse then
-			self:Curse()
+	elseif sync == syncName.curse then
+		self:Curse()
 	end
 end
 

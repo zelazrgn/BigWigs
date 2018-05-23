@@ -122,12 +122,12 @@ L:RegisterTranslations("esES", function() return {
 	onyfear_desc = "Avisa para Clamor bramante en fase 3.",
 
 	deepbreath_trigger = "takes in a deep breath",
-	flamebreath_trigger = "Onyxia comienza a lanzar Aliento de llamarada\.", 
-	wingbuffet_trigger = "Onyxia comienza a lanzar Festín de alas\.", 
-	fireball_trigger = "Onyxia comienza a lanzar Bola de Fuego.", 
-	phase2_trigger = "de encima", 
+	flamebreath_trigger = "Onyxia comienza a lanzar Aliento de llamarada\.",
+	wingbuffet_trigger = "Onyxia comienza a lanzar Festín de alas\.",
+	fireball_trigger = "Onyxia comienza a lanzar Bola de Fuego.",
+	phase2_trigger = "de encima",
 	phase3_trigger = "It seems you'll need another lesson",
-	fear_trigger = "Onyxia comienza a lanzar Clamor bramante\.", 
+	fear_trigger = "Onyxia comienza a lanzar Clamor bramante\.",
 	fear_over_trigger = "Clamor bramante",
 
 	warn1 = "¡Respiración entrante!",

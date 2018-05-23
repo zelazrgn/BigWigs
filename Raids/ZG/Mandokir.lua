@@ -32,7 +32,7 @@ L:RegisterTranslations("enUS", function() return {
 	deathyou = "You die.",
 	deathother = "(.+) dies.",
 	you = "you",
-	
+
 	watched_warning = "You are being watched! Stop everything!",
 	watched_warning_tell = "You are being watched! Stop everything!",
 	watched_warning_other = "%s is being watched!",
@@ -118,7 +118,7 @@ L:RegisterTranslations("deDE", function() return {
 
 L:RegisterTranslations("esES", function() return {
 	ohgan = "Ohgan",
---	cmd = "Mandokir",
+	--	cmd = "Mandokir",
 
 	engage_trigger = "feed your souls to Hakkar himself",
 	watch_trigger = "(.+)! I'm watching you!",
@@ -138,7 +138,7 @@ L:RegisterTranslations("esES", function() return {
 	deathyou = "Has muerto.",
 	deathother = "(.+) ha muerto.",
 	you = "tu",
-	
+
 	watched_warning = "¡Estás siendo mirado! Detén todos!",
 	watched_warning_tell = "¡Estás siendo mirado! Detén todos!",
 	watched_warning_other = "¡%s está siendo mirado!",

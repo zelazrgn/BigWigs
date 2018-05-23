@@ -67,7 +67,7 @@ L:RegisterTranslations("esES", function() return {
 
 	["Gives timer bars and raid messages about common buffs and debuffs."] = "Muestra las barras temporizadoras y los mensajes de la banda sobre buffs y debuffs comunes",
 	["Common Auras"] = "Auras Comunes",
-	--["commonauras"] = "aurascomunes",
+--["commonauras"] = "aurascomunes",
 } end )
 
 L:RegisterTranslations("koKR", function() return {
