@@ -190,7 +190,7 @@ L:RegisterTranslations("esES", function() return {
 ----------------------------------
 
 BigWigsBars = BigWigs:NewModule(L["Bars"])
-BigWigsBars.revision = tonumber(string.sub("$Revision: 20003 $", 12, -3))
+BigWigsBars.revision = tonumber(string.sub("$Revision: 20004 $", 12, -3))
 BigWigsBars.defaultDB = {
 	growup = false,
 	scale = 1.0,
@@ -480,9 +480,13 @@ function BigWigsBars:Disable(module)
 		end
 	else
 		for i=1, table.getn(barCache) do
-			BigWigsBars:BigWigs_StopBar(barCache[i][2], barCache[i][1])
+			if barCache[i] and barCache[i][2] == module then
+				BigWigsBars:BigWigs_StopBar(barCache[i][2], barCache[i][1])
+				tremove(barCache, i)
+				i=i-1
+			end
 		end
-		barCache = {}
+		--barCache = {}
 	end
 end
 
@@ -601,7 +605,16 @@ function BigWigsBars:BigWigs_StartBar(module, text, time, icon, otherc, c1, c2, 
 	self:SetCandyBarScale(id, scale)
 
 	self:StartCandyBar(id, true)
-	tinsert(barCache,{text, module})
+
+	local barExist = false
+	for i=1, table.getn(barCache) do
+		if barCache[i] and barCache[i][2] == module and barCache[i][1] == text then
+			barExist = true
+		end
+	end
+	if not barExist then
+		tinsert(barCache,{text, module})
+	end
 	--[[
 	local function OnBarClick(id)
 	local exists, time, elapsed, running, paused = self:CandyBarStatus(id)
