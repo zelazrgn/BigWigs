@@ -728,7 +728,7 @@ function BigWigsBars:BigWigs_SetHPBar(module, text, value)
 end
 
 function BigWigsBars:BigWigs_StartIntervalBar(module, text, intervalMin, intervalMax, icon, otherColor, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10)
-	self:TriggerEvent("BigWigs_StartBar", self, text, intervalMin, icon, otherColor, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10)
+	self:TriggerEvent("BigWigs_StartBar", module, text, intervalMin, icon, otherColor, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10)
 	if self.db.profile.intervalbar then
 		self:SetCandyBarFade("BigWigsBar "..text, intervalMax-intervalMin)
 	end
