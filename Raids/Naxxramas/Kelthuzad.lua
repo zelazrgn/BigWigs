@@ -606,6 +606,8 @@ function module:Phase2()
 	end
 	self:ScheduleEvent("bwKTremoveP1Bars", removeP1Bars, 1, self)
 
+	self:DelayedBar(timer.phase2, "Next Frostbolt", 10, "Spell_Nature_Timestop")
+
 end
 
 function module:Phase3()
@@ -661,6 +663,8 @@ function module:Frostbolt()
 		end
 		if self.db.profile.frostboltbar then
 			self:Bar(L["frostbolt_bar"], timer.frostbolt, icon.frostbolt, true, "blue")
+			self:RemoveBar("Next Frostbolt")
+			self:DelayedIntervalBar(2, "Next Frostbolt", 3, 15, "Spell_Nature_Timestop")
 		end
 	end
 end
